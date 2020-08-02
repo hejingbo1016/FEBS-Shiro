@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.UserMapper">
-    <sql id="countUserDetailSql" >
+    <sql id="countUserDetailSql">
         SELECT
         COUNT(1)
         FROM
         t_user u
         WHERE 1 = 1
         <if test="user.username != null and user.username != ''">
-            AND u.username = #{user.username}
+            AND u.username like CONCAT('%',#{user.username},'%')
         </if>
         <if test="user.deptId != null and user.deptId != ''">
             AND u.dept_id = #{user.deptId}
@@ -20,7 +20,7 @@
             AND u.status = #{user.status}
         </if>
         <if test="user.mobile != null and user.mobile != ''">
-            AND u.mobile = #{user.mobile}
+            AND u.mobile like CONCAT('%',#{user.mobile},'%')
         </if>
         <if test="user.createTimeFrom != null and user.createTimeFrom !=''">
             And u.create_time &gt; #{user.createTimeFrom}
@@ -54,7 +54,7 @@
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         WHERE 1 = 1
         <if test="user.username != null and user.username != ''">
-            AND u.username = #{user.username}
+            AND u.username like CONCAT('%',#{user.username},'%')
         </if>
         <if test="user.deptId != null and user.deptId != ''">
             AND d.dept_id = #{user.deptId}
@@ -66,7 +66,7 @@
             AND u.status = #{user.status}
         </if>
         <if test="user.mobile != null and user.mobile != ''">
-            AND u.mobile = #{user.mobile}
+            AND u.mobile like CONCAT('%',#{user.mobile},'%')
         </if>
         <if test="user.createTimeFrom != null and user.createTimeFrom !=''">
             And u.create_time &gt; #{user.createTimeFrom}
@@ -75,18 +75,18 @@
             And u.create_time &lt; #{user.createTimeTo}
         </if>
         GROUP BY
-            u.username,
-            u.user_id,
-            u.email,
-            u.mobile,
-            u.status,
-            u.create_time,
-            u.ssex,
-            u.dept_id,
-            u.last_login_time,
-            u.modify_time,
-            u.description,
-            u.avatar
+        u.username,
+        u.user_id,
+        u.email,
+        u.mobile,
+        u.status,
+        u.create_time,
+        u.ssex,
+        u.dept_id,
+        u.last_login_time,
+        u.modify_time,
+        u.description,
+        u.avatar
     </sql>
 
     <select id="countUserDetail" parameterType="user" resultType="long">
