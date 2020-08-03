@@ -617,5 +617,23 @@ VALUES ('苹果', 'iPhone 11 pro max', '9198', '暗夜绿', 4, '2020-04-14 15:09
 COMMIT;
 
 
+CREATE TABLE `t_wechat_user` (
+  `id` bigint NOT NULL COMMENT '主键id',
+  `account_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '授权id',
+  `avatar_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信头像url',
+  `wechat_user_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信名称',
+  `user_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户名称',
+  `phone` varchar(25) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '联系方式',
+  `user_type` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户类型',
+  `sex` char(1) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '性别 0男 1女 2保密',
+  `is_tab` char(1) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '是否开启tab，0关闭 1开启',
+  `description` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
+  `customer_type` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '客户类型',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `wechat_user_name` (`wechat_user_name`) USING BTREE,
+  KEY `user_name` (`user_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
