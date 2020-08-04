@@ -19,6 +19,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 /**
  * @author MrBird
@@ -113,13 +114,15 @@ public class GeneratorHelper {
 
     private static String packageConvertPath(String packageName) {
         return String.format("%s%s%s", File.separator,
-                packageName.contains(".") ? packageName.replaceAll("\\.", File.separator) : packageName, File.separator);
+                packageName.contains(".") ? packageName.replaceAll(".", Matcher.quoteReplacement(File.separator)) : packageName, File.separator);
     }
 
     private Template getTemplate(String templateName) throws Exception {
         final String templatePathPrefix = File.separator + "generator" + File.separator + "templates" + File.separator;
         Configuration configuration = new freemarker.template.Configuration(Configuration.VERSION_2_3_23);
-        String templatePath = GeneratorHelper.class.getResource(templatePathPrefix).getPath();
+
+        String templatePath = GeneratorHelper.class.getResource("/").getPath() + templatePathPrefix;
+
         File file = new File(templatePath);
         if (!file.exists()) {
             templatePath = System.getProperties().getProperty("java.io.tmpdir");
