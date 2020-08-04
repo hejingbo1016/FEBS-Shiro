@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -27,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  Controller
+ * Controller
  *
  * @author Hejingbo
  * @date 2020-08-04 22:24:45
@@ -36,32 +33,31 @@ import java.util.Map;
 @Validated
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("phone")
 public class PhoneController extends BaseController {
 
     private final IPhoneService phoneService;
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "phone")
-    public String phoneIndex(){
+    public String phoneIndex() {
         return FebsUtil.view("phone/phone");
     }
 
-    @GetMapping("phone")
-    @ResponseBody
-    @RequiresPermissions("phone:list")
+    @GetMapping
     public FebsResponse getAllPhones(Phone phone) {
         return new FebsResponse().success().data(phoneService.findPhones(phone));
     }
 
-    @GetMapping("phone/list")
+    @GetMapping("list")
     @ResponseBody
-    @RequiresPermissions("phone:list")
+    @RequiresPermissions("phone:view")
     public FebsResponse phoneList(QueryRequest request, Phone phone) {
         Map<String, Object> dataTable = getDataTable(this.phoneService.findPhones(request, phone));
         return new FebsResponse().success().data(dataTable);
     }
 
     @ControllerEndpoint(operation = "新增Phone", exceptionMessage = "新增Phone失败")
-    @PostMapping("phone")
+    @PostMapping
     @ResponseBody
     @RequiresPermissions("phone:add")
     public FebsResponse addPhone(@Valid Phone phone) {
@@ -79,7 +75,7 @@ public class PhoneController extends BaseController {
     }
 
     @ControllerEndpoint(operation = "修改Phone", exceptionMessage = "修改Phone失败")
-    @PostMapping("phone/update")
+    @PostMapping("update")
     @ResponseBody
     @RequiresPermissions("phone:update")
     public FebsResponse updatePhone(Phone phone) {
@@ -95,9 +91,5 @@ public class PhoneController extends BaseController {
         List<Phone> phones = this.phoneService.findPhones(queryRequest, phone).getRecords();
         ExcelKit.$Export(Phone.class, response).downXlsx(phones, false);
     }
-
-
-
-
 
 }

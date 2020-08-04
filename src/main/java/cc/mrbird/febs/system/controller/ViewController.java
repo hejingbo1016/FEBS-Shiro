@@ -5,7 +5,10 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.job.entity.Job;
+import cc.mrbird.febs.system.entity.Phone;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IPhoneService;
 import cc.mrbird.febs.system.service.IUserDataPermissionService;
 import cc.mrbird.febs.system.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author MrBird
@@ -32,6 +36,7 @@ public class ViewController extends BaseController {
     private final IUserService userService;
     private final ShiroHelper shiroHelper;
     private final IUserDataPermissionService userDataPermissionService;
+    private final IPhoneService phoneService;
 
     @GetMapping("login")
     @ResponseBody
@@ -135,6 +140,29 @@ public class ViewController extends BaseController {
     @RequiresPermissions("dept:view")
     public String systemDept() {
         return FebsUtil.view("system/dept/dept");
+    }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/phone")
+    @RequiresPermissions("phone:view")
+    public String systemPhone() {
+        return FebsUtil.view("system/phone/phone");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/phone/add")
+    @RequiresPermissions("phone:add")
+    public String systemPhoneAdd() {
+        return FebsUtil.view("system/phone/phoneAdd");
+    }
+
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/phone/update/{id}")
+    @RequiresPermissions("phone:update")
+    public String jobUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Phone phone = phoneService.getById(id);
+        model.addAttribute("phone", phone);
+        return FebsUtil.view("system/phone/phoneUpdate");
     }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
