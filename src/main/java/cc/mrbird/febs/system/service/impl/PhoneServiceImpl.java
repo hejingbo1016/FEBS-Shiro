@@ -1,6 +1,8 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.Phone;
 import cc.mrbird.febs.system.entity.Role;
 import cc.mrbird.febs.system.entity.UserRole;
@@ -44,6 +46,7 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
         page.setSearchCount(false);
         page.setTotal(baseMapper.countPhone(phone));
         setSelectLike(queryWrapper, phone);
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
         return this.page(page, queryWrapper);
     }
 
