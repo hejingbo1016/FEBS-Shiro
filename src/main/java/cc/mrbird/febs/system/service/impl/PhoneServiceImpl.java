@@ -43,13 +43,18 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
         Page<Phone> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
         page.setTotal(baseMapper.countPhone(phone));
+        setSelectLike(queryWrapper, phone);
         return this.page(page, queryWrapper);
     }
 
-    @Override
-    public List<Phone> findPhones(Phone phone) {
-        QueryWrapper<Phone> queryWrapper = new QueryWrapper<>();
-        // TODO 设置查询条件
+    /**
+     * 设置查询条件
+     *
+     * @param queryWrapper
+     * @param phone
+     */
+    private void setSelectLike(QueryWrapper<Phone> queryWrapper, Phone phone) {
+
         if (StringUtils.isNotBlank(phone.getPhoneName())) {
             queryWrapper.lambda().like(Phone::getPhoneName, phone.getPhoneName());
         }
@@ -57,8 +62,20 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
             queryWrapper.lambda().like(Phone::getPhoneType, phone.getPhoneType());
         }
         if (StringUtils.isNotBlank(phone.getPhoneColour())) {
-            queryWrapper.lambda().like(Phone::getPhoneType, phone.getPhoneColour());
+            queryWrapper.lambda().like(Phone::getPhoneColour, phone.getPhoneColour());
         }
+        if (StringUtils.isNotBlank(phone.getPhoneConfiguration())) {
+            queryWrapper.lambda().like(Phone::getPhoneConfiguration, phone.getPhoneConfiguration());
+        }
+
+
+    }
+
+    @Override
+    public List<Phone> findPhones(Phone phone) {
+        QueryWrapper<Phone> queryWrapper = new QueryWrapper<>();
+        // TODO 设置查询条件
+        setSelectLike(queryWrapper, phone);
         return this.baseMapper.selectList(queryWrapper);
     }
 

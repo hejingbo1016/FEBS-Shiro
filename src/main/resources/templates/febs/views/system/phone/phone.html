@@ -25,15 +25,18 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">状态</label>
+                                        <label class="layui-form-label">内存</label>
                                         <div class="layui-input-inline">
-                                            <select name="status">
-                                                <option value=""></option>
-                                                <option value="0">正常</option>
-                                                <option value="1">暂停</option>
-                                            </select>
+                                            <input type="text" name="phoneConfiguration" class="layui-input">
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">颜色</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="phoneColour" class="layui-input">
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -197,22 +200,22 @@
                 url: ctx + 'phone/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'phoneName', title: '手机名称'},
-                    {field: 'phoneType', title: '手机型号', maxWidth: 200},
+                    {field: 'phoneName', title: '手机名称', maxWidth: 100},
+                    {field: 'phoneType', title: '手机型号', maxWidth: 80},
                     {field: 'phoneConfiguration', title: '内存', maxWidth: 80},
                     {field: 'phoneColour', title: '颜色', maxWidth: 80},
-                    {field: 'retailPrice', title: '零售价', maxWidth: 100},
-                    {field: 'agencyPrice', title: '代理价', minWidth: 100, sort: true},
+                    {field: 'retailPrice', title: '零售价', maxWidth: 80},
+                    {field: 'agencyPrice', title: '代理价', minWidth: 80, sort: true},
                     {field: 'phoneCount', title: '手机数量', maxWidth: 80},
                     {field: 'createTime', title: '创建时间', minWidth: 100, sort: true},
-                    {title: '操作', toolbar: '#phone-option', minWidth: 140}
+                    {title: '操作', toolbar: '#phone-option', minWidth: 80}
                 ]]
             });
         }
 
         function deleteJobs(phoneIds) {
             febs.get(ctx + 'phone/delete/' + phoneIds, null, function () {
-                febs.alert.success('删除任务成功');
+                febs.alert.success('删除成功');
                 $query.click();
             });
         }

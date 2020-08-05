@@ -616,24 +616,67 @@ INSERT INTO `t_data_permission_test`
 VALUES ('苹果', 'iPhone 11 pro max', '9198', '暗夜绿', 4, '2020-04-14 15:09:20', 8);
 COMMIT;
 
-
+DROP TABLE IF EXISTS `t_wechat_user`;
 CREATE TABLE `t_wechat_user` (
-  `id` bigint NOT NULL COMMENT '主键id',
-  `account_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '授权id',
-  `avatar_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信头像url',
-  `wechat_user_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信名称',
-  `user_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户名称',
-  `phone` varchar(25) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '联系方式',
-  `user_type` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户类型',
-  `sex` char(1) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '性别 0男 1女 2保密',
-  `is_tab` char(1) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '是否开启tab，0关闭 1开启',
-  `description` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
-  `customer_type` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '客户类型',
+  `id` bigint(20) NOT NULL COMMENT '主键id',
+  `account_id` varchar(100) DEFAULT NULL COMMENT '授权id',
+  `avatar_url` varchar(255) DEFAULT NULL COMMENT '微信头像url',
+  `wechat_user_name` varchar(100) DEFAULT NULL COMMENT '微信名称',
+  `user_name` varchar(100) DEFAULT NULL COMMENT '用户名称',
+  `phone` varchar(25) DEFAULT NULL COMMENT '联系方式',
+  `user_type` varchar(11) DEFAULT NULL COMMENT '用户类型',
+  `sex` char(1) DEFAULT NULL COMMENT '性别 0男 1女 2保密',
+  `is_tab` char(1) DEFAULT NULL COMMENT '是否开启tab，0关闭 1开启',
+  `description` varchar(255) DEFAULT NULL COMMENT '备注',
+  `customer_type` varchar(11) DEFAULT NULL COMMENT '客户类型',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `modifier` varchar(255) DEFAULT NULL COMMENT '修改人员',
+  `creater` varchar(255) DEFAULT NULL COMMENT '创建人员',
+  `deleted` int(1) DEFAULT NULL COMMENT '是否删除 ( 0：非删除;； 1： 删除 )',
   PRIMARY KEY (`id`),
   KEY `wechat_user_name` (`wechat_user_name`) USING BTREE,
   KEY `user_name` (`user_name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `t_meeting`;
+CREATE TABLE `t_meeting` (
+  `id` bigint(30) NOT NULL COMMENT '主键id',
+  `meeting_name` varchar(255) DEFAULT NULL COMMENT '会议名称',
+  `sponsor` varchar(255) DEFAULT NULL COMMENT '主办方',
+  `organizer` varchar(255) DEFAULT NULL COMMENT '承办方',
+  `meeting_principal` varchar(255) DEFAULT NULL COMMENT '会议负责人',
+  `contact_phone` varchar(100) DEFAULT NULL COMMENT '联系方式',
+  `start_time` datetime DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '结束时间',
+  `synopsis` varchar(1000) DEFAULT NULL COMMENT '活动简介',
+  `activity_notes` varchar(1000) DEFAULT NULL COMMENT '活动须知',
+  `participants` varchar(2000) DEFAULT NULL COMMENT '参会人员',
+  `activity_flow` varchar(2000) DEFAULT NULL COMMENT '活动流程',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `modifier` varchar(255) DEFAULT NULL COMMENT '修改人员',
+  `creater` varchar(255) DEFAULT NULL COMMENT '创建人员',
+  `deleted` int(1) DEFAULT NULL COMMENT '是否删除 ( 0：非删除;； 1： 删除 )',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `t_meeting_hotel`;
+CREATE TABLE `t_meeting_hotel` (
+  `id` bigint(30) NOT NULL COMMENT '主键id',
+  `meeting_id` bigint(30) DEFAULT NULL COMMENT '会议id',
+  `hotel_id` bigint(30) DEFAULT NULL COMMENT '酒店id',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `modifier` varchar(255) DEFAULT NULL COMMENT '修改人员',
+  `creater` varchar(255) DEFAULT NULL COMMENT '创建人员',
+  `deleted` int(1) DEFAULT NULL COMMENT '是否删除 ( 0：非删除;； 1： 删除 )',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 SET FOREIGN_KEY_CHECKS = 1;
 
