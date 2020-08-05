@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Slf4j
 @Validated
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("phone")
 public class PhoneController extends BaseController {
@@ -68,6 +68,7 @@ public class PhoneController extends BaseController {
 
     @GetMapping("delete/{phoneIds}")
     @RequiresPermissions("phone:delete")
+    @ResponseBody
     @ControllerEndpoint(operation = "删除Phone", exceptionMessage = "删除Phone失败")
     public FebsResponse deletePhones(@NotBlank(message = "{required}") @PathVariable String phoneIds) {
         this.phoneService.deletePhones(phoneIds);
