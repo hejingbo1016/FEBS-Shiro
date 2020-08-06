@@ -1,0 +1,99 @@
+<style>
+    #phone-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #phone-add .layui-form-label {
+        width: 88px;
+    }
+
+    #phone-add .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="phone-add">
+    <form class="layui-form" action="" lay-filter="phone-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">手机名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneName" maxlength="20" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">手机型号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneType" maxlength="50" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内存：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneConfiguration" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">颜色：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneColour" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">零售价：</label>
+            <div class="layui-input-block">
+                <input type="text" name="retailPrice" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">代理价：</label>
+            <div class="layui-input-block">
+                <input type="text" name="agencyPrice" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneCount" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item layui-form-text">-->
+        <!--<label class="layui-form-label">任务备注：</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<textarea name="remark" maxlength="50" class="layui-textarea"></textarea>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="phone-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            $view = $('#phone-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        form.on('submit(phone-add-form-submit)', function (data) {
+            febs.post(ctx + 'phone', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增任务成功');
+                $('#febs-phone').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

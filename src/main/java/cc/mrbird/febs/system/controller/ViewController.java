@@ -5,9 +5,10 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.job.entity.Job;
+import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.entity.Phone;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPhoneService;
 import cc.mrbird.febs.system.service.IUserDataPermissionService;
 import cc.mrbird.febs.system.service.IUserService;
@@ -37,6 +38,7 @@ public class ViewController extends BaseController {
     private final ShiroHelper shiroHelper;
     private final IUserDataPermissionService userDataPermissionService;
     private final IPhoneService phoneService;
+    private final IMeetingService meetingService;
 
     @GetMapping("login")
     @ResponseBody
@@ -155,15 +157,34 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/phone/phoneAdd");
     }
 
-
-
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/phone/update/{id}")
     @RequiresPermissions("phone:update")
-    public String jobUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+    public String phoneUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         Phone phone = phoneService.getById(id);
         model.addAttribute("phone", phone);
         return FebsUtil.view("system/phone/phoneUpdate");
     }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting")
+    @RequiresPermissions("meeting:view")
+    public String systemMeeting() {
+        return FebsUtil.view("system/meeting/meeting");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/add")
+    @RequiresPermissions("meeting:add")
+    public String systemMeetingAdd() {
+        return FebsUtil.view("system/meeting/meetingAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/update/{id}")
+    @RequiresPermissions("meeting:update")
+    public String meetingUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Meeting meeting = meetingService.getById(id);
+        model.addAttribute("meeting", meeting);
+        return FebsUtil.view("system/meeting/meetingUpdate");
+    }
+
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {

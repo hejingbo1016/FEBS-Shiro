@@ -1,0 +1,229 @@
+<style>
+    #febs-meeting .layui-form-label {
+        width: 65px;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-meeting" lay-title="手机价格">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="job-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">手机名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="meetingName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">手机型号</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="meetingType" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">内存</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="meetingConfiguration" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">颜色</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="meetingColour" class="layui-input">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="meeting:add,meeting:update,meeting:delete,meeting:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="meetingTable" lay-data="{id: 'meetingTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="job-status">
+    {{#
+    var status = {
+    0: {title: '正常', color: 'green'},
+    1: {title: '暂停', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="meeting-option">
+    <span shiro:lacksPermission="meeting:update,meeting:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="edit" shiro:hasPermission="meeting:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="meeting:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-meeting'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+        initTable();
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('meetingTable');
+                if (name === 'add') {
+                    febs.modal.open('新增手机', 'system/meeting/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#meeting-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#meeting-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请勾选需要删除的任务');
+                    } else {
+                        febs.modal.confirm('删除任务', '确定删除所选任务？', function () {
+                            var meetingIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                meetingIds.push(item.id)
+                            });
+                            deleteJobs(meetingIds.join(','))
+                        });
+                    }
+                }
+
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'meeting/excel', params, '任务表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增手机',
+                perms: 'meeting:add'
+            }, {
+                name: 'delete',
+                title: '删除手机',
+                perms: 'meeting:delete'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'meeting:export'
+            }]
+        });
+
+        table.on('tool(meetingTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除任务', '确定删除该任务？', function () {
+                    deleteJobs(data.id);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改任务', 'system/meeting/update/' + data.id, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#meeting-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(meetingTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'meetingTable',
+                url: ctx + 'meeting/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'meetingName', title: '名称', maxWidth: 100},
+                    {field: 'meetingType', title: '型号', maxWidth: 80},
+                    {field: 'meetingConfiguration', title: '内存', maxWidth: 80},
+                    {field: 'meetingColour', title: '颜色', maxWidth: 80},
+                    {field: 'retailPrice', title: '零售价', maxWidth: 80, sort: true},
+                    {field: 'agencyPrice', title: '代理价', minWidth: 80, sort: true},
+                    {field: 'meetingCount', title: '数量', maxWidth: 80},
+                    {field: 'createTime', title: '创建时间', minWidth: 100, sort: true},
+                    {title: '操作', toolbar: '#meeting-option', minWidth: 80}
+                ]]
+            });
+        }
+
+        function deleteJobs(meetingIds) {
+            febs.get(ctx + 'meeting/delete/' + meetingIds, null, function () {
+                febs.alert.success('删除成功');
+                $query.click();
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            params.invalidate_ie_cache = new Date();
+            return params;
+        }
+    })
+</script>
