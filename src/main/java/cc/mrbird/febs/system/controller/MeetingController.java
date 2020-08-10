@@ -13,13 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +31,7 @@ import java.util.Map;
 @Validated
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("meeting")
 public class MeetingController extends BaseController {
 
     private final IMeetingService meetingService;
@@ -42,23 +41,21 @@ public class MeetingController extends BaseController {
         return FebsUtil.view("meeting/meeting");
     }
 
-    @GetMapping("meeting")
-    @ResponseBody
-    @RequiresPermissions("meeting:list")
+    @GetMapping
     public FebsResponse getAllMeetings(Meeting meeting) {
         return new FebsResponse().success().data(meetingService.findMeetings(meeting));
     }
 
-    @GetMapping("meeting/list")
+    @GetMapping("list")
     @ResponseBody
-    @RequiresPermissions("meeting:list")
+    @RequiresPermissions("meeting:view")
     public FebsResponse meetingList(QueryRequest request, Meeting meeting) {
         Map<String, Object> dataTable = getDataTable(this.meetingService.findMeetings(request, meeting));
         return new FebsResponse().success().data(dataTable);
     }
 
     @ControllerEndpoint(operation = "新增Meeting", exceptionMessage = "新增Meeting失败")
-    @PostMapping("meeting")
+    @PostMapping
     @ResponseBody
     @RequiresPermissions("meeting:add")
     public FebsResponse addMeeting(@Valid Meeting meeting) {
@@ -67,16 +64,16 @@ public class MeetingController extends BaseController {
     }
 
     @ControllerEndpoint(operation = "删除Meeting", exceptionMessage = "删除Meeting失败")
-    @GetMapping("meeting/delete")
+    @GetMapping("delete/{meetingIds}")
     @ResponseBody
-    @RequiresPermissions("meeting:delete")
-    public FebsResponse deleteMeeting(Meeting meeting) {
-        this.meetingService.deleteMeeting(meeting);
+    @RequiresPermissions("meeting:delete") 
+    public FebsResponse deletePhones(@NotBlank(message = "{required}") @PathVariable String meetingIds) {
+        this.meetingService.deleteMeetings(meetingIds);
         return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "修改Meeting", exceptionMessage = "修改Meeting失败")
-    @PostMapping("meeting/update")
+    @PostMapping("update")
     @ResponseBody
     @RequiresPermissions("meeting:update")
     public FebsResponse updateMeeting(Meeting meeting) {
@@ -85,7 +82,7 @@ public class MeetingController extends BaseController {
     }
 
     @ControllerEndpoint(operation = "修改Meeting", exceptionMessage = "导出Excel失败")
-    @PostMapping("meeting/excel")
+    @PostMapping("excel")
     @ResponseBody
     @RequiresPermissions("meeting:export")
     public void export(QueryRequest queryRequest, Meeting meeting, HttpServletResponse response) {

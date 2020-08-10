@@ -1,15 +1,15 @@
 package cc.mrbird.febs.system.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author Hejingbo
  * @date 2020-08-05 23:40:11
@@ -47,6 +47,13 @@ public class Meeting {
      */
     @TableField("meeting_principal")
     private String meetingPrincipal;
+
+
+    /**
+     * 会议地址
+     */
+    @TableField("meeting_address")
+    private String meetingAddress;
 
     /**
      * 联系方式

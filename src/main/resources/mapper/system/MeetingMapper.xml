@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.MeetingMapper">
 
+    <select id="countMeeting" resultType="java.lang.Long">
+        SELECT
+        COUNT(1)
+        FROM
+        t_meeting t
+        WHERE 1 = 1
+        <if test="meeting.meetingName != null and meeting.meetingName != ''">
+            AND t.meeting_name like CONCAT('%',#{meeting.meetingName},'%')
+        </if>
+        <if test="meeting.sponsor != null and meeting.sponsor != ''">
+            AND t.sponsor like CONCAT('%',#{meeting.sponsor},'%')
+        </if>
+        <if test="meeting.organizer != null and meeting.organizer != ''">
+            AND t.organizer like CONCAT('%',#{meeting.organizer},'%')
+        </if>
+        <if test="meeting.meetingPrincipal != null and meeting.meetingPrincipal != ''">
+            AND t.meeting_principal like CONCAT('%',#{meeting.meetingPrincipal},'%')
+        </if>
+        <if test="meeting.meetingAddress != null and meeting.meetingAddress != ''">
+            AND t.meeting_address like CONCAT('%',#{meeting.meetingAddress},'%')
+        </if>
+
+
+    </select>
 </mapper>

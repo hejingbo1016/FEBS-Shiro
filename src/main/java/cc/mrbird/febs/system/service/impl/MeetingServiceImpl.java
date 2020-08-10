@@ -1,23 +1,28 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
 import cc.mrbird.febs.system.service.IMeetingService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
-import lombok.RequiredArgsConstructor;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author Hejingbo
  * @date 2020-08-05 23:40:11
@@ -34,14 +39,45 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         LambdaQueryWrapper<Meeting> queryWrapper = new LambdaQueryWrapper<>();
         // TODO 设置查询条件
         Page<Meeting> page = new Page<>(request.getPageNum(), request.getPageSize());
+        page.setSearchCount(false);
+        page.setTotal(baseMapper.countMeeting(meeting));
+        setselectMeeting(queryWrapper, meeting);
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
         return this.page(page, queryWrapper);
+    }
+
+    /**
+     * 设置查询条件
+     *
+     * @param queryWrapper
+     * @param meeting
+     */
+    private void setselectMeeting(LambdaQueryWrapper<Meeting> queryWrapper, Meeting meeting) {
+
+        if (StringUtils.isNotBlank(meeting.getMeetingName())) {
+            queryWrapper.like(Meeting::getMeetingName, meeting.getMeetingName());
+        }
+        if (StringUtils.isNotBlank(meeting.getSponsor())) {
+            queryWrapper.like(Meeting::getSponsor, meeting.getSponsor());
+        }
+        if (StringUtils.isNotBlank(meeting.getOrganizer())) {
+            queryWrapper.like(Meeting::getOrganizer, meeting.getOrganizer());
+        }
+        if (StringUtils.isNotBlank(meeting.getMeetingAddress())) {
+            queryWrapper.like(Meeting::getMeetingAddress, meeting.getMeetingAddress());
+        }
+        if (StringUtils.isNotBlank(meeting.getMeetingPrincipal())) {
+            queryWrapper.like(Meeting::getMeetingPrincipal, meeting.getMeetingPrincipal());
+        }
+
+
     }
 
     @Override
     public List<Meeting> findMeetings(Meeting meeting) {
-	    LambdaQueryWrapper<Meeting> queryWrapper = new LambdaQueryWrapper<>();
-		// TODO 设置查询条件
-		return this.baseMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<Meeting> queryWrapper = new LambdaQueryWrapper<>();
+        // TODO 设置查询条件
+        return this.baseMapper.selectList(queryWrapper);
     }
 
     @Override
@@ -60,7 +96,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Transactional(rollbackFor = Exception.class)
     public void deleteMeeting(Meeting meeting) {
         LambdaQueryWrapper<Meeting> wrapper = new LambdaQueryWrapper<>();
-	    // TODO 设置删除条件
-	    this.remove(wrapper);
-	}
+        // TODO 设置删除条件
+        this.remove(wrapper);
+    }
+
+    @Override
+    public void deleteMeetings(String meetingIds) {
+        List<String> list = Arrays.asList(meetingIds.split(StringPool.COMMA));
+        this.baseMapper.delete(new QueryWrapper<Meeting>().lambda().in(Meeting::getId, list));
+
+    }
 }
