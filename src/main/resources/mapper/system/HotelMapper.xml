@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.system.mapper.HotelMapper">
+
+    <select id="countHotel" resultType="java.lang.Long">
+
+        SELECT
+        COUNT(1)
+        FROM
+        t_hotel t
+        WHERE 1 = 1
+        <if test="hotel.hotelName != null and hotel.hotelName != ''">
+            AND t.hotel_name like CONCAT('%',#{hotel.hotelName},'%')
+        </if>
+        <if test="hotel.hotelPrincipal != null and hotel.hotelPrincipal != ''">
+            AND t.hotel_principal like CONCAT('%',#{hotel.hotelPrincipal},'%')
+        </if>
+        <if test="hotel.contactPhone != null and hotel.contactPhone != ''">
+            AND t.contact_phone like CONCAT('%',#{hotel.contactPhone},'%')
+        </if>
+        <if test="hotel.receptionService != null and hotel.receptionService != ''">
+            AND t.reception_service like CONCAT('%',#{hotel.receptionService},'%')
+        </if>
+        <if test="hotel.hotelAddress != null and hotel.hotelAddress != ''">
+            AND t.hotel_address like CONCAT('%',#{hotel.hotelAddress},'%')
+        </if>
+
+
+
+
+    </select>
+</mapper>

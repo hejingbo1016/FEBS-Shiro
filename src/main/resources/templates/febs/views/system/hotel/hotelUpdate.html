@@ -1,0 +1,106 @@
+<style>
+    #hotel-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #hotel-update .layui-form-label {
+        width: 88px;
+    }
+
+    #hotel-update .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="hotel-update">
+    <form class="layui-form" action="" lay-filter="hotel-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">酒店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelName" maxlength="20" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" name="contactPhone" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">接待服务：</label>
+            <div class="layui-input-block">
+                <input type="text" name="receptionService" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">酒店地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelAddress" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地铁指引：</label>
+            <div class="layui-input-block">
+                <input type="text" name="metroGuidelines" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="hotel-update-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            hotel = [[${hotel}]],
+            $view = $('#hotel-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        inithotelValue();
+
+        function inithotelValue() {
+            form.val("hotel-update-form", {
+                "id": hotel.id,
+                "hotelName": hotel.hotelName,
+                "hotelPrincipal": hotel.hotelPrincipal,
+                "contactPhone": hotel.contactPhone,
+                "receptionService": hotel.receptionService,
+                "hotelAddress": hotel.hotelAddress,
+                "metroGuidelines": hotel.metroGuidelines
+            });
+        }
+
+        form.on('submit(hotel-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, hotel)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'hotel/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('任务修改成功');
+                $('#febs-hotel').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

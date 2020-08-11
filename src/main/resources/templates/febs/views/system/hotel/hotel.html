@@ -1,9 +1,9 @@
 <style>
-    #febs-meeting .layui-form-label {
+    #febs-hotel .layui-form-label {
         width: 65px;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-meeting" lay-title="会议管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-hotel" lay-title="酒店管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -13,36 +13,37 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">会议名称</label>
+                                        <label class="layui-form-label">酒店名称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="meetingName" autocomplete="off"
+                                            <input type="text" name="hotelName" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">主办方</label>
+                                        <label class="layui-form-label">酒店负责人</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="sponsor" class="layui-input">
+                                            <input type="text" name="hotelPrincipal" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">承办方</label>
+                                        <label class="layui-form-label">联系方式</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="organizer" class="layui-input">
+                                            <input type="text" name="contactPhone" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">会议负责人</label>
+                                        <label class="layui-form-label">接待服务</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="meetingPrincipal" class="layui-input">
+                                            <input type="text" name="receptionService" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">会议地址</label>
+                                        <label class="layui-form-label">酒店地址</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="meetingAddress" class="layui-input">
+                                            <input type="text" name="hotelAddress" class="layui-input">
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -55,13 +56,13 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="meeting:add,meeting:update,meeting:delete,meeting:export">
+                                     shiro:hasAnyPermissions="hotel:add,hotel:update,hotel:delete,hotel:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <table lay-filter="meetingTable" lay-data="{id: 'meetingTable'}"></table>
+                    <table lay-filter="hotelTable" lay-data="{id: 'hotelTable'}"></table>
                 </div>
             </div>
         </div>
@@ -76,13 +77,13 @@
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="meeting-option">
-    <span shiro:lacksPermission="meeting:update,meeting:delete">
+<script type="text/html" id="hotel-option">
+    <span shiro:lacksPermission="hotel:update,hotel:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="meeting:update"><i
+    <a lay-event="edit" shiro:hasPermission="hotel:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="meeting:delete"><i
+    <a lay-event="del" shiro:hasPermission="hotel:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
@@ -93,7 +94,7 @@
             form = layui.form,
             table = layui.table,
             dropdown = layui.dropdown,
-            $view = $('#febs-meeting'),
+            $view = $('#febs-hotel'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -117,30 +118,30 @@
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('meetingTable');
+                var checkStatus = table.checkStatus('hotelTable');
                 if (name === 'add') {
-                    febs.modal.open('新增会议', 'system/meeting/add', {
+                    febs.modal.open('新增酒店', 'system/hotel/add', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#meeting-add').find('#submit').trigger('click');
+                            $('#hotel-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#meeting-add').find('#reset').trigger('click');
+                            $('#hotel-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
                 }
                 if (name === 'delete') {
                     if (!checkStatus.data.length) {
-                        febs.alert.warn('请勾选需要删除的会议');
+                        febs.alert.warn('请勾选需要删除的酒店');
                     } else {
-                        febs.modal.confirm('删除会议', '确定删除所选会议？', function () {
-                            var meetingIds = [];
+                        febs.modal.confirm('删除酒店', '确定删除所选酒店？', function () {
+                            var hotelIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                                meetingIds.push(item.id)
+                                hotelIds.push(item.id)
                             });
-                            deleteJobs(meetingIds.join(','))
+                            deleteJobs(hotelIds.join(','))
                         });
                     }
                 }
@@ -149,25 +150,25 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'meeting/excel', params, '会议表.xlsx');
+                    febs.download(ctx + 'hotel/excel', params, '酒店表.xlsx');
                 }
             },
             options: [{
                 name: 'add',
-                title: '新增会议',
-                perms: 'meeting:add'
+                title: '新增酒店',
+                perms: 'hotel:add'
             }, {
                 name: 'delete',
-                title: '删除会议',
-                perms: 'meeting:delete'
+                title: '删除酒店',
+                perms: 'hotel:delete'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'meeting:export'
+                perms: 'hotel:export'
             }]
         });
 
-        table.on('tool(meetingTable)', function (obj) {
+        table.on('tool(hotelTable)', function (obj) {
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
@@ -176,11 +177,11 @@
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改会议', 'system/meeting/update/' + data.id, {
+                febs.modal.open('修改酒店', 'system/hotel/update/' + data.id, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
-                        $('#meeting-update').find('#submit').trigger('click');
+                        $('#hotel-update').find('#submit').trigger('click');
                     },
                     btn2: function () {
                         layer.closeAll();
@@ -189,7 +190,7 @@
             }
         });
 
-        table.on('sort(meetingTable)', function (obj) {
+        table.on('sort(hotelTable)', function (obj) {
             sortObject = obj;
             tableIns.reload({
                 initSort: obj,
@@ -203,26 +204,25 @@
         function initTable() {
             tableIns = febs.table.init({
                 elem: $view.find('table'),
-                id: 'meetingTable',
-                url: ctx + 'meeting/list',
+                id: 'hotelTable',
+                url: ctx + 'hotel/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'meetingName', title: '会议名称', maxWidth: 100},
-                    {field: 'sponsor', title: '主办方', maxWidth: 80},
-                    {field: 'organizer', title: '承办方', maxWidth: 80},
-                    {field: 'meetingPrincipal', title: '会议负责人', maxWidth: 80},
-                    {field: 'contactPhone', title: '联系方式', maxWidth: 80, sort: true},
-                    {field: 'meetingAddress', title: '会议地址', maxWidth: 80},
-                    {field: 'startTime', title: '开始时间', minWidth: 80, sort: true},
-                    {field: 'endTime', title: '结束时间', maxWidth: 80},
+                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
+                    {field: 'hotelPrincipal', title: '酒店负责人', maxWidth: 80},
+                    {field: 'contactPhone', title: '联系方式', maxWidth: 80},
+                    {field: 'receptionService', title: '接待服务', maxWidth: 80},
+                    {field: 'hotelAddress', title: '酒店地址', maxWidth: 80},
+                    {field: 'metroGuidelines', title: '地铁指引', maxWidth: 80},
+                    {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
 
-                    {title: '操作', toolbar: '#meeting-option', minWidth: 80}
+                    {title: '操作', toolbar: '#hotel-option', minWidth: 80}
                 ]]
             });
         }
 
-        function deleteJobs(meetingIds) {
-            febs.get(ctx + 'meeting/delete/' + meetingIds, null, function () {
+        function deleteJobs(hotelIds) {
+            febs.get(ctx + 'hotel/delete/' + hotelIds, null, function () {
                 febs.alert.success('删除成功');
                 $query.click();
             });

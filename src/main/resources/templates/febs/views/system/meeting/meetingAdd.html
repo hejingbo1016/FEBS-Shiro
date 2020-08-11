@@ -56,18 +56,18 @@
             </div>
         </div>
         <!--<div class="layui-inline">-->
-            <!--<label class="layui-form-label">开始时间</label>-->
-            <!--<div class="layui-input-inline">-->
-                <!--<input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="date"-->
-                       <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
-            <!--</div>-->
+        <!--<label class="layui-form-label">开始时间</label>-->
+        <!--<div class="layui-input-inline">-->
+        <!--<input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="date"-->
+        <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
         <!--</div>-->
         <!--<div class="layui-inline">-->
-            <!--<label class="layui-form-label">结束时间</label>-->
-            <!--<div class="layui-input-inline">-->
-                <!--<input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="date"-->
-                       <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
-            <!--</div>-->
+        <!--<label class="layui-form-label">结束时间</label>-->
+        <!--<div class="layui-input-inline">-->
+        <!--<input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="date"-->
+        <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
         <!--</div>-->
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
@@ -102,19 +102,18 @@
             $view = $('#meeting-add'),
             validate = layui.validate;
 
-
-        form.render(null, 'meeting-add-form');
-
         form.verify(validate);
-
-        laydate.render({
-            elem: '#febs-form-meeting-start'
-        });
+        form.render();
 
 
-        laydate.render({
-            elem: '#febs-form-meeting-end'
-        });
+        // laydate.render({
+        //     elem: '#febs-form-meeting-start'
+        // });
+        //
+        //
+        // laydate.render({
+        //     elem: '#febs-form-meeting-end'
+        // });
 
 
         form.on('submit(meeting-add-form-submit)', function (data) {

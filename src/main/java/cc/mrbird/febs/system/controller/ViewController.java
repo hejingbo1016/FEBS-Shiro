@@ -5,13 +5,11 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.Hotel;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.entity.Phone;
 import cc.mrbird.febs.system.entity.User;
-import cc.mrbird.febs.system.service.IMeetingService;
-import cc.mrbird.febs.system.service.IPhoneService;
-import cc.mrbird.febs.system.service.IUserDataPermissionService;
-import cc.mrbird.febs.system.service.IUserService;
+import cc.mrbird.febs.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,6 +37,7 @@ public class ViewController extends BaseController {
     private final IUserDataPermissionService userDataPermissionService;
     private final IPhoneService phoneService;
     private final IMeetingService meetingService;
+    private final IHotelService hotelService;
 
     @GetMapping("login")
     @ResponseBody
@@ -183,6 +182,27 @@ public class ViewController extends BaseController {
         Meeting meeting = meetingService.getById(id);
         model.addAttribute("meeting", meeting);
         return FebsUtil.view("system/meeting/meetingUpdate");
+    }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel")
+    @RequiresPermissions("hotel:view")
+    public String systemHotel() {
+        return FebsUtil.view("system/hotel/hotel");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/add")
+    @RequiresPermissions("hotel:add")
+    public String systemHotelAdd() {
+        return FebsUtil.view("system/hotel/hotelAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/update/{id}")
+    @RequiresPermissions("hotel:update")
+    public String hotelUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Hotel hotel = hotelService.getById(id);
+        model.addAttribute("hotel", hotel);
+        return FebsUtil.view("system/hotel/hotelUpdate");
     }
 
 
