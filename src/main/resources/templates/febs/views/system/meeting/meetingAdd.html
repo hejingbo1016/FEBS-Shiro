@@ -55,18 +55,24 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
+                       placeholder="开始时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
+                       placeholder="结束时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
         <!--<div class="layui-inline">-->
-        <!--<label class="layui-form-label">开始时间</label>-->
+        <!--<label class="layui-form-label">日期时间范围</label>-->
         <!--<div class="layui-input-inline">-->
-        <!--<input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="date"-->
-        <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="layui-inline">-->
-        <!--<label class="layui-form-label">结束时间</label>-->
-        <!--<div class="layui-input-inline">-->
-        <!--<input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="date"-->
-        <!--placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">-->
+        <!--<input type="text" class="layui-input" id="test10" placeholder=" - ">-->
         <!--</div>-->
         <!--</div>-->
         <div class="layui-form-item layui-form-text">
@@ -95,28 +101,33 @@
 </div>
 
 <script>
-    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             $view = $('#meeting-add'),
             validate = layui.validate;
+        var laydate = layui.laydate;
+
+
+        laydate.render({
+            elem: '#febs-form-meeting-start'
+            , type: 'datetime'
+        });
+
+
+        laydate.render({
+            elem: '#febs-form-meeting-end'
+            , type: 'datetime'
+        });
+
 
         form.verify(validate);
         form.render();
 
-
-        // laydate.render({
-        //     elem: '#febs-form-meeting-start'
-        // });
-        //
-        //
-        // laydate.render({
-        //     elem: '#febs-form-meeting-end'
-        // });
-
-
         form.on('submit(meeting-add-form-submit)', function (data) {
+            data.field.endTime = new Date(data.field.endTime);
+            data.field.startTime = new Date(data.field.startTime);
             febs.post(ctx + 'meeting', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增任务成功');

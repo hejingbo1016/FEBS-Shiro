@@ -19,7 +19,7 @@
                 <input type="text" name="id" class="layui-input">
             </div>
         </div>
-    
+
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">会议名称：</label>
             <div class="layui-input-block">
@@ -65,15 +65,15 @@
         <div class="layui-inline">
             <label class="layui-form-label">开始时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="date"
-                       placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
+                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
+                       placeholder="开始时间" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">结束时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="date"
-                       placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
+                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
+                       placeholder="结束时间" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
@@ -103,13 +103,26 @@
 </div>
 
 <script data-th-inline="javascript">
-    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             meeting = [[${meeting}]],
             $view = $('#meeting-update'),
             validate = layui.validate;
+        var laydate = layui.laydate;
+
+
+        laydate.render({
+            elem: '#febs-form-meeting-start'
+            , type: 'datetime'
+        });
+
+
+        laydate.render({
+            elem: '#febs-form-meeting-end'
+            , type: 'datetime'
+        });
 
         form.verify(validate);
         form.render();
@@ -135,6 +148,8 @@
         }
 
         form.on('submit(meeting-update-form-submit)', function (data) {
+            data.field.endTime = new Date(data.field.endTime);
+            data.field.startTime = new Date(data.field.startTime);
             if (febs.nativeEqual(data.field, meeting)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
