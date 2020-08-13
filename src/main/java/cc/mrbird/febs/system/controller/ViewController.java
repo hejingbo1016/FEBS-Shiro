@@ -205,6 +205,12 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/hotel/hotelUpdate");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/room/{id}")
+    @RequiresPermissions("hotel:room")
+    public String hotelRoom(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        model.addAttribute("hotelId", id);
+        return FebsUtil.view("system/hotel/hotelRoom");
+    }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
