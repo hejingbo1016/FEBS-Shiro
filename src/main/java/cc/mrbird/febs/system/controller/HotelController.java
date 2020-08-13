@@ -6,15 +6,22 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.system.entity.Hotel;
+import cc.mrbird.febs.system.service.IFileService;
 import cc.mrbird.febs.system.service.IHotelService;
+import cn.hutool.http.server.HttpServerRequest;
 import com.wuwenze.poi.ExcelKit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -35,6 +42,7 @@ import java.util.Map;
 public class HotelController extends BaseController {
 
     private final IHotelService hotelService;
+    private final IFileService fileService;
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "hotel")
     public String hotelIndex() {
@@ -58,8 +66,18 @@ public class HotelController extends BaseController {
     @PostMapping
     @ResponseBody
     @RequiresPermissions("hotel:add")
-    public FebsResponse addHotel(@Valid Hotel hotel) {
+    public FebsResponse addHotel(@Valid Hotel hotel, List<MultipartFile> file) {
         this.hotelService.createHotel(hotel);
+
+        Long id = hotel.getId();
+        if (id != null) {
+            File fileEn = new File();
+            fileEn.setForeignId(hotel.getId());
+            fileService.deleteFile(fileEn);
+
+            fileService.upload(file, "hotel", id);
+        }
+
         return new FebsResponse().success();
     }
 
@@ -76,8 +94,19 @@ public class HotelController extends BaseController {
     @PostMapping("update")
     @ResponseBody
     @RequiresPermissions("hotel:update")
-    public FebsResponse updateHotel(Hotel hotel) {
+    @Transactional(rollbackFor = Exception.class)
+    public FebsResponse updateHotel(Hotel hotel, List<MultipartFile> file) {
         this.hotelService.updateHotel(hotel);
+
+        Long id = hotel.getId();
+        if (id != null) {
+            File fileEn = new File();
+            fileEn.setForeignId(hotel.getId());
+            fileService.deleteFile(fileEn);
+
+            fileService.upload(file, "hotel", id);
+        }
+
         return new FebsResponse().success();
     }
 

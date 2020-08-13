@@ -5,6 +5,7 @@ import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,4 +53,8 @@ public interface IFileService extends IService<File> {
      * @param file file
      */
     void deleteFile(File file);
+
+    List<File> upload(List<MultipartFile> file, String dir, Long fId);
+
+    File upload(MultipartFile file, String dir, Long fId);
 }

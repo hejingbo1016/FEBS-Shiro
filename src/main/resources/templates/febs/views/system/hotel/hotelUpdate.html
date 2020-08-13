@@ -12,7 +12,7 @@
     }
 </style>
 <div class="layui-fluid" id="hotel-update">
-    <form class="layui-form" action="" lay-filter="hotel-update-form">
+    <form class="layui-form" action="" lay-filter="hotel-update-form" enctype="multipart/form-data" method="post">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">id：</label>
             <div class="layui-input-block">
@@ -55,6 +55,20 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="upload">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;width: 88%">
+                    预览图：
+                    <div class="layui-upload-list uploader-list" style="overflow: auto;" id="uploader-list">
+                        <div id="" class="file-iteme">
+                            <div class="handle"><i class="layui-icon" style="color: white;margin-right: 40%">&#xe640;</i>
+                            </div>
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="hotel-update-form-submit" id="submit"></button>
@@ -62,15 +76,66 @@
         </div>
     </form>
 </div>
+<style type="text/css">
+    .layui-form-label {
+        width: 110px;
+    }
 
+    .uploader-list {
+        margin-left: -15px;
+    }
+
+    .uploader-list .info {
+        position: relative;
+        margin-top: -25px;
+        background-color: black;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        opacity: 0.5;
+        width: 100px;
+        height: 25px;
+        text-align: center;
+        display: none;
+    }
+
+    .uploader-list .handle {
+        position: relative;
+        background-color: #ff6a00;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        width: 100px;
+        text-align: right;
+        height: 18px;
+        margin-bottom: -18px;
+        display: none;
+    }
+
+    .uploader-list .handle span {
+        margin-right: 5px;
+    }
+
+    .uploader-list .handle span:hover {
+        cursor: pointer;
+    }
+
+    .uploader-list .file-iteme {
+        margin: 12px 0 0 15px;
+        padding: 1px;
+        float: left;
+    }
+</style>
 <script data-th-inline="javascript">
-    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'upload', 'layer'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             hotel = [[${hotel}]],
             $view = $('#hotel-update'),
-            validate = layui.validate;
+            validate = layui.validate,
+            layer = layui.layer,
+            upload = layui.upload;
 
         form.verify(validate);
         form.render();
@@ -94,13 +159,67 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-            febs.post(ctx + 'hotel/update', data.field, function () {
+
+            $(data.form).attr('action', ctx + 'hotel/update');
+            /*febs.post(ctx + 'hotel/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('任务修改成功');
                 $('#febs-hotel').find('#query').click();
-            });
-            return false;
+            });*/
+            return true;
         });
+
+        //多图片上传
+        upload.render({
+            elem: '#upload'
+            ,url: '#' //改成您自己的上传接口
+            ,multiple: true
+            ,auto: false
+            ,choose: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    if (index == 5) {
+                        return false;
+                    }
+
+                    $('#uploader-list').append(
+                        '<div id="" class="file-iteme">' +
+                        '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="' + result + '" class="layui-upload-img">' +
+                        '</div>'
+                    );
+
+                    // $('#quote').append('<img width="100px" height="100px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+            }
+            , before: function (obj) {
+                layer.msg('图片上传中...', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 0
+                })
+            }
+            ,done: function(res){
+                //上传完毕
+            }
+        });
+
+
+        $(document).on("mouseenter mouseleave", ".file-iteme", function (event) {
+            if (event.type === "mouseenter") {
+                //鼠标悬浮
+                $(this).children(".info").fadeIn("fast");
+                $(this).children(".handle").fadeIn("fast");
+            } else if (event.type === "mouseleave") {
+                //鼠标离开
+                $(this).children(".info").hide();
+                $(this).children(".handle").hide();
+            }
+        });
+
+        $(document).on("click", ".file-iteme .handle", function(event){
+            $(this).parent().remove();
+        })
 
     });
 </script>
