@@ -20,9 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @Aspect
 @Component

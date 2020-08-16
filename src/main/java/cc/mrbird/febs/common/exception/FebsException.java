@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.exception;
 /**
  * FEBS系统内部异常
  *
- * @author MrBird
+ *
  */
 public class FebsException extends RuntimeException  {
 

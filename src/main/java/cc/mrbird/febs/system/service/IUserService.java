@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.scheduling.annotation.Async;
 
-/**
- * @author MrBird
- */
+
 public interface IUserService extends IService<User> {
 
     /**

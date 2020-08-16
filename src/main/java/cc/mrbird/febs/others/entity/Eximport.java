@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * 导入导出测试，Eximport = export + import
  *
- * @author MrBird
+ *
  */
 @Data
 @TableName("t_eximport")

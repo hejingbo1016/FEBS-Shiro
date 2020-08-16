@@ -22,9 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
-/**
- * @author MrBird
- */
+
 @Configuration
 @EnableSwagger2
 @RequiredArgsConstructor

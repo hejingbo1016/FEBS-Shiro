@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @RestController
 @RequestMapping("generatorConfig")

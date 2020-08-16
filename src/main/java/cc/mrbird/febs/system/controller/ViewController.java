@@ -25,9 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
-/**
- * @author MrBird
- */
+
 @Controller("systemView")
 @RequiredArgsConstructor
 public class ViewController extends BaseController {

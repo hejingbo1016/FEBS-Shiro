@@ -32,9 +32,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -3,9 +3,7 @@ package cc.mrbird.febs.common.authentication;
 import cc.mrbird.febs.common.annotation.Helper;
 import org.apache.shiro.authz.AuthorizationInfo;
 
-/**
- * @author MrBird
- */
+
 @Helper
 public class ShiroHelper extends ShiroRealm {
 

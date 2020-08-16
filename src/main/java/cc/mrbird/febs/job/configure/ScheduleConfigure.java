@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 定时任务配置
  *
- * @author MrBird
+ *
  */
 @Configuration
 @RequiredArgsConstructor
