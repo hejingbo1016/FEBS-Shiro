@@ -62,7 +62,6 @@
                             </div>
                         </div>
                     </form>
-                    <input type="button" id="addTable" value="点击">
                     <table lay-filter="hotelTable" lay-data="{id: 'hotelTable'}"></table>
                 </div>
             </div>
@@ -228,13 +227,13 @@
                 url: ctx + 'hotel/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelName', edit: 'text', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelPrincipal', edit: 'text', title: '酒店负责人', maxWidth: 80},
-                    {field: 'contactPhone', edit: 'text', title: '联系方式', maxWidth: 80},
-                    {field: 'receptionService', edit: 'text', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelAddress', edit: 'text', title: '酒店地址', maxWidth: 80},
-                    {field: 'metroGuidelines', edit: 'text', title: '地铁指引', maxWidth: 80},
-                    {field: 'createTime', edit: 'text', title: '创建时间', minWidth: 80, sort: true},
+                    {field: 'hotelName',  title: '酒店名称', maxWidth: 100},
+                    {field: 'hotelPrincipal',  title: '酒店负责人', maxWidth: 80},
+                    {field: 'contactPhone',  title: '联系方式', maxWidth: 80},
+                    {field: 'receptionService',  title: '接待服务', maxWidth: 80},
+                    {field: 'hotelAddress',  title: '酒店地址', maxWidth: 80},
+                    {field: 'metroGuidelines',  title: '地铁指引', maxWidth: 80},
+                    {field: 'createTime',  title: '创建时间', minWidth: 80, sort: true},
 
                     {title: '操作', toolbar: '#hotel-option', minWidth: 80}
                 ]]
