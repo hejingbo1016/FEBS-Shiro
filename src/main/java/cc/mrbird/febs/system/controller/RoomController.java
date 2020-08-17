@@ -50,11 +50,11 @@ public class RoomController extends BaseController {
         return new FebsResponse().success().data(roomService.findRooms(room));
     }
 
-    @GetMapping("list")
+    @GetMapping("list/{id}")
     @ResponseBody
     @RequiresPermissions("hotel:room")
-    public FebsResponse roomList(QueryRequest request, Room room,String hotelId) {
-        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room,hotelId));
+    public FebsResponse roomList(QueryRequest request, Room room,String id) {
+        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room,id));
         return new FebsResponse().success().data(dataTable);
     }
 

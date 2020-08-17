@@ -203,9 +203,8 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/room/{id}")
     @RequiresPermissions("hotel:room")
     public String hotelRoom(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
-        Room room = new Room();
-        room.setHotelId(id);
-        model.addAttribute("room", room);
+        Hotel hotel = hotelService.getById(id);
+        model.addAttribute("hotel", hotel);
         return FebsUtil.view("system/hotel/hotelRoom");
     }
 

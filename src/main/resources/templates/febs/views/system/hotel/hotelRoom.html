@@ -1,17 +1,9 @@
 <style>
-    #hotelRoom-room {
-        padding: 20px 25px 25px 0;
-    }
-
-    #hotelRoom-room .layui-form-label {
-        width: 88px;
-    }
-
-    #hotelRoom-room .layui-input-block {
-        margin-left: 120px;
+    #febs-hotelRoom .layui-form-label {
+        width: 65px;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoom" lay-title="房间管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoomRoom" lay-title="房间管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -23,12 +15,10 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label">房间类型</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="hotelRoomName" autocomplete="off"
+                                            <input type="text" name="roomType" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -47,35 +37,53 @@
                             </div>
                         </div>
                     </form>
-                    <table lay-filter="hotelRoomRoomTable" lay-data="{id: 'hotelRoomRoomTable'}"></table>
+                    <input type="button" id="addTable" value="点击">
+                    <table lay-filter="hotelRoomTable" lay-data="{id: 'hotelRoomTable'}"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type="text/html" id="job-status">
+    {{#
+    var status = {
+    0: {title: '正常', color: 'green'},
+    1: {title: '暂停', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="hotelRoom-option">
+    <span shiro:lacksPermission="hotelRoom:update,hotelRoom:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="edit" shiro:hasPermission="hotelRoom:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="generate" shiro:hasPermission="hotelRoom:room"><i
+            class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
+    <a lay-event="del" shiro:hasPermission="hotelRoom:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
 
+</script>
 <script data-th-inline="javascript">
-    layui.use(['dropdown', 'laydate', 'validate', 'form', 'table', 'febs'], function () {
-        var $ = layui.$,
+    layui.use(['jquery', 'dropdown', 'laydate', 'form', 'table', 'febs'], function () {
+        var $ = layui.jquery,
             laydate = layui.laydate,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
             dropdown = layui.dropdown,
-            room = [[${room}]],
             $view = $('#febs-hotelRoom'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
+            hotel = [[${hotel}]],
             $searchForm = $view.find('form'),
             sortObject = {field: 'createTime', type: null},
-            validate = layui.validate,
             tableIns;
 
-        form.verify(validate);
         form.render();
         initTable();
-
 
         $query.on('click', function () {
             var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
@@ -88,58 +96,6 @@
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
 
-        dropdown.render({
-            elem: $view.find('.action-more'),
-            click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('hotelRoomTable');
-                if (name === 'add') {
-                    febs.modal.open('新增酒店', 'system/hotelRoom/add', {
-                        btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#hotelRoom-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#hotelRoom-add').find('#reset').trigger('click');
-                            return false;
-                        }
-                    });
-                }
-                if (name === 'delete') {
-                    if (!checkStatus.data.length) {
-                        febs.alert.warn('请勾选需要删除的酒店');
-                    } else {
-                        febs.modal.confirm('删除酒店', '确定删除所选酒店？', function () {
-                            var hotelRoomIds = [];
-                            layui.each(checkStatus.data, function (key, item) {
-                                hotelRoomIds.push(item.id)
-                            });
-                            deleteJobs(hotelRoomIds.join(','))
-                        });
-                    }
-                }
-
-                if (name === 'export') {
-                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
-                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
-                    params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'hotelRoom/excel', params, '酒店表.xlsx');
-                }
-            },
-            options: [{
-                name: 'add',
-                title: '新增酒店',
-                perms: 'hotelRoom:add'
-            }, {
-                name: 'delete',
-                title: '删除酒店',
-                perms: 'hotelRoom:delete'
-            }, {
-                name: 'export',
-                title: '导出Excel',
-                perms: 'hotelRoom:export'
-            }]
-        });
 
         table.on('tool(hotelRoomTable)', function (obj) {
             var data = obj.data,
@@ -149,19 +105,6 @@
                     deleteJobs(data.id);
                 });
             }
-            if (layEvent === 'edit') {
-                febs.modal.open('修改酒店', 'system/hotelRoom/update/' + data.id, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#hotelRoom-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
-                });
-            }
-
         });
 
         table.on('sort(hotelRoomTable)', function (obj) {
@@ -175,31 +118,22 @@
             });
         });
 
-        //监听单元格编辑
-        table.on('edit(hotelRoomTable)', function (obj) {
-            var value = obj.value //得到修改后的值
-                , data = obj.data //得到所在行所有键值
-                , field = obj.field; //得到字段
-            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-        });
-
-
         function initTable() {
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'hotelRoomTable',
-                url: ctx + 'room/list',
+                url: ctx + 'room/list/' + hotel.id,
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelPrincipal', title: '酒店负责人', maxWidth: 80},
-                    {field: 'contactPhone', title: '联系方式', maxWidth: 80},
-                    {field: 'receptionService', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelAddress', title: '酒店地址', maxWidth: 80},
-                    {field: 'metroGuidelines', title: '地铁指引', maxWidth: 80},
-                    {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
+                    {field: 'hotelRoomName', edit: 'text', title: '酒店名称', maxWidth: 100},
+                    {field: 'hotelRoomPrincipal', edit: 'text', title: '酒店负责人', maxWidth: 80},
+                    {field: 'contactPhone', edit: 'text', title: '联系方式', maxWidth: 80},
+                    {field: 'receptionService', edit: 'text', title: '接待服务', maxWidth: 80},
+                    {field: 'hotelRoomAddress', edit: 'text', title: '酒店地址', maxWidth: 80},
+                    {field: 'metroGuidelines', edit: 'text', title: '地铁指引', maxWidth: 80},
+                    {field: 'createTime', edit: 'text', title: '创建时间', minWidth: 80, sort: true},
 
-                    {title: '操作', toolbar: '#hotel-option', minWidth: 80}
+                    {title: '操作', toolbar: '#hotelRoom-option', minWidth: 80}
                 ]]
             });
         }
@@ -210,6 +144,30 @@
                 $query.click();
             });
         }
+
+        $("#addTable").click(function () {
+            var tr = " <tr>" +
+                " <td data-field='' data-type='checkbox'> <div class='layui-table-cell laytable-cell-1-checkbox'> </div></td>" +
+                " <td data-field='hotelRoomName' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomName '> </div></td>" +
+                " <td data-field='hotelRoomPrincipal' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomPrincipal '> </div></td>" +
+                " <td data-field='contactPhone' data-edit='text'> <div class='layui-table-cell laytable-cell-1-contactPhone '> </div></td>" +
+                " <td data-field='receptionService'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-receptionService  '> </div></td>" +
+                " <td data-field='hotelRoomAddress' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomAddress '> </div></td>" +
+                " <td data-field='metroGuidelines' data-edit='text'> <div class='layui-table-cell laytable-cell-1-metroGuidelines '> </div></td>" +
+                " <td data-field='createTime' data-edit='text'> <div class='layui-table-cell laytable-cell-1-createTime '> </div></td>" +
+                " </tr>";
+            $(".layui-table-body .layui-table tbody").append(tr);
+        });
+
+        //监听单元格编辑
+        table.on('edit(hotelRoomTable)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+
+
+        });
 
         function getQueryParams() {
             var params = $searchForm.serializeJson();
