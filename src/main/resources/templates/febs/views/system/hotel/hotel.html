@@ -62,6 +62,7 @@
                             </div>
                         </div>
                     </form>
+                    <input type="button" id="addTable" value="点击">
                     <table lay-filter="hotelTable" lay-data="{id: 'hotelTable'}"></table>
                 </div>
             </div>
@@ -227,13 +228,13 @@
                 url: ctx + 'hotel/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelPrincipal', title: '酒店负责人', maxWidth: 80},
-                    {field: 'contactPhone', title: '联系方式', maxWidth: 80},
-                    {field: 'receptionService', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelAddress', title: '酒店地址', maxWidth: 80},
-                    {field: 'metroGuidelines', title: '地铁指引', maxWidth: 80},
-                    {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
+                    {field: 'hotelName', edit: 'text', title: '酒店名称', maxWidth: 100},
+                    {field: 'hotelPrincipal', edit: 'text', title: '酒店负责人', maxWidth: 80},
+                    {field: 'contactPhone', edit: 'text', title: '联系方式', maxWidth: 80},
+                    {field: 'receptionService', edit: 'text', title: '接待服务', maxWidth: 80},
+                    {field: 'hotelAddress', edit: 'text', title: '酒店地址', maxWidth: 80},
+                    {field: 'metroGuidelines', edit: 'text', title: '地铁指引', maxWidth: 80},
+                    {field: 'createTime', edit: 'text', title: '创建时间', minWidth: 80, sort: true},
 
                     {title: '操作', toolbar: '#hotel-option', minWidth: 80}
                 ]]
@@ -246,6 +247,29 @@
                 $query.click();
             });
         }
+
+        $("#addTable").click(function () {
+            var tr = " <tr>" +
+                " <td data-field='hotelName' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelName '>11 </div></td>" +
+                " <td data-field='hotelPrincipal' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelPrincipal '>22 </div></td>" +
+                " <td data-field='contactPhone' data-edit='text'> <div class='layui-table-cell laytable-cell-1-contactPhone '>33 </div></td>" +
+                " <td data-field='receptionService'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-receptionService  '>44 </div></td>" +
+                " <td data-field='hotelAddress' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelAddress '>55 </div></td>" +
+                " <td data-field='metroGuidelines' data-edit='text'> <div class='layui-table-cell laytable-cell-1-metroGuidelines '>55 </div></td>" +
+                " <td data-field='createTime' data-edit='text'> <div class='layui-table-cell laytable-cell-1-createTime '>55 </div></td>" +
+                " </tr>";
+            $(".layui-table-body .layui-table tbody").append(tr);
+        });
+
+        //监听单元格编辑
+        table.on('edit(hotelTable)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+
+
+        });
 
         function getQueryParams() {
             var params = $searchForm.serializeJson();

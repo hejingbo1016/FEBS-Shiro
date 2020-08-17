@@ -5,10 +5,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.system.entity.Hotel;
-import cc.mrbird.febs.system.entity.Meeting;
-import cc.mrbird.febs.system.entity.Phone;
-import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -206,7 +203,9 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/room/{id}")
     @RequiresPermissions("hotel:room")
     public String hotelRoom(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
-        model.addAttribute("hotelId", id);
+        Room room = new Room();
+        room.setHotelId(id);
+        model.addAttribute("room", room);
         return FebsUtil.view("system/hotel/hotelRoom");
     }
 

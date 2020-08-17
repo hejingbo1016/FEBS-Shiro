@@ -11,7 +11,7 @@
         margin-left: 120px;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoom" lay-title="房间价格">
+<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoom" lay-title="房间管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -21,36 +21,13 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">酒店名称</label>
+                                        <label class="layui-form-label">房间类型</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="hotelRoomName" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">酒店负责人</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="hotelRoomPrincipal" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">联系方式</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="contactPhone" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">接待服务</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="receptionService" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">酒店地址</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="hotelRoomAddress" class="layui-input">
-                                        </div>
-                                    </div>
+
 
                                 </div>
                             </div>
@@ -78,23 +55,27 @@
 </div>
 
 
-<script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
-        var $ = layui.jquery,
+<script data-th-inline="javascript">
+    layui.use(['dropdown', 'laydate', 'validate', 'form', 'table', 'febs'], function () {
+        var $ = layui.$,
             laydate = layui.laydate,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
             dropdown = layui.dropdown,
+            room = [[${room}]],
             $view = $('#febs-hotelRoom'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
             sortObject = {field: 'createTime', type: null},
+            validate = layui.validate,
             tableIns;
 
+        form.verify(validate);
         form.render();
         initTable();
+
 
         $query.on('click', function () {
             var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
@@ -181,20 +162,6 @@
                 });
             }
 
-            if (layEvent === 'generate') {
-                febs.modal.open('设置房间', 'system/hotelRoom/room/' + data.id, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#hotelRoom-room').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
-                });
-            }
-
-
         });
 
         table.on('sort(hotelRoomTable)', function (obj) {
@@ -209,29 +176,30 @@
         });
 
         //监听单元格编辑
-        table.on('edit(hotelRoomTable)', function(obj){
+        table.on('edit(hotelRoomTable)', function (obj) {
             var value = obj.value //得到修改后的值
-                ,data = obj.data //得到所在行所有键值
-                ,field = obj.field; //得到字段
-            layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
         });
+
 
         function initTable() {
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'hotelRoomTable',
-                url: ctx + 'hotelRoom/list',
+                url: ctx + 'room/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelRoomName', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelRoomPrincipal', title: '酒店负责人', maxWidth: 80},
+                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
+                    {field: 'hotelPrincipal', title: '酒店负责人', maxWidth: 80},
                     {field: 'contactPhone', title: '联系方式', maxWidth: 80},
                     {field: 'receptionService', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelRoomAddress', title: '酒店地址', maxWidth: 80},
+                    {field: 'hotelAddress', title: '酒店地址', maxWidth: 80},
                     {field: 'metroGuidelines', title: '地铁指引', maxWidth: 80},
                     {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
 
-                    {title: '操作', toolbar: '#hotelRoom-option', minWidth: 80}
+                    {title: '操作', toolbar: '#hotel-option', minWidth: 80}
                 ]]
             });
         }

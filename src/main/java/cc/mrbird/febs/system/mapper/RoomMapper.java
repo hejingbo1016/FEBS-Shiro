@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.mapper;
 
 import cc.mrbird.febs.system.entity.Room;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  *  Mapper
@@ -11,4 +12,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoomMapper extends BaseMapper<Room> {
 
+    Long countRoom(@Param("room")Room room, @Param("hotelId") String hotelId);
 }
