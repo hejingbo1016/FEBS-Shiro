@@ -52,7 +52,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     @Override
     public List<File> findFiles(File file) {
 	    LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
-		// TODO 设置查询条件
+        queryWrapper.eq(File::getForeignId, file.getForeignId());
 		return this.baseMapper.selectList(queryWrapper);
     }
 

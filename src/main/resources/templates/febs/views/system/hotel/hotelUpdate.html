@@ -132,6 +132,7 @@
             febs = layui.febs,
             form = layui.form,
             hotel = [[${hotel}]],
+            files = [[${files}]],
             $view = $('#hotel-update'),
             validate = layui.validate,
             layer = layui.layer,
@@ -152,6 +153,19 @@
                 "hotelAddress": hotel.hotelAddress,
                 "metroGuidelines": hotel.metroGuidelines
             });
+
+            if (files.length > 0) {
+                for (var i in files) {
+                    var file = files[i];
+                    $('#uploader-list').append(
+                        '<div id="" class="file-iteme">' +
+                        '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="/fileContent/' + file.url + '" class="layui-upload-img">' +
+                        '</div>'
+                    );
+                }
+            }
+
         }
 
         form.on('submit(hotel-update-form-submit)', function (data) {
@@ -161,7 +175,8 @@
             }
 
             $(data.form).attr('action', ctx + 'hotel/update');
-            /*febs.post(ctx + 'hotel/update', data.field, function () {
+            /*debugger
+            febs.post(ctx + 'hotel/update', data.form.serialize(), function () {
                 layer.closeAll();
                 febs.alert.success('任务修改成功');
                 $('#febs-hotel').find('#query').click();
