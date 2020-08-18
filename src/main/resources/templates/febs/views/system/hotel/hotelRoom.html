@@ -80,6 +80,9 @@
 
         form.render();
 
+        var hotelId = sessionStorage.getItem('hotelId');
+
+
         initTable();
 
         $query.on('click', function () {
@@ -195,11 +198,8 @@
         });
 
 
-        var hotelId = null;
-
-
         function initTable() {
-            hotelId = sessionStorage.getItem('hotelId');
+
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'hotelRoomTable',
@@ -227,7 +227,7 @@
 
         $("#addTable").click(function () {
             var tr = " <tr>" +
-                " <td  data-type='checkbox'> <div class='layui-table-cell'> </div></td>" +
+                " <td data-type='checkbox'> <div class='layui-table-cell'> </div></td>" +
                 " <td data-field='hotelId'> <div class='layui-table-cell laytable-cell-1-hotelId '></div></td>" +
                 " <td data-field='roomType' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
                 " <td data-field='roomCount' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
@@ -244,7 +244,7 @@
             var value = obj.value //得到修改后的值
                 , data = obj.data //得到所在行所有键值
                 , field = obj.field; //得到字段
-            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value + ' hotelId' + hotelId);
 
 
         });
