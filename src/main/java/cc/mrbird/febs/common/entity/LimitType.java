@@ -1,8 +1,6 @@
 package cc.mrbird.febs.common.entity;
 
-/**
- * @author MrBird
- */
+
 public enum LimitType {
     /**
      * 传统类型

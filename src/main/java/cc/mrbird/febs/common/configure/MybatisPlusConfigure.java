@@ -12,9 +12,7 @@ import org.springframework.core.annotation.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Configuration
 public class MybatisPlusConfigure {
     /**

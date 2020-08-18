@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @Helper
 public class GeneratorHelper {

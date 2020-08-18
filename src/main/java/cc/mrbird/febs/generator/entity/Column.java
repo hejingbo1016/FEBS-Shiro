@@ -2,9 +2,7 @@ package cc.mrbird.febs.generator.entity;
 
 import lombok.Data;
 
-/**
- * @author MrBird
- */
+
 @Data
 public class Column {
     /**

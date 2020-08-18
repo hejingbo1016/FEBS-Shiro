@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import java.util.Map;
 @Validated
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("room")
 public class RoomController extends BaseController {
 
     private final IRoomService roomService;
@@ -43,18 +45,16 @@ public class RoomController extends BaseController {
         return FebsUtil.view("room/room");
     }
 
-    @GetMapping("room")
-    @ResponseBody
-    @RequiresPermissions("room:list")
+    @GetMapping
     public FebsResponse getAllRooms(Room room) {
         return new FebsResponse().success().data(roomService.findRooms(room));
     }
 
-    @GetMapping("room/list")
+    @GetMapping("list/{id}")
     @ResponseBody
-    @RequiresPermissions("room:list")
-    public FebsResponse roomList(QueryRequest request, Room room) {
-        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room));
+    @RequiresPermissions("hotel:room")
+    public FebsResponse roomList(QueryRequest request, Room room,String id) {
+        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room,id));
         return new FebsResponse().success().data(dataTable);
     }
 
@@ -89,8 +89,8 @@ public class RoomController extends BaseController {
     @PostMapping("room/excel")
     @ResponseBody
     @RequiresPermissions("room:export")
-    public void export(QueryRequest queryRequest, Room room, HttpServletResponse response) {
-        List<Room> rooms = this.roomService.findRooms(queryRequest, room).getRecords();
+    public void export(QueryRequest queryRequest, Room room, HttpServletResponse response,String hotelId) {
+        List<Room> rooms = this.roomService.findRooms(queryRequest, room, hotelId).getRecords();
         ExcelKit.$Export(Room.class, response).downXlsx(rooms, false);
     }
 }

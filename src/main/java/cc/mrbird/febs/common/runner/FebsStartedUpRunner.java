@@ -14,10 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 
-/**
- * @author MrBird
- * @author FiseTch
- */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -44,7 +41,7 @@ public class FebsStartedUpRunner implements ApplicationRunner {
             log.error("| |_   / /\\  | | | |");
             log.error("|_|   /_/--\\ |_| |_|__");
             log.error("                        ");
-            log.error("FEBS启动失败，{}", e.getMessage());
+            log.error("启动失败，{}", e.getMessage());
             log.error("Redis连接异常，请检查Redis连接配置并确保Redis服务已启动");
             // 关闭 FEBS
             context.close();
@@ -63,7 +60,7 @@ public class FebsStartedUpRunner implements ApplicationRunner {
             log.info("/ /`  / / \\ | |\\/| | |_) | |   | |_   | |  | |_  ");
             log.info("\\_\\_, \\_\\_/ |_|  | |_|   |_|__ |_|__  |_|  |_|__ ");
             log.info("                                                      ");
-            log.info("FEBS 权限系统启动完毕，地址：{}", url);
+            log.info("长合订房系统启动完毕，地址：{}", url);
 
             boolean auto = febsProperties.isAutoOpenBrowser();
             if (auto && StringUtils.equalsIgnoreCase(active, FebsConstant.DEVELOP)) {

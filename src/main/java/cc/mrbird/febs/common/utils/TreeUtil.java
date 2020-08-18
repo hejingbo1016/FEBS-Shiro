@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author MrBird
- */
+
 public class TreeUtil {
 
     private static final String TOP_NODE_ID = "0";

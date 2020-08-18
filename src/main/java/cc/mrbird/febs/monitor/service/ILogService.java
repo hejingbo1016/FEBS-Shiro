@@ -12,9 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import java.lang.reflect.Method;
 
-/**
- * @author MrBird
- */
+
 public interface ILogService extends IService<SystemLog> {
 
     /**

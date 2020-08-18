@@ -5,9 +5,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
 
-/**
- * @author MrBird
- */
+
 public abstract class BaseAspectSupport {
 
     Method resolveMethod(ProceedingJoinPoint point) {

@@ -25,9 +25,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * @author MrBird
- */
+
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl extends ServiceImpl<LogMapper, SystemLog> implements ILogService {

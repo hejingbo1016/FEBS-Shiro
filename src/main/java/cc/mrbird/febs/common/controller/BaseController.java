@@ -10,9 +10,7 @@ import org.apache.shiro.subject.Subject;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author MrBird
- */
+
 public class BaseController {
 
     private Subject getSubject() {

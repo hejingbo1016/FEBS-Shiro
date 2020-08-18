@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 /**
  * 接口限流
  *
- * @author MrBird
+ *
  */
 @Slf4j
 @Aspect

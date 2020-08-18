@@ -14,9 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author MrBird
- */
+
 @Service("userDataPermissionService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class UserDataPermissionServiceImpl extends ServiceImpl<UserDataPermissionMapper, UserDataPermission> implements IUserDataPermissionService {

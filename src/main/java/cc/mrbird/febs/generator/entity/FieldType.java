@@ -1,8 +1,6 @@
 package cc.mrbird.febs.generator.entity;
 
-/**
- * @author MrBird
- */
+
 public class FieldType {
 
     public static final String DATE = "date";

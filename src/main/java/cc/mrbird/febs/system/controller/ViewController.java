@@ -23,9 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Controller("systemView")
 @RequiredArgsConstructor
 public class ViewController extends BaseController {
@@ -208,6 +206,13 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/hotel/hotelUpdate");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/room/{id}")
+    @RequiresPermissions("hotel:room")
+    public String hotelRoom(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Hotel hotel = hotelService.getById(id);
+        model.addAttribute("hotel", hotel);
+        return FebsUtil.view("system/hotel/hotelRoom");
+    }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {

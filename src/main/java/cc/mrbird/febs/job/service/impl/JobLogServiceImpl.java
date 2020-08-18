@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @Service("JobLogService")
 public class JobLogServiceImpl extends ServiceImpl<JobLogMapper, JobLog> implements IJobLogService {

@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
-/**
- * @author MrBird
- */
+
 public interface IDataPermissionTestService extends IService<DataPermissionTest> {
     /**
      * 查询（分页）

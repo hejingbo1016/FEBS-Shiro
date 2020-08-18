@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @Data
 @TableName("t_login_log")

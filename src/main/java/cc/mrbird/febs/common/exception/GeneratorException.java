@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.exception;
 /**
  * 代码生成异常
  *
- * @author MrBird
+ *
  */
 public class GeneratorException extends Exception {
 

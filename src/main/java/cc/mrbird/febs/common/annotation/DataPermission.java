@@ -2,9 +2,7 @@ package cc.mrbird.febs.common.annotation;
 
 import java.lang.annotation.*;
 
-/**
- * @author MrBird
- */
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

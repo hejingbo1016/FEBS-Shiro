@@ -25,9 +25,7 @@ import java.io.StringReader;
 import java.sql.Connection;
 import java.util.Properties;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class DataPermissionInterceptor extends AbstractSqlParserHandler implements Interceptor {
