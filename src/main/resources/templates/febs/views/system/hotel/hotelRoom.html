@@ -3,7 +3,7 @@
         width: 65px;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoomRoom" lay-title="房间管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-hotelRoom" lay-title="房间管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -19,6 +19,7 @@
                                                    class="layui-input">
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -31,7 +32,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="hotelRoom:add,hotelRoom:update,hotelRoom:delete,hotelRoom:export">
+                                     shiro:hasAnyPermissions="hotel:add,hotel:update,hotel:delete,hotel:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -53,21 +54,21 @@
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="hotelRoom-option">
-    <span shiro:lacksPermission="hotelRoom:update,hotelRoom:delete">
+<script type="text/html" id="hotel-option">
+    <span shiro:lacksPermission="hotel:update,hotel:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="hotelRoom:update"><i
+    <a lay-event="edit" shiro:hasPermission="hotel:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="generate" shiro:hasPermission="hotelRoom:room"><i
+    <a lay-event="generate" shiro:hasPermission="hotel:room"><i
             class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
-    <a lay-event="del" shiro:hasPermission="hotelRoom:delete"><i
+    <a lay-event="del" shiro:hasPermission="hotel:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
 
 </script>
-<script data-th-inline="javascript">
-    layui.use(['jquery','febs','form', 'table', 'dropdown', 'laydate' ], function () {
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
             febs = layui.febs,
@@ -77,12 +78,12 @@
             $view = $('#febs-hotelRoom'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
-            hotel = [[${hotel}]],
             $searchForm = $view.find('form'),
             sortObject = {field: 'createTime', type: null},
             tableIns;
 
         form.render();
+
         initTable();
 
         $query.on('click', function () {
@@ -96,6 +97,58 @@
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
 
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('hotelRoomTable');
+                if (name === 'add') {
+                    febs.modal.open('新增酒店', 'system/hotel/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#hotel-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#hotel-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请勾选需要删除的酒店');
+                    } else {
+                        febs.modal.confirm('删除酒店', '确定删除所选酒店？', function () {
+                            var hotelIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                hotelIds.push(item.id)
+                            });
+                            deleteJobs(hotelIds.join(','))
+                        });
+                    }
+                }
+
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'hotel/excel', params, '酒店表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增酒店',
+                perms: 'hotel:add'
+            }, {
+                name: 'delete',
+                title: '删除酒店',
+                perms: 'hotel:delete'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'hotel:export'
+            }]
+        });
 
         table.on('tool(hotelRoomTable)', function (obj) {
             var data = obj.data,
@@ -105,6 +158,33 @@
                     deleteJobs(data.id);
                 });
             }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改酒店', 'system/hotel/update/' + data.id, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#hotel-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
+            if (layEvent === 'generate') {
+                febs.modal.open('设置房间', 'system/hotel/room/' + data.id, {
+                    area: $(window).width() <= 750 ? '80%' : '70%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#hotel-room').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
+
         });
 
         table.on('sort(hotelRoomTable)', function (obj) {
@@ -119,27 +199,27 @@
         });
 
         function initTable() {
+            var hotelId = sessionStorage.getItem('hotelId');
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'hotelRoomTable',
-                url: ctx + 'room/list/' + hotel.id,
+                url: ctx + 'room/list/' + hotelId,
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelRoomName', edit: 'text', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelRoomPrincipal', edit: 'text', title: '酒店负责人', maxWidth: 80},
-                    {field: 'contactPhone', edit: 'text', title: '联系方式', maxWidth: 80},
-                    {field: 'receptionService', edit: 'text', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelRoomAddress', edit: 'text', title: '酒店地址', maxWidth: 80},
-                    {field: 'metroGuidelines', edit: 'text', title: '地铁指引', maxWidth: 80},
-                    {field: 'createTime', edit: 'text', title: '创建时间', minWidth: 80, sort: true},
-
+                    {field: 'hotelId', edit: 'text', title: 'ID', maxWidth: 100},
+                    {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
+                    {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
+                    {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},
+                    {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
+                    {field: 'totalPrice', edit: 'text', title: '总价', maxWidth: 80},
                     {title: '操作', toolbar: '#hotelRoom-option', minWidth: 80}
+
                 ]]
             });
         }
 
-        function deleteJobs(hotelRoomIds) {
-            febs.get(ctx + 'hotelRoom/delete/' + hotelRoomIds, null, function () {
+        function deleteJobs(hotelIds) {
+            febs.get(ctx + 'hotel/delete/' + hotelIds, null, function () {
                 febs.alert.success('删除成功');
                 $query.click();
             });
@@ -148,13 +228,11 @@
         $("#addTable").click(function () {
             var tr = " <tr>" +
                 " <td data-field='' data-type='checkbox'> <div class='layui-table-cell laytable-cell-1-checkbox'> </div></td>" +
-                " <td data-field='hotelRoomName' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomName '> </div></td>" +
-                " <td data-field='hotelRoomPrincipal' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomPrincipal '> </div></td>" +
-                " <td data-field='contactPhone' data-edit='text'> <div class='layui-table-cell laytable-cell-1-contactPhone '> </div></td>" +
-                " <td data-field='receptionService'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-receptionService  '> </div></td>" +
-                " <td data-field='hotelRoomAddress' data-edit='text'> <div class='layui-table-cell laytable-cell-1-hotelRoomAddress '> </div></td>" +
-                " <td data-field='metroGuidelines' data-edit='text'> <div class='layui-table-cell laytable-cell-1-metroGuidelines '> </div></td>" +
-                " <td data-field='createTime' data-edit='text'> <div class='layui-table-cell laytable-cell-1-createTime '> </div></td>" +
+                " <td data-field='roomType' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
+                " <td data-field='roomCount' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
+                " <td data-field='surplusNumber' data-edit='text'> <div class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
+                " <td data-field='univalence'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
+                " <td data-field='totalPrice' data-edit='text'> <div class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
                 " </tr>";
             $(".layui-table-body .layui-table tbody").append(tr);
         });
