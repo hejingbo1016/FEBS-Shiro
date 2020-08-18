@@ -5,10 +5,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.system.entity.Hotel;
-import cc.mrbird.febs.system.entity.Meeting;
-import cc.mrbird.febs.system.entity.Phone;
-import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -24,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author MrBird
@@ -38,6 +36,7 @@ public class ViewController extends BaseController {
     private final IPhoneService phoneService;
     private final IMeetingService meetingService;
     private final IHotelService hotelService;
+    private final IFileService fileService;
 
     @GetMapping("login")
     @ResponseBody
@@ -201,7 +200,11 @@ public class ViewController extends BaseController {
     @RequiresPermissions("hotel:update")
     public String hotelUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         Hotel hotel = hotelService.getById(id);
+        File file = new File();
+        file.setForeignId(id);
+        List<File> files = fileService.findFiles(file);
         model.addAttribute("hotel", hotel);
+        model.addAttribute("files", files);
         return FebsUtil.view("system/hotel/hotelUpdate");
     }
 
