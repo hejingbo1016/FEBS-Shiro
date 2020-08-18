@@ -249,18 +249,6 @@
             });
         }
 
-        $("#addTable").click(function () {
-            var tr = " <tr>" +
-                " <td data-field='' data-type='checkbox'> <div class='layui-table-cell laytable-cell-1-checkbox'> </div></td>" +
-                " <td data-field='roomType' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
-                " <td data-field='roomCount' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
-                " <td data-field='surplusNumber' data-edit='text'> <div class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
-                " <td data-field='univalence'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
-                " <td data-field='totalPrice' data-edit='text'> <div class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
-                " </tr>";
-            $(".layui-table-body .layui-table tbody").append(tr);
-        });
-
         //监听单元格编辑
         table.on('edit(hotelTable)', function (obj) {
             var value = obj.value //得到修改后的值

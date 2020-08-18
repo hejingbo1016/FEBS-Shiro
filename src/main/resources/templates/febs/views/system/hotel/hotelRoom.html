@@ -38,7 +38,7 @@
                             </div>
                         </div>
                     </form>
-                    <input type="button" id="addTable" value="点击">
+                    <button type="button" class="layui-btn layui-btn-normal" id="addTable">新增房类</button>
                     <table lay-filter="hotelRoomTable" lay-data="{id: 'hotelRoomTable'}"></table>
                 </div>
             </div>
@@ -54,14 +54,10 @@
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="hotel-option">
+<script type="text/html" id="hotelRoom-option">
     <span shiro:lacksPermission="hotel:update,hotel:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="hotel:update"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="generate" shiro:hasPermission="hotel:room"><i
-            class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
     <a lay-event="del" shiro:hasPermission="hotel:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
@@ -198,15 +194,19 @@
             });
         });
 
+
+        var hotelId = null;
+
+
         function initTable() {
-            var hotelId = sessionStorage.getItem('hotelId');
+            hotelId = sessionStorage.getItem('hotelId');
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'hotelRoomTable',
                 url: ctx + 'room/list/' + hotelId,
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelId', edit: 'text', title: 'ID', maxWidth: 100},
+                    {field: 'hotelId', title: 'ID'},
                     {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
                     {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
                     {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},
@@ -227,12 +227,14 @@
 
         $("#addTable").click(function () {
             var tr = " <tr>" +
-                " <td data-field='' data-type='checkbox'> <div class='layui-table-cell laytable-cell-1-checkbox'> </div></td>" +
+                " <td  data-type='checkbox'> <div class='layui-table-cell'> </div></td>" +
+                " <td data-field='hotelId'> <div class='layui-table-cell laytable-cell-1-hotelId '></div></td>" +
                 " <td data-field='roomType' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
                 " <td data-field='roomCount' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
                 " <td data-field='surplusNumber' data-edit='text'> <div class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
                 " <td data-field='univalence'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
                 " <td data-field='totalPrice' data-edit='text'> <div class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
+                " <td data-field='操作'  toolbar:'#hotelRoom-option'> <div class='layui-table-cell' > </div></td>" +
                 " </tr>";
             $(".layui-table-body .layui-table tbody").append(tr);
         });
