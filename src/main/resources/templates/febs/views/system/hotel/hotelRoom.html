@@ -166,21 +166,33 @@
 
 
             if (layEvent === 'addRoom') {
-                // var hotelIds = $("#" + hotelId + "hotelId").text();
+                // var loading = $(this).find('.layui-icon');
+                var hotelId = $("#" + hotelId + "hotelId").text();
+                var roomType = $("#" + hotelId + "roomType").text();
+                var roomCount = $("#" + hotelId + "roomCount").text();
+                var surplusNumber = $("#" + hotelId + "surplusNumber").text();
+                var univalence = $("#" + hotelId + "univalence").text();
+                var totalPrice = $("#" + hotelId + "totalPrice").text();
+
                 var params = $searchForm.serializeJson();
-                $.post(ctx + 'login', {id: 1,}, function (r) {
+
+                var param = {
+                    'hotelId': hotelId,
+                    'roomType': roomType,
+                    'roomCount': roomCount,
+                    'surplusNumber': surplusNumber,
+                    'univalence': univalence,
+                    'totalPrice': totalPrice
+                }
+                $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
-                        location.href = ctx + 'index';
+                        $query.click();
                     } else {
                         layer.msg(r.message);
-                        loading.hide();
-                        initCode();
+                        // loading.hide();
                     }
                 });
-
-
                 alert(params)
-                // alert(hotelIds);
             }
 
 
@@ -227,15 +239,14 @@
 
         $("#addTable").click(function () {
             var hotelId = sessionStorage.getItem('hotelId');
-            debugger
             var tr = " <tr>" +
-                " <td data-type='checkbox'> <div class='layui-table-cell'> </div></td>" +
+                " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
                 " <td data-field='hotelId'> <div id='" + hotelId + "hotelId' class='layui-table-cell laytable-cell-1-hotelId '>" + hotelId + "</div></td>" +
                 " <td data-field='roomType' data-edit='text'> <div id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
-                " <td data-field='roomCount' data-edit='text'> <div class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
-                " <td data-field='surplusNumber' data-edit='text'> <div class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
-                " <td data-field='univalence'  data-edit='text'> <div class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
-                " <td data-field='totalPrice' data-edit='text'> <div class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
+                " <td data-field='roomCount' data-edit='text'> <div  id='" + hotelId + "roomCount' class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
+                " <td data-field='surplusNumber' data-edit='text'> <div  id='" + hotelId + "surplusNumber' class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
+                " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
+                " <td data-field='totalPrice' data-edit='text'> <div  id='" + hotelId + "totalPrice' class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
                 " <td data-field='操作'  toolbar:'#hotelRoom-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='room:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
                 " </tr>";
             $("[lay-id='hotelRoomTable'] .layui-table-body .layui-table tbody").append(tr);
