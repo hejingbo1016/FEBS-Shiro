@@ -53,4 +53,6 @@ public interface IRoomService extends IService<Room> {
      * @param room room
      */
     void deleteRoom(Room room);
+
+    void deleteRooms(String roomIds);
 }
