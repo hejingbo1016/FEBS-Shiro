@@ -167,7 +167,7 @@
 
             if (layEvent === 'addRoom') {
                 // var loading = $(this).find('.layui-icon');
-                var hotelId = $("#" + hotelId + "hotelId").text();
+                var hotelIds = $("#" + hotelId + "hotelId").text();
                 var roomType = $("#" + hotelId + "roomType").text();
                 var roomCount = $("#" + hotelId + "roomCount").text();
                 var surplusNumber = $("#" + hotelId + "surplusNumber").text();
@@ -177,7 +177,7 @@
                 var params = $searchForm.serializeJson();
 
                 var param = {
-                    'hotelId': hotelId,
+                    'hotelId': hotelIds,
                     'roomType': roomType,
                     'roomCount': roomCount,
                     'surplusNumber': surplusNumber,
