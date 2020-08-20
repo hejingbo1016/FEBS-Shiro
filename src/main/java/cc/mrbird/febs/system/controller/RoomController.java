@@ -83,7 +83,7 @@ public class RoomController extends BaseController {
     }
 
     @ControllerEndpoint(operation = "修改Room", exceptionMessage = "修改Room失败")
-    @PostMapping("room/update")
+    @PostMapping("update")
     @ResponseBody
     @RequiresPermissions("room:update")
     public FebsResponse updateRoom(Room room) {

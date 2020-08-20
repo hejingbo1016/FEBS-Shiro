@@ -198,7 +198,6 @@
                 sessionStorage.setItem('hotelId', data.id);
                 febs.modal.open('设置房间', 'system/hotel/room/' + data.id, {
                     area: $(window).width() <= 750 ? '80%' : '70%',
-                    btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#hotel-room').find('#submit').trigger('click');
                     },

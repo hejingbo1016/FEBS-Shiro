@@ -51,11 +51,9 @@
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
 <script type="text/html" id="hotelRoom-option">
-    <span shiro:lacksPermission="room:add,room:delete">
+    <span shiro:lacksPermission="room:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="room:add"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="del" shiro:hasPermission="room:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
@@ -166,7 +164,6 @@
 
 
             if (layEvent === 'addRoom') {
-                // var loading = $(this).find('.layui-icon');
                 var hotelIds = $("#" + hotelId + "hotelId").text();
                 var roomType = $("#" + hotelId + "roomType").text();
                 var roomCount = $("#" + hotelId + "roomCount").text();
@@ -174,7 +171,6 @@
                 var univalence = $("#" + hotelId + "univalence").text();
                 var totalPrice = $("#" + hotelId + "totalPrice").text();
 
-                var params = $searchForm.serializeJson();
 
                 var param = {
                     'hotelId': hotelIds,
@@ -189,10 +185,8 @@
                         $query.click();
                     } else {
                         layer.msg(r.message);
-                        // loading.hide();
                     }
                 });
-                alert(params)
             }
 
 
@@ -254,10 +248,22 @@
 
         //监听单元格编辑
         table.on('edit(hotelRoomTable)', function (obj) {
-            var value = obj.value //得到修改后的值
-                , data = obj.data //得到所在行所有键值
-                , field = obj.field; //得到字段
-            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value + ' hotelId' + hotelId);
+            // var value = obj.value //得到修改后的值
+            // , fieldKey = obj.field; //得到字段
+            var data = obj.data //得到所在行所有键值
+            if (data.id != null) {
+                var updateParam = {
+                    'hotelId': data.hotelId,
+                    'roomType': data.roomType,
+                    'roomCount': data.roomCount,
+                    'surplusNumber': data.surplusNumber,
+                    'univalence': data.univalence,
+                    'totalPrice': data.totalPrice,
+                    'id': data.id
+                }
+                febs.post(ctx + 'room/update', updateParam, function () {
+                });
+            }
 
 
         });
