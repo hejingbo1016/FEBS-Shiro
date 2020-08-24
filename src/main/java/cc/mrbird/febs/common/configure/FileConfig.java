@@ -10,6 +10,6 @@ public class FileConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/fileContent/**")
-                .addResourceLocations("file:" + ConfigUtil.getProperty("attachment.upload.root"));
+                .addResourceLocations("file:/" + ConfigUtil.getProperty("attachment.upload.root"));
     }
 }
