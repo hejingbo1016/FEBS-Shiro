@@ -53,7 +53,7 @@ public class WechatUtil {
         if (data != null) {
             String[] openidArr = data.getOpenid();
             if (openidArr != null && openidArr.length > 0) {
-                UserInfoList userInfoList = UserAPI.userInfoBatchget(token, "zh_CN", CollUtil.toList(ArrayUtil.sub(openidArr, 0, 10)));
+                UserInfoList userInfoList = UserAPI.userInfoBatchget(token, "zh_CN", CollUtil.toList(openidArr));
                 userList.addAll(userInfoList.getUser_info_list());
             }
         }
