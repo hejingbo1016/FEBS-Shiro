@@ -5,9 +5,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
-/**
- * @author MrBird
- */
+
 @Data
 @ToString
 public class QueryRequest implements Serializable {

@@ -18,9 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author MrBird
- */
+
 @Data
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,

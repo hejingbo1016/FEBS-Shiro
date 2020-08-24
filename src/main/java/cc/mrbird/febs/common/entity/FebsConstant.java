@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.entity;
 /**
  * 常量
  *
- * @author MrBird
+ *
  */
 public interface FebsConstant {
 

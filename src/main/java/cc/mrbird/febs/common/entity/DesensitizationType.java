@@ -2,9 +2,7 @@ package cc.mrbird.febs.common.entity;
 
 import lombok.Getter;
 
-/**
- * @author MrBird
- */
+
 @Getter
 public enum DesensitizationType {
     /**

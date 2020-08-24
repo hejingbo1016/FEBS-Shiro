@@ -22,7 +22,7 @@ public interface IWechatUserService extends IService<WechatUser> {
      * @param wechatUser wechatUser
      * @return IPage<WechatUser>
      */
-    IPage<WechatUser> findWechatUsers(QueryRequest request, WechatUser wechatUser);
+    IPage<WechatUser> findWeChatUsers(QueryRequest request, WechatUser wechatUser);
 
     /**
      * 查询（所有）
@@ -30,7 +30,7 @@ public interface IWechatUserService extends IService<WechatUser> {
      * @param wechatUser wechatUser
      * @return List<WechatUser>
      */
-    List<WechatUser> findWechatUsers(WechatUser wechatUser);
+    List<WechatUser> findWeChatUsers(WechatUser wechatUser);
 
     /**
      * 新增
@@ -52,4 +52,6 @@ public interface IWechatUserService extends IService<WechatUser> {
      * @param wechatUser wechatUser
      */
     void deleteWechatUser(WechatUser wechatUser);
+
+    void deleteWeChatUsers(String weChatUserIds);
 }

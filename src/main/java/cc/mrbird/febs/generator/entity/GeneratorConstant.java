@@ -3,7 +3,7 @@ package cc.mrbird.febs.generator.entity;
 /**
  * 代码生成常量
  *
- * @author MrBird
+ *
  */
 public class GeneratorConstant {
 

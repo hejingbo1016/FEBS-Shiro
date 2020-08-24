@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.entity;
 /**
  * 正则常量
  *
- * @author MrBird
+ *
  */
 public interface Regexp {
 

@@ -23,9 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author MrBird
- */
+
 @Service("loginLogService")
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
 

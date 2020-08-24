@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.entity;
 /**
  * 图片类型常量类
  *
- * @author MrBird
+ *
  */
 public interface ImageType {
 

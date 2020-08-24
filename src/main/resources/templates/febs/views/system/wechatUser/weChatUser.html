@@ -1,9 +1,9 @@
 <style>
-    #febs-hotel .layui-form-label {
+    #febs-weChatUser .layui-form-label {
         width: 65px;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-hotel" lay-title="酒店管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-weChatUser" lay-title="微信用户">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -13,36 +13,25 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">酒店名称</label>
+                                        <label class="layui-form-label">用户昵称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="hotelName" autocomplete="off"
+                                            <input type="text" name="nickname" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">酒店负责人</label>
+                                        <label class="layui-form-label">所在省份</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="hotelPrincipal" class="layui-input">
+                                            <input type="text" name="province" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">联系方式</label>
+                                        <label class="layui-form-label">所在城市</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="contactPhone" class="layui-input">
+                                            <input type="text" name="city" class="layui-input">
                                         </div>
                                     </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">接待服务</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="receptionService" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">酒店地址</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="hotelAddress" class="layui-input">
-                                        </div>
-                                    </div>
+
 
                                 </div>
                             </div>
@@ -56,13 +45,13 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="hotel:add,hotel:update,hotel:delete,hotel:export">
+                                     shiro:hasAnyPermissions="weChatUser:add,weChatUser:update,weChatUser:delete,weChatUser:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <table lay-filter="hotelTable" lay-data="{id: 'hotelTable'}"></table>
+                    <table lay-filter="weChatUserTable" lay-data="{id: 'weChatUserTable'}"></table>
                 </div>
             </div>
         </div>
@@ -77,15 +66,32 @@
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="hotel-option">
-    <span shiro:lacksPermission="hotel:update,hotel:delete">
+<script type="text/html" id="weChatUser-subscribe">
+    {{#
+    var subscribe = {
+    1: {title: '已订阅', color: 'green'},
+    0: {title: '未订阅', color: 'volcano'}
+    }[d.subscribe];
+    }}
+    <span class="layui-badge febs-bg-{{subscribe.color}}">{{ subscribe.title }}</span>
+</script>
+<script type="text/html" id="weChatUser-sex">
+    {{#
+    var sex = {
+    0: {title: '未知'},
+    2: {title: '女'},
+    1: {title: '男'}
+    }[d.sex];
+    }}
+    <span>{{sex.title}}</span>
+</script>
+<script type="text/html" id="weChatUser-option">
+    <span shiro:lacksPermission="weChatUser:update,weChatUser:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="hotel:update"><i
+    <a lay-event="edit" shiro:hasPermission="weChatUser:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="generate" shiro:hasPermission="hotel:room"><i
-            class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
-    <a lay-event="del" shiro:hasPermission="hotel:delete"><i
+    <a lay-event="del" shiro:hasPermission="weChatUser:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
 
@@ -98,7 +104,7 @@
             form = layui.form,
             table = layui.table,
             dropdown = layui.dropdown,
-            $view = $('#febs-hotel'),
+            $view = $('#febs-weChatUser'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -123,30 +129,30 @@
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('hotelTable');
+                var checkStatus = table.checkStatus('weChatUserTable');
                 if (name === 'add') {
-                    febs.modal.open('新增酒店', 'system/hotel/add', {
+                    febs.modal.open('新增用户', 'system/weChatUser/add', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#hotel-add').find('#submit').trigger('click');
+                            $('#weChatUser-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#hotel-add').find('#reset').trigger('click');
+                            $('#weChatUser-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
                 }
                 if (name === 'delete') {
                     if (!checkStatus.data.length) {
-                        febs.alert.warn('请勾选需要删除的酒店');
+                        febs.alert.warn('请勾选需要删除的用户');
                     } else {
-                        febs.modal.confirm('删除酒店', '确定删除所选酒店？', function () {
-                            var hotelIds = [];
+                        febs.modal.confirm('删除用户', '确定删除所选用户？', function () {
+                            var weChatUserIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                                hotelIds.push(item.id)
+                                weChatUserIds.push(item.id)
                             });
-                            deleteJobs(hotelIds.join(','))
+                            deleteJobs(weChatUserIds.join(','))
                         });
                     }
                 }
@@ -155,25 +161,25 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'hotel/excel', params, '酒店表.xlsx');
+                    febs.download(ctx + 'weChatUser/excel', params, '用户表.xlsx');
                 }
             },
             options: [{
                 name: 'add',
-                title: '新增酒店',
-                perms: 'hotel:add'
+                title: '新增用户',
+                perms: 'weChatUser:add'
             }, {
                 name: 'delete',
-                title: '删除酒店',
-                perms: 'hotel:delete'
+                title: '删除用户',
+                perms: 'weChatUser:delete'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'hotel:export'
+                perms: 'weChatUser:export'
             }]
         });
 
-        table.on('tool(hotelTable)', function (obj) {
+        table.on('tool(weChatUserTable)', function (obj) {
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
@@ -182,11 +188,11 @@
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改酒店', 'system/hotel/update/' + data.id, {
+                febs.modal.open('修改用户', 'system/weChatUser/update/' + data.id, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
-                        $('#hotel-update').find('#submit').trigger('click');
+                        $('#weChatUser-update').find('#submit').trigger('click');
                     },
                     btn2: function () {
                         layer.closeAll();
@@ -194,21 +200,9 @@
                 });
             }
 
-            if (layEvent === 'generate') {
-                sessionStorage.setItem('hotelId', data.id);
-                febs.modal.open('设置房间', 'system/hotel/room/' + data.id, {
-                    area: $(window).width() <= 750 ? '80%' : '70%',
-                    yes: function (index, layero) {
-                        $('#hotel-room').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
-                });
-            }
         });
 
-        table.on('sort(hotelTable)', function (obj) {
+        table.on('sort(weChatUserTable)', function (obj) {
             sortObject = obj;
             tableIns.reload({
                 initSort: obj,
@@ -222,36 +216,37 @@
         function initTable() {
             tableIns = febs.table.init({
                 elem: $view.find('table'),
-                id: 'hotelTable',
-                url: ctx + 'hotel/list',
+                id: 'weChatUserTable',
+                url: ctx + 'weChatUser/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
-                    {field: 'hotelPrincipal', title: '酒店负责人', maxWidth: 80},
-                    {field: 'contactPhone', title: '联系方式', maxWidth: 80},
-                    {field: 'receptionService', title: '接待服务', maxWidth: 80},
-                    {field: 'hotelAddress', title: '酒店地址', maxWidth: 80},
-                    {field: 'metroGuidelines', title: '地铁指引', maxWidth: 80},
-                    {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
-
-                    {title: '操作', toolbar: '#hotel-option', minWidth: 80}
+                    {field: 'nickname', title: '用户昵称', maxWidth: 100},
+                    {field: 'userName', title: '用户名称', maxWidth: 100},
+                    {field: 'headimgurl', title: '头像', maxWidth: 100},
+                    {field: 'province', title: '省份', maxWidth: 80},
+                    {field: 'city', title: '城市', maxWidth: 80},
+                    {title: '性别', templet: '#weChatUser-sex'},
+                    {field: 'phone', title: '联系方式', maxWidth: 80},
+                    {title: '订阅', templet: '#weChatUser-subscribe'},
+                    {field: 'subscribeTime', title: '关注时间', maxWidth: 80, sort: true},
+                    {title: '操作', toolbar: '#weChatUser-option', minWidth: 80}
                 ]]
             });
         }
 
-        function deleteJobs(hotelIds) {
-            febs.get(ctx + 'hotel/delete/' + hotelIds, null, function () {
+        function deleteJobs(weChatUserIds) {
+            febs.get(ctx + 'weChatUser/delete/' + weChatUserIds, null, function () {
                 febs.alert.success('删除成功');
                 $query.click();
             });
         }
 
         //监听单元格编辑
-        table.on('edit(hotelTable)', function (obj) {
+        table.on('edit(weChatUserTable)', function (obj) {
             var value = obj.value //得到修改后的值
                 , data = obj.data //得到所在行所有键值
                 , field = obj.field; //得到字段
-            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value + 'hotelId' + hotelId);
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value + 'weChatUserId' + weChatUserId);
 
 
         });

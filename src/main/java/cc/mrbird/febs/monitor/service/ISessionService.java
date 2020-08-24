@@ -4,9 +4,7 @@ import cc.mrbird.febs.monitor.entity.ActiveUser;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 public interface ISessionService {
 
     /**

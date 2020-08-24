@@ -26,9 +26,7 @@ import javax.validation.Path;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author MrBird
- */
+
 @Slf4j
 @RestControllerAdvice
 @Order(value = Ordered.HIGHEST_PRECEDENCE)

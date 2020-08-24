@@ -23,9 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Controller("systemView")
 @RequiredArgsConstructor
 public class ViewController extends BaseController {
@@ -37,6 +35,7 @@ public class ViewController extends BaseController {
     private final IMeetingService meetingService;
     private final IHotelService hotelService;
     private final IFileService fileService;
+    private final IWechatUserService wechatUserService;
 
     @GetMapping("login")
     @ResponseBody
@@ -206,6 +205,35 @@ public class ViewController extends BaseController {
         model.addAttribute("hotel", hotel);
         model.addAttribute("files", files);
         return FebsUtil.view("system/hotel/hotelUpdate");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel/room/{id}")
+    @RequiresPermissions("hotel:room")
+    public String hotelRoom(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Hotel hotel = hotelService.getById(id);
+        model.addAttribute("hotel", hotel);
+        return FebsUtil.view("system/hotel/hotelRoom");
+    }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser")
+    @RequiresPermissions("weChatUser:view")
+    public String systemWeChatUser() {
+        return FebsUtil.view("system/weChatUser/weChatUser");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/add")
+    @RequiresPermissions("weChatUser:add")
+    public String systemWeChatUserAdd() {
+        return FebsUtil.view("system/weChatUser/weChatUserAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/update/{id}")
+    @RequiresPermissions("weChatUser:update")
+    public String weChatUserUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        WechatUser weChatUser = wechatUserService.getById(id);
+        model.addAttribute("weChatUser", weChatUser);
+        return FebsUtil.view("system/weChatUser/weChatUserUpdate");
     }
 
 

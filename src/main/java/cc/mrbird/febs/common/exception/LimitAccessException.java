@@ -3,7 +3,7 @@ package cc.mrbird.febs.common.exception;
 /**
  * 限流异常
  *
- * @author MrBird
+ *
  */
 public class LimitAccessException extends Exception {
 

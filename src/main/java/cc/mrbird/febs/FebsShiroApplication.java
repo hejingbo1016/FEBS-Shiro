@@ -7,9 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-/**
- * @author MrBird
- */
+
 @EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement

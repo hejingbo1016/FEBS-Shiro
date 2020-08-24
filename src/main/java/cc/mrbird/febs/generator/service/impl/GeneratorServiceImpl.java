@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
+
 @Service
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements IGeneratorService {

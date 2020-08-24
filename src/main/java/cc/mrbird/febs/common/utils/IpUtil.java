@@ -2,9 +2,7 @@ package cc.mrbird.febs.common.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author MrBird
- */
+
 public class IpUtil {
 
 	private static final String UNKNOWN = "unknown";
