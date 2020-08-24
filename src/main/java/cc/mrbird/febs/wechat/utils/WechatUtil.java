@@ -53,8 +53,14 @@ public class WechatUtil {
         if (data != null) {
             String[] openidArr = data.getOpenid();
             if (openidArr != null && openidArr.length > 0) {
-                UserInfoList userInfoList = UserAPI.userInfoBatchget(token, "zh_CN", CollUtil.toList(openidArr));
-                userList.addAll(userInfoList.getUser_info_list());
+                List<List<String>> openidGroupList = CollUtil.split(CollUtil.toList(openidArr), 1000);
+
+                // 多线程获取
+                openidGroupList.parallelStream().forEach(e -> {
+                    UserInfoList userInfoList = UserAPI.userInfoBatchget(token, "zh_CN", e);
+                    if (userInfoList != null && userInfoList.getUser_info_list() != null)
+                        userList.addAll(userInfoList.getUser_info_list());
+                });
             }
         }
     }
