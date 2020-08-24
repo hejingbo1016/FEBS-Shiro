@@ -35,6 +35,7 @@ public class ViewController extends BaseController {
     private final IMeetingService meetingService;
     private final IHotelService hotelService;
     private final IFileService fileService;
+    private final IWechatUserService wechatUserService;
 
     @GetMapping("login")
     @ResponseBody
@@ -213,6 +214,28 @@ public class ViewController extends BaseController {
         model.addAttribute("hotel", hotel);
         return FebsUtil.view("system/hotel/hotelRoom");
     }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser")
+    @RequiresPermissions("weChatUser:view")
+    public String systemWeChatUser() {
+        return FebsUtil.view("system/weChatUser/weChatUser");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/add")
+    @RequiresPermissions("weChatUser:add")
+    public String systemWeChatUserAdd() {
+        return FebsUtil.view("system/weChatUser/weChatUserAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/update/{id}")
+    @RequiresPermissions("weChatUser:update")
+    public String weChatUserUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        WechatUser weChatUser = wechatUserService.getById(id);
+        model.addAttribute("weChatUser", weChatUser);
+        return FebsUtil.view("system/weChatUser/weChatUserUpdate");
+    }
+
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {

@@ -1,0 +1,261 @@
+<style>
+    #febs-weChatUser .layui-form-label {
+        width: 65px;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-weChatUser" lay-title="微信用户">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="job-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">用户昵称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="nickname" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">所在省份</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="province" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">所在城市</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="city" class="layui-input">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="weChatUser:add,weChatUser:update,weChatUser:delete,weChatUser:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="weChatUserTable" lay-data="{id: 'weChatUserTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="job-status">
+    {{#
+    var status = {
+    0: {title: '正常', color: 'green'},
+    1: {title: '暂停', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="weChatUser-subscribe">
+    {{#
+    var subscribe = {
+    1: {title: '已订阅', color: 'green'},
+    0: {title: '未订阅', color: 'volcano'}
+    }[d.subscribe];
+    }}
+    <span class="layui-badge febs-bg-{{subscribe.color}}">{{ subscribe.title }}</span>
+</script>
+<script type="text/html" id="weChatUser-sex">
+    {{#
+    var sex = {
+    0: {title: '未知'},
+    2: {title: '女'},
+    1: {title: '男'}
+    }[d.sex];
+    }}
+    <span>{{sex.title}}</span>
+</script>
+<script type="text/html" id="weChatUser-option">
+    <span shiro:lacksPermission="weChatUser:update,weChatUser:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="edit" shiro:hasPermission="weChatUser:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="weChatUser:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+
+
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-weChatUser'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('weChatUserTable');
+                if (name === 'add') {
+                    febs.modal.open('新增用户', 'system/weChatUser/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#weChatUser-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#weChatUser-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请勾选需要删除的用户');
+                    } else {
+                        febs.modal.confirm('删除用户', '确定删除所选用户？', function () {
+                            var weChatUserIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                weChatUserIds.push(item.id)
+                            });
+                            deleteJobs(weChatUserIds.join(','))
+                        });
+                    }
+                }
+
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'weChatUser/excel', params, '用户表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增用户',
+                perms: 'weChatUser:add'
+            }, {
+                name: 'delete',
+                title: '删除用户',
+                perms: 'weChatUser:delete'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'weChatUser:export'
+            }]
+        });
+
+        table.on('tool(weChatUserTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除任务', '确定删除该记录？', function () {
+                    deleteJobs(data.id);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改用户', 'system/weChatUser/update/' + data.id, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#weChatUser-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
+        });
+
+        table.on('sort(weChatUserTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'weChatUserTable',
+                url: ctx + 'weChatUser/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'nickname', title: '用户昵称', maxWidth: 100},
+                    {field: 'userName', title: '用户名称', maxWidth: 100},
+                    {field: 'headimgurl', title: '头像', maxWidth: 100},
+                    {field: 'province', title: '省份', maxWidth: 80},
+                    {field: 'city', title: '城市', maxWidth: 80},
+                    {title: '性别', templet: '#weChatUser-sex'},
+                    {field: 'phone', title: '联系方式', maxWidth: 80},
+                    {title: '订阅', templet: '#weChatUser-subscribe'},
+                    {field: 'subscribeTime', title: '关注时间', maxWidth: 80, sort: true},
+                    {title: '操作', toolbar: '#weChatUser-option', minWidth: 80}
+                ]]
+            });
+        }
+
+        function deleteJobs(weChatUserIds) {
+            febs.get(ctx + 'weChatUser/delete/' + weChatUserIds, null, function () {
+                febs.alert.success('删除成功');
+                $query.click();
+            });
+        }
+
+        //监听单元格编辑
+        table.on('edit(weChatUserTable)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value + 'weChatUserId' + weChatUserId);
+
+
+        });
+
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            params.invalidate_ie_cache = new Date();
+            return params;
+        }
+    })
+</script>

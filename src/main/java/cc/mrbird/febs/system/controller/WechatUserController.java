@@ -15,12 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -32,65 +31,64 @@ import java.util.Map;
  */
 @Slf4j
 @Validated
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("weChatUser")
 public class WechatUserController extends BaseController {
 
     private final IWechatUserService wechatUserService;
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "wechatUser")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "weChatUser")
     public String wechatUserIndex(){
-        return FebsUtil.view("wechatUser/wechatUser");
+        return FebsUtil.view("weChatUser/weChatUser");
     }
 
-    @GetMapping("wechatUser")
-    @ResponseBody
-    @RequiresPermissions("wechatUser:list")
+    @GetMapping
     public FebsResponse getAllWechatUsers(WechatUser wechatUser) {
-        return new FebsResponse().success().data(wechatUserService.findWechatUsers(wechatUser));
+        return new FebsResponse().success().data(wechatUserService.findWeChatUsers(wechatUser));
     }
 
-    @GetMapping("wechatUser/list")
+    @GetMapping("list")
     @ResponseBody
-    @RequiresPermissions("wechatUser:list")
-    public FebsResponse wechatUserList(QueryRequest request, WechatUser wechatUser) {
-        Map<String, Object> dataTable = getDataTable(this.wechatUserService.findWechatUsers(request, wechatUser));
+    @RequiresPermissions("weChatUser:view")
+    public FebsResponse weChatUserList(QueryRequest request, WechatUser wechatUser) {
+        Map<String, Object> dataTable = getDataTable(this.wechatUserService.findWeChatUsers(request, wechatUser));
         return new FebsResponse().success().data(dataTable);
     }
 
     @ControllerEndpoint(operation = "新增WechatUser", exceptionMessage = "新增WechatUser失败")
-    @PostMapping("wechatUser")
+    @PostMapping
     @ResponseBody
-    @RequiresPermissions("wechatUser:add")
-    public FebsResponse addWechatUser(@Valid WechatUser wechatUser) {
+    @RequiresPermissions("weChatUser:add")
+    public FebsResponse addWeChatUser(@Valid WechatUser wechatUser) {
         this.wechatUserService.createWechatUser(wechatUser);
         return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "删除WechatUser", exceptionMessage = "删除WechatUser失败")
-    @GetMapping("wechatUser/delete")
+    @GetMapping("delete/{weChatUserIds}")
     @ResponseBody
-    @RequiresPermissions("wechatUser:delete")
-    public FebsResponse deleteWechatUser(WechatUser wechatUser) {
-        this.wechatUserService.deleteWechatUser(wechatUser);
+    @RequiresPermissions("weChatUser:delete")
+    public FebsResponse deleteWeChatUsers(@NotBlank(message = "{required}") @PathVariable String weChatUserIds) {
+        this.wechatUserService.deleteWeChatUsers(weChatUserIds);
         return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "修改WechatUser", exceptionMessage = "修改WechatUser失败")
-    @PostMapping("wechatUser/update")
+    @PostMapping("update")
     @ResponseBody
-    @RequiresPermissions("wechatUser:update")
+    @RequiresPermissions("weChatUser:update")
     public FebsResponse updateWechatUser(WechatUser wechatUser) {
         this.wechatUserService.updateWechatUser(wechatUser);
         return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "修改WechatUser", exceptionMessage = "导出Excel失败")
-    @PostMapping("wechatUser/excel")
+    @PostMapping("excel")
     @ResponseBody
-    @RequiresPermissions("wechatUser:export")
+    @RequiresPermissions("weChatUser:export")
     public void export(QueryRequest queryRequest, WechatUser wechatUser, HttpServletResponse response) {
-        List<WechatUser> wechatUsers = this.wechatUserService.findWechatUsers(queryRequest, wechatUser).getRecords();
+        List<WechatUser> wechatUsers = this.wechatUserService.findWeChatUsers(queryRequest, wechatUser).getRecords();
         ExcelKit.$Export(WechatUser.class, response).downXlsx(wechatUsers, false);
     }
 }
