@@ -126,9 +126,9 @@
                 }
                 if (name === 'delete') {
                     if (!checkStatus.data.length) {
-                        febs.alert.warn('请勾选需要删除的任务');
+                        febs.alert.warn('请勾选需要删除的手机');
                     } else {
-                        febs.modal.confirm('删除任务', '确定删除所选任务？', function () {
+                        febs.modal.confirm('删除手机', '确定删除所选手机？', function () {
                             var phoneIds = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 phoneIds.push(item.id)
@@ -142,7 +142,7 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'phone/excel', params, '任务表.xlsx');
+                    febs.download(ctx + 'phone/excel', params, '手机信息表.xlsx');
                 }
             },
             options: [{
@@ -164,12 +164,12 @@
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
-                febs.modal.confirm('删除任务', '确定删除该任务？', function () {
+                febs.modal.confirm('删除手机', '确定删除该手机？', function () {
                     deleteJobs(data.id);
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改任务', 'system/phone/update/' + data.id, {
+                febs.modal.open('修改手机', 'system/phone/update/' + data.id, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
@@ -205,9 +205,9 @@
                     {field: 'phoneConfiguration', title: '内存', maxWidth: 80},
                     {field: 'phoneColour', title: '颜色', maxWidth: 80},
                     {field: 'retailPrice', title: '零售价', maxWidth: 80, sort: true},
-                    {field: 'agencyPrice', title: '代理价', minWidth: 80, sort: true},
+                    {field: 'agencyPrice', title: '批发价', minWidth: 80, sort: true},
                     {field: 'phoneCount', title: '数量', maxWidth: 80},
-                    {field: 'createTime', title: '创建时间', minWidth: 100, sort: true},
+                    {field: 'modifyTime', title: '修改时间', minWidth: 100, sort: true},
                     {title: '操作', toolbar: '#phone-option', minWidth: 80}
                 ]]
             });
