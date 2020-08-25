@@ -219,13 +219,13 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser")
     @RequiresPermissions("weChatUser:view")
     public String systemWeChatUser() {
-        return FebsUtil.view("system/weChatUser/weChatUser");
+        return FebsUtil.view("system/wechatUser/weChatUser");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/add")
     @RequiresPermissions("weChatUser:add")
     public String systemWeChatUserAdd() {
-        return FebsUtil.view("system/weChatUser/weChatUserAdd");
+        return FebsUtil.view("system/wechatUser/weChatUserAdd");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatUser/update/{id}")
@@ -233,7 +233,7 @@ public class ViewController extends BaseController {
     public String weChatUserUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         WechatUser weChatUser = wechatUserService.getById(id);
         model.addAttribute("weChatUser", weChatUser);
-        return FebsUtil.view("system/weChatUser/weChatUserUpdate");
+        return FebsUtil.view("system/wechatUser/weChatUserUpdate");
     }
 
 
