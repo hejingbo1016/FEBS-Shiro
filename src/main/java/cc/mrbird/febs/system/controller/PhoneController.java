@@ -47,7 +47,6 @@ public class PhoneController extends BaseController {
     }
 
     @GetMapping("list")
-    @ResponseBody
     @RequiresPermissions("phone:view")
     public FebsResponse phoneList(QueryRequest request, Phone phone) {
         Map<String, Object> dataTable = getDataTable(this.phoneService.findPhones(request, phone));
@@ -56,7 +55,6 @@ public class PhoneController extends BaseController {
 
     @ControllerEndpoint(operation = "新增Phone", exceptionMessage = "新增Phone失败")
     @PostMapping
-    @ResponseBody
     @RequiresPermissions("phone:add")
     public FebsResponse addPhone(@Valid Phone phone) {
         this.phoneService.createPhone(phone);
@@ -66,7 +64,6 @@ public class PhoneController extends BaseController {
 
     @GetMapping("delete/{phoneIds}")
     @RequiresPermissions("phone:delete")
-    @ResponseBody
     @ControllerEndpoint(operation = "删除Phone", exceptionMessage = "删除Phone失败")
     public FebsResponse deletePhones(@NotBlank(message = "{required}") @PathVariable String phoneIds) {
         this.phoneService.deletePhones(phoneIds);
@@ -75,16 +72,14 @@ public class PhoneController extends BaseController {
 
     @ControllerEndpoint(operation = "修改Phone", exceptionMessage = "修改Phone失败")
     @PostMapping("update")
-    @ResponseBody
     @RequiresPermissions("phone:update")
     public FebsResponse updatePhone(Phone phone) {
         this.phoneService.updatePhone(phone);
         return new FebsResponse().success();
     }
 
-    @ControllerEndpoint(operation = "修改Phone", exceptionMessage = "导出Excel失败")
-    @PostMapping("excel")
-    @ResponseBody
+    @ControllerEndpoint(exceptionMessage = "导出Excel失败")
+    @GetMapping("excel")
     @RequiresPermissions("phone:export")
     public void export(QueryRequest queryRequest, Phone phone, HttpServletResponse response) {
         List<Phone> phones = this.phoneService.findPhones(queryRequest, phone).getRecords();

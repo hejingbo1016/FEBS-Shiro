@@ -20,10 +20,10 @@
             </div>
         </div>
         <!--<div class="layui-form-item febs-hide">-->
-            <!--<label class="layui-form-label febs-form-item-require">状态：</label>-->
-            <!--<div class="layui-input-block">-->
-                <!--<input type="text" name="status" class="layui-input">-->
-            <!--</div>-->
+        <!--<label class="layui-form-label febs-form-item-require">状态：</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<input type="text" name="status" class="layui-input">-->
+        <!--</div>-->
         <!--</div>-->
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">手机名称：</label>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">代理价：</label>
+            <label class="layui-form-label">批发价：</label>
             <div class="layui-input-block">
                 <input type="text" name="agencyPrice" maxlength="50" lay-verify="range"
                        autocomplete="off" class="layui-input">
@@ -75,10 +75,10 @@
             </div>
         </div>
         <!--<div class="layui-form-item layui-form-text">-->
-            <!--<label class="layui-form-label">任务备注：</label>-->
-            <!--<div class="layui-input-block">-->
-                <!--<textarea name="remark" maxlength="50" class="layui-textarea"></textarea>-->
-            <!--</div>-->
+        <!--<label class="layui-form-label">任务备注：</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<textarea name="remark" maxlength="50" class="layui-textarea"></textarea>-->
+        <!--</div>-->
         <!--</div>-->
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="phone-update-form-submit" id="submit"></button>
@@ -119,6 +119,7 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+            data.field.modifyTime = new Date();
             febs.post(ctx + 'phone/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('任务修改成功');
