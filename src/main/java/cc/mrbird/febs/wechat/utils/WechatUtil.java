@@ -6,6 +6,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.data.redis.core.RedisTemplate;
+import weixin.popular.api.PayMchAPI;
 import weixin.popular.api.TokenAPI;
 import weixin.popular.api.UserAPI;
 import weixin.popular.bean.token.Token;
@@ -39,6 +40,11 @@ public class WechatUtil {
         }
     }
 
+    /**
+     * 获取所有用户信息
+     * @param nextOpenid
+     * @param userList
+     */
     public static void getUserList(String nextOpenid, List<User> userList) {
         String token = getToken();
         FollowResult followResult = UserAPI.userGet(token, nextOpenid);
@@ -61,6 +67,55 @@ public class WechatUtil {
                     if (userInfoList != null && userInfoList.getUser_info_list() != null)
                         userList.addAll(userInfoList.getUser_info_list());
                 });
+            }
+        }
+    }
+
+    /**
+     * 根据openid 获取用户信息
+     * @param openidList
+     * @return
+     */
+    public static List<User> getUserList(List<String> openidList) {
+
+        if (CollUtil.isEmpty(openidList))
+            return null;
+
+        String token = getToken();
+        List<List<String>> openidGroupList = CollUtil.split(openidList, 1000);
+
+        List<User> userList = CollUtil.newArrayList();
+
+        // 多线程获取
+        openidGroupList.parallelStream().forEach(e -> {
+            UserInfoList userInfoList = UserAPI.userInfoBatchget(token, "zh_CN", e);
+            if (userInfoList != null && userInfoList.getUser_info_list() != null)
+                userList.addAll(userInfoList.getUser_info_list());
+        });
+
+        return userList;
+    }
+
+    /**
+     * 获取所有openid
+     * @param nextOpenid
+     * @param openidList
+     */
+    public static void getOpenidList(String nextOpenid, List<String> openidList) {
+        String token = getToken();
+        FollowResult followResult = UserAPI.userGet(token, nextOpenid);
+
+        // 是否还有用户
+        String next_openid = followResult.getNext_openid();
+        if (StrUtil.isNotBlank(next_openid)) {
+            getOpenidList(next_openid, openidList);
+        }
+
+        FollowResult.Data data = followResult.getData();
+        if (data != null) {
+            String[] openidArr = data.getOpenid();
+            if (openidArr != null && openidArr.length > 0) {
+                openidList.addAll(CollUtil.toList(openidArr));
             }
         }
     }
