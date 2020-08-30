@@ -1,0 +1,203 @@
+<style>
+    #weChatMetting {
+        padding: 20px 25px 25px 0;
+    }
+
+    #weChatMetting .layui-form-label {
+        width: 88px;
+    }
+
+    #weChatMetting .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="weChatMetting">
+    <form class="layui-form" action="" lay-filter="weChatMetting-form" enctype="multipart/form-data" method="post">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">会议名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingName" maxlength="20" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">主办方：</label>
+            <div class="layui-input-block">
+                <input type="text" name="sponsor" maxlength="50" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">会议负责人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingPrincipal" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" name="contactPhone" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">会议地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingAddress" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">承办方：</label>
+            <div class="layui-input-block">
+                <input type="text" name="organizer" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
+                       placeholder="开始时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
+                       placeholder="结束时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">活动简介：</label>
+            <div class="layui-input-block">
+                <textarea name="synopsis" maxlength="100" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">活动须知：</label>
+            <div class="layui-input-block">
+                <textarea name="activityNotes" maxlength="50" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">活动流程：</label>
+            <div class="layui-input-block">
+                <textarea name="activityFlow" maxlength="50" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="weChatMetting-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+<style type="text/css">
+    .layui-form-label {
+        width: 110px;
+    }
+
+    .uploader-list {
+        margin-left: -15px;
+    }
+
+    .uploader-list .info {
+        position: relative;
+        margin-top: -25px;
+        background-color: black;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        opacity: 0.5;
+        width: 100px;
+        height: 25px;
+        text-align: center;
+        display: none;
+    }
+
+    .uploader-list .handle {
+        position: relative;
+        background-color: #ff6a00;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        width: 100px;
+        text-align: right;
+        height: 18px;
+        margin-bottom: -18px;
+        display: none;
+    }
+
+    .uploader-list .handle span {
+        margin-right: 5px;
+    }
+
+    .uploader-list .handle span:hover {
+        cursor: pointer;
+    }
+
+    .uploader-list .file-iteme {
+        margin: 12px 0 0 15px;
+        padding: 1px;
+        float: left;
+    }
+</style>
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate', 'upload', 'layer'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            weChatUser = [[${weChatUser}]],
+            $view = $('#weChatMetting'),
+            validate = layui.validate,
+            layer = layui.layer;
+
+        form.verify(validate);
+        form.render();
+
+        initweChatUserValue();
+
+        function initweChatUserValue() {
+            form.val("weChatMetting-form", {
+                "id": meeting.id,
+                "meetingName": meeting.meetingName,
+                "sponsor": meeting.sponsor,
+                "organizer": meeting.organizer,
+                "meetingPrincipal": meeting.meetingPrincipal,
+                "meetingAddress": meeting.meetingAddress,
+                "contactPhone": meeting.contactPhone,
+                "startTime": meeting.startTime,
+                "endTime": meeting.endTime,
+                "synopsis": meeting.synopsis,
+                "activityNotes": meeting.activityNotes,
+                "activityFlow": meeting.activityFlow,
+                "participants": meeting.participants
+            });
+        }
+
+
+        form.on('submit(weChatMetting-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, weChatUser)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'weChatUser/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('任务修改成功');
+                $('#febs-weChatUser').find('#query').click();
+            });
+            return false;
+        });
+
+
+    });
+</script>
