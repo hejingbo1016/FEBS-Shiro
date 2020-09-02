@@ -43,6 +43,17 @@
                                             <input type="text" name="meetingAddress" class="layui-input">
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value=""></option>
+                                                <option value="0">未审核</option>
+                                                <option value="1">已审核</option>
+                                                <option value="2">已过期</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -67,15 +78,18 @@
         </div>
     </div>
 </div>
-<script type="text/html" id="job-status">
+<script type="text/html" id="meeting-status">
     {{#
     var status = {
-    0: {title: '正常', color: 'green'},
-    1: {title: '暂停', color: 'volcano'}
+    0: {title: '未审核', color: 'volcano'},
+    1: {title: '已审核', color: 'green'},
+    2: {title: '已过期', color: 'blue'}
     }[d.status];
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
+
+
 <script type="text/html" id="meeting-option">
     <span shiro:lacksPermission="meeting:update,meeting:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -215,6 +229,7 @@
                     {field: 'meetingAddress', title: '会议地址', maxWidth: 80},
                     {field: 'startTime', title: '开始时间', minWidth: 80, sort: true},
                     {field: 'endTime', title: '结束时间', maxWidth: 80},
+                    {title: '状态', templet: '#meeting-status'},
                     {title: '操作', toolbar: '#meeting-option', minWidth: 80}
                 ]]
             });

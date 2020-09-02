@@ -69,8 +69,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (StringUtils.isNotBlank(meeting.getMeetingPrincipal())) {
             queryWrapper.like(Meeting::getMeetingPrincipal, meeting.getMeetingPrincipal());
         }
-
-
+        if (meeting.getStatus() != null) {
+            queryWrapper.eq(Meeting::getStatus, meeting.getStatus());
+        }
     }
 
     @Override

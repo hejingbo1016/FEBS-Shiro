@@ -130,4 +130,9 @@ public class Meeting {
     @TableField("deleted")
     private Integer deleted;
 
+    /**
+     * 数据状态（0：未审批，1：已审批，2：已过期）
+     */
+    @TableField("status")
+    private Integer status;
 }

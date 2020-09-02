@@ -17,6 +17,9 @@
         <if test="meeting.organizer != null and meeting.organizer != ''">
             AND t.organizer like CONCAT('%',#{meeting.organizer},'%')
         </if>
+        <if test="meeting.status != null and meeting.status != ''">
+            AND t.status = #{meeting.status}
+        </if>
         <if test="meeting.meetingPrincipal != null and meeting.meetingPrincipal != ''">
             AND t.meeting_principal like CONCAT('%',#{meeting.meetingPrincipal},'%')
         </if>
