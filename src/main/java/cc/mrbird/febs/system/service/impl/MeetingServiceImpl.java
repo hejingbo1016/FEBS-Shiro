@@ -107,4 +107,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         this.baseMapper.delete(new QueryWrapper<Meeting>().lambda().in(Meeting::getId, list));
 
     }
+
+    @Override
+    public void auditMeeting(String id) {
+        this.meetingMapper.auditMeeting(id);
+    }
 }

@@ -89,4 +89,14 @@ public class MeetingController extends BaseController {
         List<Meeting> meetings = this.meetingService.findMeetings(queryRequest, meeting).getRecords();
         ExcelKit.$Export(Meeting.class, response).downXlsx(meetings, false);
     }
+
+
+    @ControllerEndpoint(operation = "审核Meeting", exceptionMessage = "审核Meeting失败")
+    @GetMapping("audit/{id}")
+    @ResponseBody
+    @RequiresPermissions("meeting:audit")
+    public FebsResponse auditPhones(@NotBlank(message = "{required}") @PathVariable String id) {
+        this.meetingService.auditMeeting(id);
+        return new FebsResponse().success();
+    }
 }

@@ -54,4 +54,6 @@ public interface IMeetingService extends IService<Meeting> {
     void deleteMeeting(Meeting meeting);
 
     void deleteMeetings(String meetingIds);
+
+    void auditMeeting(String id);
 }
