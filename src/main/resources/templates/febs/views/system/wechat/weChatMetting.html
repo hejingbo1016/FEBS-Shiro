@@ -14,98 +14,100 @@
     #weChatMetting .layui-input-block {
         margin-left: 120px;
     }
+
+    #weChatMetting .layui-input {
+        border: none;
+    }
 </style>
 <div class="layui-fluid" id="weChatMetting">
     <form class="layui-form" action="" lay-filter="weChatMetting-form" enctype="multipart/form-data" method="post">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">id：</label>
             <div class="layui-input-block">
-                <input type="text" name="id" class="layui-input">
+                <input type="text" name="id" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">会议名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingName" maxlength="20" lay-verify="range|required"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="meetingName" maxlength="20"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">主办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="sponsor" maxlength="50" lay-verify="range|required"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="sponsor" maxlength="50"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">会议负责人：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingPrincipal" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="meetingPrincipal" maxlength="50"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">联系方式：</label>
             <div class="layui-input-block">
-                <input type="text" name="contactPhone" maxlength="20" lay-verify="range"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="contactPhone" maxlength="20"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">会议地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingAddress" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="meetingAddress" maxlength="50"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">承办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="organizer" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
+                <input type="text" name="organizer" maxlength="50"
+                       autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">开始时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
-                       placeholder="开始时间" autocomplete="off" class="layui-input">
+                <input type="text" name="startTime" id="febs-form-meeting-start"
+                       placeholder="开始时间" autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">结束时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
-                       placeholder="结束时间" autocomplete="off" class="layui-input">
+                <input type="text" name="endTime" id="febs-form-meeting-end"
+                       placeholder="结束时间" autocomplete="off" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
             <div class="layui-input-block">
-                <textarea name="synopsis" maxlength="100" class="layui-textarea"></textarea>
+                <textarea name="synopsis" maxlength="100" class="layui-textarea" readonly="readonly"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
             <div class="layui-input-block">
-                <textarea name="activityNotes" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityNotes" maxlength="50" class="layui-textarea" readonly="readonly"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
             <div class="layui-input-block">
-                <textarea name="activityFlow" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityFlow" maxlength="50" class="layui-textarea" readonly="readonly"></textarea>
             </div>
         </div>
 
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="weChatMetting-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
-        </div>
     </form>
 </div>
 <link rel="stylesheet" href="/../../layui/css/layui.css" media="all">
-<link rel="stylesheet" href="/../../layui/layui.js" media="all">
+<script src="/../../layui/layui.js" media="all"></script>
+<script src="/../../layui/lay/modules/jquery.js" media="all"></script>
+
 <style type="text/css">
     .layui-form-label {
         width: 110px;
@@ -157,16 +159,15 @@
     }
 </style>
 <script data-th-inline="javascript">
-    layui.use(['layer', 'jquery', 'febs', 'form', 'validate', 'upload'], function () {
+    layui.use(['layer', 'jquery', 'form', 'upload'], function () {
         var $ = layui.jquery,
-            febs = layui.febs,
             form = layui.form,
             weChatMetting = [[${weChatMetting}]],
             $view = $('#weChatMetting'),
-            validate = layui.validate,
+
             layer = layui.layer;
 
-        form.verify(validate);
+
         form.render();
 
         initweChatUserValue();
@@ -188,20 +189,6 @@
                 "participants": weChatMetting.participants
             });
         }
-
-
-        form.on('submit(weChatMetting-form-submit)', function (data) {
-            if (febs.nativeEqual(data.field, weChatUser)) {
-                febs.alert.warn('数据未作任何修改！');
-                return false;
-            }
-            febs.post(ctx + 'weChatUser/update', data.field, function () {
-                layer.closeAll();
-                febs.alert.success('任务修改成功');
-                $('#febs-weChatUser').find('#query').click();
-            });
-            return false;
-        });
 
 
     });
