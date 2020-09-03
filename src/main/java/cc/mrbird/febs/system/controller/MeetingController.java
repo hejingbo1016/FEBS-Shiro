@@ -66,7 +66,7 @@ public class MeetingController extends BaseController {
     @ControllerEndpoint(operation = "删除Meeting", exceptionMessage = "删除Meeting失败")
     @GetMapping("delete/{meetingIds}")
     @ResponseBody
-    @RequiresPermissions("meeting:delete") 
+    @RequiresPermissions("meeting:delete")
     public FebsResponse deletePhones(@NotBlank(message = "{required}") @PathVariable String meetingIds) {
         this.meetingService.deleteMeetings(meetingIds);
         return new FebsResponse().success();
@@ -92,11 +92,11 @@ public class MeetingController extends BaseController {
 
 
     @ControllerEndpoint(operation = "审核Meeting", exceptionMessage = "审核Meeting失败")
-    @GetMapping("audit/{id}")
+    @PostMapping("audit")
     @ResponseBody
     @RequiresPermissions("meeting:audit")
-    public FebsResponse auditPhones(@NotBlank(message = "{required}") @PathVariable String id) {
-        this.meetingService.auditMeeting(id);
+    public FebsResponse auditPhones(Meeting meeting) {
+        this.meetingService.auditMeeting(meeting);
         return new FebsResponse().success();
     }
 }

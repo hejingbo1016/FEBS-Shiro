@@ -246,14 +246,13 @@ public class ViewController extends BaseController {
 
 
 
-/*
-    @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatMetting/update/{id}")
-    public String weChatMetting(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
-        Meeting weChatMetting = meetingService.getById(id);
-        model.addAttribute("weChatMetting", weChatMetting);
-        return FebsUtil.view("system/wechat/weChatMetting");
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/audit/{id}")
+    @RequiresPermissions("meeting:audit")
+    public String meetingAudit(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Meeting meeting = meetingService.getById(id);
+        model.addAttribute("meeting", meeting);
+        return FebsUtil.view("system/meeting/meetingAudit");
     }
-*/
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {

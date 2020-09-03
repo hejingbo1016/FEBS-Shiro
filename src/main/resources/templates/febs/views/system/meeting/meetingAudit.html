@@ -1,0 +1,77 @@
+<style>
+    #meeting-audit {
+        padding: 20px 25px 25px 0;
+    }
+
+    #meeting-audit .layui-form-label {
+        width: 88px;
+    }
+
+    #meeting-audit .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="meeting-audit">
+    <form class="layui-form" action="" lay-filter="meeting-audit-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">审核：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="0" title="待审核">
+                <input type="radio" name="status" value="1" title="通过审核">
+                <input type="radio" name="status" value="2" title="审核不通过">
+                <input type="radio" name="status" value="3" title="审核已过期">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="meeting-audit-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            meeting = [[${meeting}]],
+            $view = $('#meeting-audit'),
+            validate = layui.validate;
+        var laydate = layui.laydate;
+
+
+        form.verify(validate);
+        form.render();
+
+        var auditId = sessionStorage.getItem('auditId');
+
+        initmeetingValue();
+
+
+        function initmeetingValue() {
+            form.val("meeting-audit-form", {
+                "id": meeting.id,
+                "status": meeting.status
+
+            });
+        }
+
+        form.on('submit(meeting-audit-form-submit)', function (data) {
+            febs.post(ctx + 'meeting/audit', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('审核成功');
+                $('#febs-meeting').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

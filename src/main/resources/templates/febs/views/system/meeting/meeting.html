@@ -48,9 +48,10 @@
                                         <div class="layui-input-inline">
                                             <select name="status">
                                                 <option value=""></option>
-                                                <option value="0">未审核</option>
-                                                <option value="1">已审核</option>
-                                                <option value="2">已过期</option>
+                                                <option value="0">待审核</option>
+                                                <option value="1">审核通过</option>
+                                                <option value="2">审核未通过</option>
+                                                <option value="3">审核已过期</option>
                                             </select>
                                         </div>
                                     </div>
@@ -81,9 +82,10 @@
 <script type="text/html" id="meeting-status">
     {{#
     var status = {
-    0: {title: '未审核', color: 'volcano'},
-    1: {title: '已审核', color: 'green'},
-    2: {title: '已过期', color: 'blue'}
+    0: {title: '待审核', color: 'volcano'},
+    1: {title: '审核通过', color: 'green'},
+    2: {title: '审核未通过', color: 'red'},
+    3: {title: '审核已过期', color: 'blue'}
     }[d.status];
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
@@ -205,9 +207,15 @@
                 });
             }
             if (layEvent === 'audit') {
-
-                febs.modal.confirm('确认审核', '同意通过该会议发布！', function () {
-                    auditJobs(data.id);
+                febs.modal.open('确认审核', 'system/meeting/audit/' + data.id, {
+                    area: $(window).width() <= 450 ? '50%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#meeting-audit').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
                 });
             }
         });

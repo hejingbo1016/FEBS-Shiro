@@ -15,5 +15,5 @@ public interface MeetingMapper extends BaseMapper<Meeting> {
 
     Long countMeeting(@Param("meeting") Meeting meeting);
 
-    void auditMeeting(String id);
+    void auditMeeting(Meeting meeting);
 }

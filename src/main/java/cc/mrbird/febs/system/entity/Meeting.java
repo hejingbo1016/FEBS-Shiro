@@ -131,7 +131,7 @@ public class Meeting {
     private Integer deleted;
 
     /**
-     * 数据状态（0：未审批，1：已审批，2：已过期）
+     * 数据状态（0：待审批，1：审核通过，2：审核未通过，3：审核已过期）
      */
     @TableField("status")
     private Integer status;

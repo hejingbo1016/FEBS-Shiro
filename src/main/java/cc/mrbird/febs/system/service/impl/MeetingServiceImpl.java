@@ -109,7 +109,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     }
 
     @Override
-    public void auditMeeting(String id) {
-        this.meetingMapper.auditMeeting(id);
+    public void auditMeeting(Meeting meeting) {
+        this.meetingMapper.auditMeeting(meeting);
     }
 }
