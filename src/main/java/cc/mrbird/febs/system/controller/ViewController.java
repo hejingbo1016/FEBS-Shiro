@@ -237,7 +237,6 @@ public class ViewController extends BaseController {
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/weChatMetting/update/{id}")
-    @RequiresPermissions("weChatUser:update")
     public String weChatMetting(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         Meeting weChatMetting = meetingService.getById(id);
         model.addAttribute("weChatMetting", weChatMetting);
