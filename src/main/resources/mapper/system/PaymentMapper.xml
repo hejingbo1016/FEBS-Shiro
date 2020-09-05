@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.system.mapper.PaymentMapper">
+
+
+    <select id="countPayment" resultType="java.lang.Long">
+
+        SELECT
+        COUNT(1)
+        FROM
+        t_payment t
+        left join t_meeting m on m.id = t.meeting_id
+        left join t_hotel h on h.id = t.hotel_id
+        WHERE 1 = 1
+        <if test="payment.paymentCode != null and payment.paymentCode != ''">
+            AND t.payment_Code like CONCAT('%',#{payment.paymentCode},'%')
+        </if>
+        <if test="payment.meetingName != null and payment.meetingName != ''">
+            AND m.meeting_name like CONCAT('%',#{payment.meetingName},'%')
+        </if>
+        <if test="payment.hotelName != null and payment.hotelName != ''">
+            AND h.hotel_name like CONCAT('%',#{payment.hotelName},'%')
+        </if>
+        <if test="payment.payType != null and payment.payType != ''">
+            AND t.payType = #{payment.payType}
+        </if>
+
+
+    </select>
+
+
+    <select id="findPaymentPage" resultType="cc.mrbird.febs.system.entity.Payment">
+        select t.*,m.meeting_name as meetingName,h.hotel_name as hotelName
+        FROM
+        t_payment t
+        left join t_meeting m on m.id = t.meeting_id
+        left join t_hotel h on h.id = t.hotel_id
+        WHERE 1 = 1
+        <if test="payment.paymentCode != null and payment.paymentCode != ''">
+            AND t.payment_Code like CONCAT('%',#{payment.paymentCode},'%')
+        </if>
+        <if test="payment.meetingName != null and payment.meetingName != ''">
+            AND m.meeting_name like CONCAT('%',#{payment.meetingName},'%')
+        </if>
+        <if test="payment.hotelName != null and payment.hotelName != ''">
+            AND h.hotel_name like CONCAT('%',#{payment.hotelName},'%')
+        </if>
+        <if test="payment.payType != null and payment.payType != ''">
+            AND t.payType = #{payment.payType}
+        </if>
+
+
+    </select>
+
+
+    <delete id="deletePayments">
+
+        update t_payment set deleted =1
+        where id in
+        <foreach close=")" collection="ids.split(',+')" item="id" open="(">
+            ${id}
+        </foreach>
+
+
+    </delete>
+
+
+    <insert id="insertPayment" parameterType="cc.mrbird.febs.system.entity.Payment">
+        insert into t_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="paymentCode != null">
+                payment_Code,
+            </if>
+            <if test="meetingId != null">
+                meeting_id,
+            </if>
+            <if test="hotelId != null">
+                hotel_id,
+            </if>
+            <if test="paymentAmount != null">
+                payment_Amount,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="creater != null">
+                creater,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="paymentCode != null">
+                #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingId != null">
+                #{meetingId,jdbcType=INTEGER},
+            </if>
+            <if test="hotelId != null">
+                #{hotelId,jdbcType=INTEGER},
+            </if>
+            <if test="paymentAmount != null">
+                #{paymentAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="creater != null">
+                #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

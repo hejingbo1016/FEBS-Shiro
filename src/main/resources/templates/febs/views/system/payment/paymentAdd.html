@@ -1,0 +1,88 @@
+<style>
+    #payment-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #payment-add .layui-form-label {
+        width: 88px;
+    }
+
+    #payment-add .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="payment-add">
+    <form class="layui-form" action="" lay-filter="payment-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">订单编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymentCode" maxlength="20" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">会议名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingName" maxlength="50" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">酒店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelName" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付金额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymentAmount" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="payType" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="100" class="layui-textarea">
+                </textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="payment-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            $view = $('#payment-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        form.on('submit(payment-add-form-submit)', function (data) {
+            data.field.modifyTime = new Date();
+            febs.post(ctx + 'payment', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增订单成功');
+                $('#febs-payment').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

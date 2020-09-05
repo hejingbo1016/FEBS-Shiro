@@ -1,0 +1,114 @@
+<style>
+    #payment-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #payment-update .layui-form-label {
+        width: 88px;
+    }
+
+    #payment-update .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="payment-update">
+    <form class="layui-form" action="" lay-filter="payment-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">订单编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymentCode" maxlength="20" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">会议名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingName" maxlength="50" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">酒店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelName" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付金额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymentAmount" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="payType" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="100" class="layui-textarea">
+                </textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="payment-update-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            payment = [[${payment}]],
+            $view = $('#payment-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initpaymentValue();
+
+        function initpaymentValue() {
+            form.val("payment-update-form", {
+                "id": payment.id,
+                "paymentCode": payment.paymentCode,
+                "meetingName": payment.meetingName,
+                "hotelName": payment.hotelName,
+                "paymentAmount": payment.paymentAmount,
+                "payType": payment.payType,
+                "createTime": payment.createTime,
+                "description":payment.description
+            });
+        }
+
+        form.on('submit(payment-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, payment)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            data.field.modifyTime = new Date();
+            febs.post(ctx + 'payment/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('任务修改成功');
+                $('#febs-payment').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

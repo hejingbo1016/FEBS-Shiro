@@ -36,6 +36,7 @@ public class ViewController extends BaseController {
     private final IHotelService hotelService;
     private final IFileService fileService;
     private final IWechatUserService wechatUserService;
+    private final IPaymentService paymentService;
 
     @GetMapping("login")
     @ResponseBody
@@ -244,13 +245,33 @@ public class ViewController extends BaseController {
     }
 
 
-
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/audit/{id}")
     @RequiresPermissions("meeting:audit")
     public String meetingAudit(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         Meeting meeting = meetingService.getById(id);
         model.addAttribute("meeting", meeting);
         return FebsUtil.view("system/meeting/meetingAudit");
+    }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment")
+    @RequiresPermissions("payment:view")
+    public String systemPayment() {
+        return FebsUtil.view("system/payment/payment");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment/add")
+    @RequiresPermissions("payment:add")
+    public String systemPaymentAdd() {
+        return FebsUtil.view("system/payment/paymentAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment/update/{id}")
+    @RequiresPermissions("payment:update")
+    public String paymentUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Payment payment = paymentService.getById(id);
+        model.addAttribute("payment", payment);
+        return FebsUtil.view("system/payment/paymentUpdate");
     }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
