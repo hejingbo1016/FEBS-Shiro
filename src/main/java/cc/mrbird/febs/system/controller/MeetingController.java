@@ -120,7 +120,7 @@ public class MeetingController extends BaseController {
 
 
     @ControllerEndpoint(operation = "微信端通过会议id获取详细信息", exceptionMessage = "微信端通过会议id获取详细信息")
-    @PostMapping("getWeChatMettingById")
+    @GetMapping("getWeChatMettingById")
     @ResponseBody
     public FebsResponse getWeChatMettingById(@Valid Long id) {
         Meeting mettings = meetingService.getWeChatMettingById(id);
