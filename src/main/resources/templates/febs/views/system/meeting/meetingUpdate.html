@@ -94,6 +94,15 @@
                 <textarea name="activityFlow" maxlength="50" class="layui-textarea"></textarea>
             </div>
         </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">酒店选择：</label>
+            <div class="layui-input-block">
+                <button type="button" id="selectHotel" class="layui-btn">选择</button>
+            </div>
+        </div>
+        <div id="hotelTableList">
+
+        </div>
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="meeting-update-form-submit" id="submit"></button>
@@ -103,10 +112,11 @@
 </div>
 
 <script data-th-inline="javascript">
-    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'table'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
+            table = layui.table,
             meeting = [[${meeting}]],
             $view = $('#meeting-update'),
             validate = layui.validate;
@@ -162,5 +172,45 @@
             return false;
         });
 
+        $('#meeting-update #selectHotel').click(function () {
+            febs.modal.open('选择酒店', 'system/meeting/selectHotel', {
+                area: $(window).width() <= 450 ? '50%' : '50%',
+                btn: ['选择', '取消'],
+                yes: function (index, layero) {
+                    var dataArr = layui.table.checkStatus('selectHotelTable').data;
+                    for (var i in dataArr) {
+                        var data = dataArr[i];
+                        var id = data.id;
+                        var tableId = 'hotelTable_' + id;
+
+                        if ($view.find('#' + tableId) && $view.find('#' + tableId).length == 0) {
+                            $view.find('#hotelTableList')
+                                .append('<h2>酒店名称：' + data.hotelName + '</h2>');
+                            $view.find('#hotelTableList')
+                                .append('<table class="layui-hide" id="' + tableId + '"></table>');
+
+                            febs.table.init({
+                                elem: $view.find('#' + tableId),
+                                id: '#' + tableId,
+                                url: ctx + 'room/list/' + id,
+                                cols: [[
+                                    {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
+                                    {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
+                                    {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},
+                                    {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
+                                    {field: 'totalPrice', edit: 'text', title: '总价', maxWidth: 80}
+                                    /**/
+                                ]]
+                            });
+                        }
+                    }
+                    layer.close(index);
+                },
+                btn2: function () {
+                    layer.closeAll();
+                }
+            });
+        });
     });
+
 </script>

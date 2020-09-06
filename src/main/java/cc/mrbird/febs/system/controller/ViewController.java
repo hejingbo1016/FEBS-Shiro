@@ -185,6 +185,12 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/meeting/meetingUpdate");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/selectHotel")
+    // @RequiresPermissions("meeting:selectHotel")
+    public String selectHotel(Model model) {
+        return FebsUtil.view("system/meeting/selectHotel");
+    }
+
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/hotel")
     @RequiresPermissions("hotel:view")
