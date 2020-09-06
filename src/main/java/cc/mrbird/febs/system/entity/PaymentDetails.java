@@ -1,15 +1,17 @@
 package cc.mrbird.febs.system.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author Hejingbo
  * @date 2020-09-05 21:06:26
@@ -19,31 +21,32 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class PaymentDetails {
 
     /**
-     * 
+     *
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 
+     *
      */
     @TableField("payment_Code")
     private Long paymentCode;
 
     /**
-     * 
+     *
      */
     @TableField("fee_name")
     private String feeName;
 
     /**
-     * 
+     *
      */
     @TableField("number")
     private Integer number;
 
     /**
-     * 
+     * 区间金额
      */
     @TableField("interval_price")
     private Double intervalPrice;

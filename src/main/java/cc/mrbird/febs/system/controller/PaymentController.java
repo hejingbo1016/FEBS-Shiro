@@ -1,19 +1,17 @@
 package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
-import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.Payment;
 import cc.mrbird.febs.system.service.IPaymentService;
 import com.wuwenze.poi.ExcelKit;
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +74,7 @@ public class PaymentController extends BaseController {
 
 
     @ControllerEndpoint(operation = "修改Payment", exceptionMessage = "修改Payment失败")
-    @PostMapping("payment/update")
+    @PostMapping("update")
     @ResponseBody
     @RequiresPermissions("payment:update")
     public FebsResponse updatePayment(Payment payment) {
@@ -86,7 +84,7 @@ public class PaymentController extends BaseController {
 
 
     @ControllerEndpoint(operation = "修改Payment", exceptionMessage = "导出Excel失败")
-    @PostMapping("payment/excel")
+    @PostMapping("excel")
     @ResponseBody
     @RequiresPermissions("payment:export")
     public void export(QueryRequest queryRequest, Payment payment, HttpServletResponse response) {

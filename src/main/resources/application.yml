@@ -35,3 +35,6 @@ logging:
           core:
             metadata:
               TableInfoHelper: error
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

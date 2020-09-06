@@ -11,7 +11,7 @@
         t_payment t
         left join t_meeting m on m.id = t.meeting_id
         left join t_hotel h on h.id = t.hotel_id
-        WHERE 1 = 1
+        WHERE t.deleted =0
         <if test="payment.paymentCode != null and payment.paymentCode != ''">
             AND t.payment_Code like CONCAT('%',#{payment.paymentCode},'%')
         </if>
@@ -30,12 +30,12 @@
 
 
     <select id="findPaymentPage" resultType="cc.mrbird.febs.system.entity.Payment">
-        select t.*,m.meeting_name as meetingName,h.hotel_name as hotelName
+        select t.*,m.meeting_name ,h.hotel_name
         FROM
         t_payment t
         left join t_meeting m on m.id = t.meeting_id
         left join t_hotel h on h.id = t.hotel_id
-        WHERE 1 = 1
+        WHERE t.deleted =0
         <if test="payment.paymentCode != null and payment.paymentCode != ''">
             AND t.payment_Code like CONCAT('%',#{payment.paymentCode},'%')
         </if>
@@ -144,4 +144,15 @@
             </if>
         </trim>
     </insert>
+
+
+    <select id="selectByPaymentId" resultType="cc.mrbird.febs.system.entity.Payment">
+
+        select t.*,m.meeting_name ,h.hotel_name
+        FROM
+        t_payment t
+        left join t_meeting m on m.id = t.meeting_id
+        left join t_hotel h on h.id = t.hotel_id
+        where t.id = #{id}
+    </select>
 </mapper>

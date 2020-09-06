@@ -42,7 +42,9 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         page.setTotal(paymentMapper.countPayment(payment));
 
         SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
-        return paymentMapper.findPaymentPage(page, payment);
+        IPage<Payment> paymentPage = paymentMapper.findPaymentPage(page, payment);
+
+        return paymentPage;
     }
 
     @Override
@@ -94,6 +96,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     public void deletePayments(String paymentIds) {
         paymentMapper.deletePayments(paymentIds);
 
+    }
+
+    @Override
+    public Payment selectByPaymentId(Long id) {
+        return paymentMapper.selectByPaymentId(id);
     }
 
 

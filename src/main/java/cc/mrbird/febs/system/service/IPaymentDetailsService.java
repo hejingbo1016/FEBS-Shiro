@@ -52,4 +52,10 @@ public interface IPaymentDetailsService extends IService<PaymentDetails> {
      * @param paymentDetails paymentDetails
      */
     void deletePaymentDetails(PaymentDetails paymentDetails);
+
+    PaymentDetails selectDetailsByPaymentCode(String paymentCode);
+
+    void addPaymentDetails(PaymentDetails paymentDetails);
+
+    void deletePaymentDetailsByIds(String ids);
 }

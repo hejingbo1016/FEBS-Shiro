@@ -104,7 +104,7 @@
             data.field.modifyTime = new Date();
             febs.post(ctx + 'payment/update', data.field, function () {
                 layer.closeAll();
-                febs.alert.success('任务修改成功');
+                febs.alert.success('订单修改成功');
                 $('#febs-payment').find('#query').click();
             });
             return false;

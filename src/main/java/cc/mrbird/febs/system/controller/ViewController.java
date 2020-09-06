@@ -37,6 +37,8 @@ public class ViewController extends BaseController {
     private final IFileService fileService;
     private final IWechatUserService wechatUserService;
     private final IPaymentService paymentService;
+    private final IPaymentDetailsService paymentDetailsService;
+
 
     @GetMapping("login")
     @ResponseBody
@@ -269,9 +271,16 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment/update/{id}")
     @RequiresPermissions("payment:update")
     public String paymentUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
-        Payment payment = paymentService.getById(id);
+        Payment payment = paymentService.selectByPaymentId(id);
         model.addAttribute("payment", payment);
         return FebsUtil.view("system/payment/paymentUpdate");
+    }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/paymentDetails/list")
+    @RequiresPermissions("payment:details")
+    public String hotelRoom() {
+        return FebsUtil.view("system/payment/paymentDetails");
     }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")

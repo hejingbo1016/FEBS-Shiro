@@ -1,0 +1,295 @@
+<style>
+    #febs-paymentDetails .layui-form-label {
+        width: 65px;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-paymentDetails" lay-title="订单详情">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="job-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">费用名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="feeName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <button type="button" class="layui-btn layui-btn-normal" id="addTable">新增费用</button>
+                    <table lay-filter="paymentDetailsTable" lay-data="{id: 'paymentDetailsTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="job-status">
+    {{#
+    var status = {
+    0: {title: '正常', color: 'green'},
+    1: {title: '暂停', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="paymentDetails-option">
+    <span shiro:lacksPermission="paymentDetails:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="del" shiro:hasPermission="paymentDetails:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+
+
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-paymentDetails'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+
+        var paymentCode = sessionStorage.getItem('paymentCode');
+
+
+        initTable();
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('paymentDetailsTable');
+                if (name === 'add') {
+                    febs.modal.open('新增费用', 'system/hotel/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#hotel-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#hotel-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请勾选需要删除的费用');
+                    } else {
+                        febs.modal.confirm('删除费用', '确定删除所选费用？', function () {
+                            var ids = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ids.push(item.id)
+                            });
+                            deleteJobs(ids.join(','))
+                        });
+                    }
+                }
+
+
+            },
+
+        });
+
+        table.on('tool(paymentDetailsTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除任务', '确定删除该记录？', function () {
+                    deleteJobs(data.id);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改费用', 'system/hotel/update/' + data.id, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#hotel-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
+            if (layEvent === 'generate') {
+                febs.modal.open('设置房间', 'system/hotel/room/' + data.id, {
+                    area: $(window).width() <= 750 ? '80%' : '70%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#hotel-room').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+            var newdata = {};
+            if (layEvent === 'date') {
+                var field = $(this).data('field');
+                laydate.render({
+                    elem: this.firstChild
+                    , show: true //直接显示
+                    , closeStop: this
+                    , type: 'datetime'
+                    , format: "yyyy-MM-dd HH:mm:ss"
+                    , done: function (value, date) {
+                        newdata[field] = value;
+                        obj.update(newdata);
+                        alert(JSON.stringify(value))
+                    }
+                });
+            }
+
+
+            if (layEvent === 'addRoom') {
+                var paymentCodes = $("#" + paymentCode + "paymentCode").text();
+                alert(paymentCodes);
+                var feeName = $("#" + paymentCode + "feeName").text();
+                var intervalPrice = $("#" + paymentCode + "intervalPrice").text();
+                var number = $("#" + paymentCode + "number").text();
+                // var startTime = $("#" + paymentCode + "startTime").text();
+                // var endTime = $("#" + paymentCode + "endTime").text();
+
+
+                var param = {
+                    'paymentCode': paymentCodes,
+                    'feeName': feeName,
+                    'intervalPrice': intervalPrice,
+                    'number': number
+                    // 'startTime': startTime,
+                    // 'endTime': endTime
+                }
+                $.post(ctx + 'paymentDetails/add', param, function (r) {
+                    if (r.code === 200) {
+                        $query.click();
+                    } else {
+                        layer.msg(r.message);
+                    }
+                });
+            }
+
+
+        });
+
+        table.on('sort(paymentDetailsTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+
+        function initTable() {
+
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'paymentDetailsTable',
+                url: ctx + 'paymentDetails/list/' + paymentCode,
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'paymentCode', title: '订单编号'},
+                    {field: 'feeName', edit: 'text', title: '费用名称', maxWidth: 100},
+                    {field: 'intervalPrice', edit: 'text', title: '区间金额', maxWidth: 80},
+                    {field: 'number', edit: 'text', title: '数量', maxWidth: 80},
+                    {field: 'startTime', edit: 'text', title: '入住日期', maxWidth: 80},
+                    {field: 'endTime', edit: 'text', title: '截止日期', maxWidth: 80},
+                    {title: '操作', toolbar: '#paymentDetails-option', minWidth: 80}
+
+                ]]
+            });
+        }
+
+        function deleteJobs(ids) {
+            febs.get(ctx + 'paymentDetails/delete/' + ids, null, function () {
+                febs.alert.success('删除成功');
+                $query.click();
+            });
+        }
+
+        $("#addTable").click(function () {
+            var paymentCode = sessionStorage.getItem('paymentCode');
+            var tr = " <tr>" +
+                " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
+                " <td data-field='paymentCode'> <div id='" + paymentCode + "paymentCode' class='layui-table-cell laytable-cell-1-hotelId '>" + paymentCode + "</div></td>" +
+                " <td data-field='feeName' data-edit='text'> <div id='" + paymentCode + "feeName' class='layui-table-cell laytable-cell-1-feeName '> </div></td>" +
+                " <td data-field='intervalPrice' data-edit='text'> <div  id='" + paymentCode + "intervalPrice' class='layui-table-cell laytable-cell-1-intervalPrice '> </div></td>" +
+                " <td data-field='number' data-edit='text'> <div  id='" + paymentCode + "number' class='layui-table-cell laytable-cell-1-number '> </div></td>" +
+                // " <td data-field='startTime'  data-edit='text'> <div  id='" + paymentCode + "startTime'  class='layui-table-cell laytable-cell-1-startTime  '> </div></td>" +
+                // " <td data-field='endTime' data-edit='text' event:'date',> <div  id='" + paymentCode + "endTime' class='layui-table-cell laytable-cell-1-endTime '> </div></td>" +
+                " <td data-field='操作'  toolbar:'#paymentDetails-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='paymentDetails:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
+                " </tr>";
+            $("[lay-id='paymentDetailsTable'] .layui-table-body .layui-table tbody").append(tr);
+        });
+
+        //监听单元格编辑
+        table.on('edit(paymentDetailsTable)', function (obj) {
+            // var value = obj.value //得到修改后的值
+            // , fieldKey = obj.field; //得到字段
+            var data = obj.data //得到所在行所有键值
+            if (data.id != null) {
+                var updateParam = {
+                    'paymentCode': data.paymentCode,
+                    'feeName': data.feeName,
+                    'intervalPrice': data.intervalPrice,
+                    'number': data.number,
+                    // 'startTime': data.startTime,
+                    // 'endTime': data.endTime,
+                    'id': data.id
+                }
+                febs.post(ctx + 'paymentDetails/update', updateParam, function () {
+                });
+            }
+
+
+        });
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            params.invalidate_ie_cache = new Date();
+            return params;
+        }
+
+    })
+</script>

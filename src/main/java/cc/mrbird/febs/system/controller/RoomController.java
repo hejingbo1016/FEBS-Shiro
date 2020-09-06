@@ -1,17 +1,16 @@
 package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
-import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.Room;
 import cc.mrbird.febs.system.service.IRoomService;
 import com.wuwenze.poi.ExcelKit;
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -65,9 +64,9 @@ public class RoomController extends BaseController {
     public FebsResponse addRoom(@Valid Room room) {
         if (!Objects.isNull(room)) {
             if (!StringUtils.isEmpty(room.getId())) {
-                this.roomService.createRoom(room);
-            } else {
                 this.roomService.updateRoom(room);
+            } else {
+                this.roomService.createRoom(room);
             }
         }
         return new FebsResponse().success();

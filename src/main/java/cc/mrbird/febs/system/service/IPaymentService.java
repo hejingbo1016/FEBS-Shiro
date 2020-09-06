@@ -48,4 +48,5 @@ public interface IPaymentService  extends IService<Payment> {
 
     void deletePayments(String paymentIds);
 
+    Payment selectByPaymentId(Long id);
 }

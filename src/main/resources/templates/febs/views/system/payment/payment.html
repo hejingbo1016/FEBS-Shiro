@@ -31,6 +31,18 @@
                                             <input type="text" name="hotelName" class="layui-input">
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="payType">
+                                                <option value=""></option>
+                                                <option value="1">待支付</option>
+                                                <option value="2">已支付</option>
+                                                <option value="3">申请退款</option>
+                                                <option value="4">已退款</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
 
                                 </div>
@@ -57,21 +69,28 @@
         </div>
     </div>
 </div>
-<script type="text/html" id="job-status">
+
+<script type="text/html" id="payment-payType">
     {{#
-    var status = {
-    0: {title: '正常', color: 'green'},
-    1: {title: '暂停', color: 'volcano'}
-    }[d.status];
+    var payType = {
+    1: {title: '待支付', color: 'volcano'},
+    2: {title: '已支付', color: 'green'},
+    3: {title: '申请退款', color: 'red'},
+    4: {title: '已退款', color: 'blue'}
+    }[d.payType];
     }}
-    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+    <span class="layui-badge febs-bg-{{payType.color}}">{{ payType.title }}</span>
 </script>
+
+
 <script type="text/html" id="payment-option">
     <span shiro:lacksPermission="payment:update,payment:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
     <a lay-event="edit" shiro:hasPermission="payment:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="paymentDetails" shiro:hasPermission="payment:details"><i
+            class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
     <a lay-event="del" shiro:hasPermission="payment:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
@@ -177,6 +196,19 @@
                     }
                 });
             }
+
+            if (layEvent === 'paymentDetails') {
+                sessionStorage.setItem('paymentCode', data.paymentCode);
+                febs.modal.open('订单详情', 'system/paymentDetails/list/', {
+                    area: $(window).width() <= 750 ? '80%' : '70%',
+                    yes: function (index, layero) {
+                        $('#paymentDetails').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
         });
 
         table.on('sort(paymentTable)', function (obj) {
@@ -201,7 +233,7 @@
                     {field: 'meetingName', title: '会议名称', maxWidth: 80},
                     {field: 'hotelName', title: '酒店名称', maxWidth: 80},
                     {field: 'paymentAmount', title: '支付金额', maxWidth: 80, sort: true},
-                    {field: 'payType', title: '支付状态', maxWidth: 80},
+                    {title: '状态', templet: '#payment-payType'},
                     {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
                     {title: '操作', toolbar: '#payment-option', minWidth: 80}
                 ]]
