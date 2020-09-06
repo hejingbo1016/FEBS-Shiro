@@ -1,0 +1,152 @@
+<style>
+    #meetingHotel-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #meetingHotel-update .layui-form-label {
+        width: 88px;
+    }
+
+    #meetingHotel-update .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="meetingHotel-update">
+    <form class="layui-form" action="" lay-filter="meetingHotel-update-form">
+
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">酒店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelName" maxlength="20"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">费用名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeName" maxlength="50" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">剩余数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="surplusNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">费用价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feePrice" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">可用数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="dateTime" id="febs-form-meetingHotel-dateTime" lay-verify="datetime"
+                       placeholder="日期" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">开始时间</label>-->
+        <!--<div class="layui-input-inline">-->
+        <!--<input type="text" name="startTime" id="febs-form-meetingHotel-start" lay-verify="datetime"-->
+        <!--placeholder="开始时间" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">结束时间</label>-->
+        <!--<div class="layui-input-inline">-->
+        <!--<input type="text" name="endTime" id="febs-form-meetingHotel-end" lay-verify="datetime"-->
+        <!--placeholder="结束时间" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="meetingHotel-update-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            meetingHotel = [[${meetingHotel}]],
+            $view = $('#meetingHotel-update'),
+            validate = layui.validate;
+        var laydate = layui.laydate;
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-start'
+            , type: 'datetime'
+        });
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-end'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#febs-form-meetingHotel-dateTime'
+            , type: 'datetime'
+        });
+
+        form.verify(validate);
+        form.render();
+
+        initphoneValue();
+
+        function initphoneValue() {
+            form.val("meetingHotel-update-form", {
+                "id": meetingHotel.id,
+                "feeName": meetingHotel.feeName,
+                "surplusNumber": meetingHotel.surplusNumber,
+                "feePrice": meetingHotel.feePrice,
+                "feeType": meetingHotel.feeType,
+                "availableNumber": meetingHotel.availableNumber,
+                "startTime": meetingHotel.startTime,
+                "endTime": meetingHotel.endTime,
+                "dateTime": meetingHotel.dateTime,
+                "hotelName": meetingHotel.hotelName
+            });
+        }
+
+        form.on('submit(meetingHotel-update-form-submit)', function (data) {
+            // data.field.endTime = new Date(data.field.endTime);
+            // data.field.startTime = new Date(data.field.startTime);
+            data.field.dateTime = new Date(data.field.dateTime);
+            if (febs.nativeEqual(data.field, meetingHotel)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            data.field.modifyTime = new Date();
+            febs.post(ctx + 'meetingHotel/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('费用项修改成功');
+                $('#febs-meetingHotel').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

@@ -38,6 +38,7 @@ public class ViewController extends BaseController {
     private final IWechatUserService wechatUserService;
     private final IPaymentService paymentService;
     private final IPaymentDetailsService paymentDetailsService;
+    private final IMeetingHotelService meetingHotelService;
 
 
     @GetMapping("login")
@@ -261,7 +262,6 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/meeting/meetingAudit");
     }
 
-
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment")
     @RequiresPermissions("payment:view")
     public String systemPayment() {
@@ -288,6 +288,25 @@ public class ViewController extends BaseController {
     public String hotelRoom() {
         return FebsUtil.view("system/payment/paymentDetails");
     }
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meeting/meetingHotel")
+    @RequiresPermissions("meetingHotel:view")
+    public String meetingHotel() {
+        return FebsUtil.view("system/meeting/meetingHotel");
+    }
+
+
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meetingHotel/update/{id}")
+    @RequiresPermissions("meetingHotel:update")
+    public String meetingHotelUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        MeetingHotel  meetingHotel = meetingHotelService.getById(id);
+        model.addAttribute("meetingHotel", meetingHotel);
+        return FebsUtil.view("system/meeting/meetingHotelUpdate");
+    }
+
+
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {

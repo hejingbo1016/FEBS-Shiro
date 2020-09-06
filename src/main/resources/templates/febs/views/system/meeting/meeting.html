@@ -70,6 +70,7 @@
                                      shiro:hasAnyPermissions="meeting:add,meeting:update,meeting:delete,meeting:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
+
                             </div>
                         </div>
                     </form>
@@ -100,6 +101,8 @@
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="audit" shiro:hasPermission="meeting:audit"><i
             class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
+    <a lay-event="meetHotel" shiro:hasPermission="meetingHotel:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe8b9;</i></a>
     <a lay-event="del" shiro:hasPermission="meeting:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
@@ -218,6 +221,20 @@
                     }
                 });
             }
+
+            if (layEvent === 'meetHotel') {
+                sessionStorage.setItem('meetingId', data.id);
+                febs.modal.open('会议费用项', 'system/meeting/meetingHotel', {
+                    area: $(window).width() <= 750 ? '90%' : '70%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#meeting-meetingHotel').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
         });
 
         table.on('sort(meetingTable)', function (obj) {
@@ -242,12 +259,12 @@
                     {field: 'sponsor', title: '主办方', maxWidth: 80},
                     {field: 'organizer', title: '承办方', maxWidth: 80},
                     {field: 'meetingPrincipal', title: '会议负责人', maxWidth: 80},
-                    {field: 'contactPhone', title: '联系方式', maxWidth: 80, sort: true},
-                    {field: 'meetingAddress', title: '会议地址', maxWidth: 80},
-                    {field: 'startTime', title: '开始时间', minWidth: 80, sort: true},
-                    {field: 'endTime', title: '结束时间', maxWidth: 80},
-                    {title: '状态', templet: '#meeting-status'},
-                    {title: '操作', toolbar: '#meeting-option', minWidth: 80}
+                    {field: 'contactPhone', title: '联系方式', maxWidth: 60, sort: true},
+                    {field: 'meetingAddress', title: '会议地址', maxWidth: 60},
+                    {field: 'startTime', title: '开始时间', minWidth: 60, sort: true},
+                    {field: 'endTime', title: '结束时间', maxWidth: 60},
+                    {title: '状态', templet: '#meeting-status', maxWidth: 50},
+                    {title: '操作', toolbar: '#meeting-option', minWidth: 100}
                 ]]
             });
         }
