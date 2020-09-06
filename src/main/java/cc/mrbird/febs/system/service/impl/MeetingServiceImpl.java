@@ -1,8 +1,10 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.dto.JsonObjectPage;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
 import cc.mrbird.febs.system.service.IMeetingService;
@@ -111,5 +113,19 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public void auditMeeting(Meeting meeting) {
         this.meetingMapper.auditMeeting(meeting);
+    }
+
+    @Override
+    public IPage<Meeting> weChatMettingList(QueryRequest request, Meeting meeting) {
+        if (org.springframework.util.StringUtils.isEmpty(meeting.getStatus())) {
+            meeting.setStatus(AdminConstants.AUDIT_T_TYPE);
+        }
+        return findMeetings(request, meeting);
+    }
+
+    @Override
+    public JsonObjectPage getWeChatMettingById(Long id) {
+        Meeting meeting = meetingMapper.selectById(id);
+        return JsonObjectPage.createJsonObjectPage(meeting);
     }
 }

@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.dto.JsonObjectPage;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
@@ -99,4 +100,23 @@ public class MeetingController extends BaseController {
         this.meetingService.auditMeeting(meeting);
         return new FebsResponse().success();
     }
+
+
+    @ControllerEndpoint(operation = "微信端获取会议列表", exceptionMessage = "微信获取会议列表失败")
+    @GetMapping("weChatMettingList")
+    @ResponseBody
+    public FebsResponse weChatMettingList(QueryRequest request, Meeting meeting) {
+        Map<String, Object> dataTable = getDataTable(this.meetingService.weChatMettingList(request, meeting));
+        return new FebsResponse().success().data(dataTable);
+    }
+
+
+    @ControllerEndpoint(operation = "微信端通过会议id获取详细信息", exceptionMessage = "微信端通过会议id获取详细信息")
+    @PostMapping("getWeChatMettingById")
+    @ResponseBody
+    public JsonObjectPage getWeChatMettingById(Long id) {
+        return meetingService.getWeChatMettingById(id);
+    }
+
+
 }

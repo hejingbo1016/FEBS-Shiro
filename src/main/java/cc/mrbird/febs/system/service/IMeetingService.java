@@ -1,5 +1,6 @@
 package cc.mrbird.febs.system.service;
 
+import cc.mrbird.febs.common.dto.JsonObjectPage;
 import cc.mrbird.febs.system.entity.Meeting;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
@@ -56,4 +57,8 @@ public interface IMeetingService extends IService<Meeting> {
     void deleteMeetings(String meetingIds);
 
     void auditMeeting(Meeting meeting);
+
+    IPage<Meeting> weChatMettingList(QueryRequest request, Meeting meeting);
+
+    JsonObjectPage getWeChatMettingById(Long id);
 }
