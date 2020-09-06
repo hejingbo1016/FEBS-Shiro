@@ -7,7 +7,9 @@ import cc.mrbird.febs.system.entity.MeetingHotel;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.service.IMeetingHotelService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,5 +67,12 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         LambdaQueryWrapper<MeetingHotel> wrapper = new LambdaQueryWrapper<>();
         // TODO 设置删除条件
         this.remove(wrapper);
+    }
+
+    @Override
+    public void deleteMeetingHotels(String ids) {
+        List<String> list = Arrays.asList(ids.split(StringPool.COMMA));
+        this.baseMapper.delete(new QueryWrapper<MeetingHotel>().lambda().in(MeetingHotel::getId, list));
+
     }
 }

@@ -2,7 +2,6 @@ package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
-import cc.mrbird.febs.common.dto.JsonObjectPage;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
@@ -54,6 +53,15 @@ public class MeetingController extends BaseController {
         Map<String, Object> dataTable = getDataTable(this.meetingService.findMeetings(request, meeting));
         return new FebsResponse().success().data(dataTable);
     }
+
+
+//    @GetMapping("getMeetingNames")
+//    @ResponseBody
+//    @RequiresPermissions("meeting:view")
+//    public FebsResponse getMeetingNames(QueryRequest request, Meeting meeting) {
+//        Map<String, Object> dataTable = getDataTable(this.meetingService.getMeetingNames(request, meeting));
+//        return new FebsResponse().success().data(dataTable);
+//    }
 
     @ControllerEndpoint(operation = "新增Meeting", exceptionMessage = "新增Meeting失败")
     @PostMapping
@@ -114,11 +122,19 @@ public class MeetingController extends BaseController {
     @ControllerEndpoint(operation = "微信端通过会议id获取详细信息", exceptionMessage = "微信端通过会议id获取详细信息")
     @PostMapping("getWeChatMettingById")
     @ResponseBody
-    public JsonObjectPage getWeChatMettingById(Long id) {
-        return meetingService.getWeChatMettingById(id);
+    public FebsResponse getWeChatMettingById(@Valid Long id) {
+        Meeting mettings = meetingService.getWeChatMettingById(id);
+        return new FebsResponse().success().data(mettings);
     }
 
 
-    
+    @ControllerEndpoint(operation = "微信端通过会议id查酒店列表", exceptionMessage = "微信端通过会议id查酒店列表失败")
+    @PostMapping("weChatHotelsByMeetingId")
+    @ResponseBody
+    public FebsResponse weChatHotelsByMeetingId(@Valid Long id) {
+//        return meetingService.weChatHotelsByMeetingId(id);
+        return null;
+    }
+
 
 }

@@ -52,4 +52,6 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
      * @param meetingHotel meetingHotel
      */
     void deleteMeetingHotel(MeetingHotel meetingHotel);
+
+    void deleteMeetingHotels(String ids);
 }

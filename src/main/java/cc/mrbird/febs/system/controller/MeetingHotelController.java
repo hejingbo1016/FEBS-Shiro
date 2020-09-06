@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +67,8 @@ public class MeetingHotelController extends BaseController {
     @GetMapping("delete/{ids}")
     @ResponseBody
     @RequiresPermissions("meetingHotel:delete")
-    public FebsResponse deleteMeetingHotel(MeetingHotel meetingHotel) {
-        this.meetingHotelService.deleteMeetingHotel(meetingHotel);
+    public FebsResponse deleteMeetingHotels(@NotBlank(message = "{required}") @PathVariable String ids) {
+        this.meetingHotelService.deleteMeetingHotels(ids);
         return new FebsResponse().success();
     }
 

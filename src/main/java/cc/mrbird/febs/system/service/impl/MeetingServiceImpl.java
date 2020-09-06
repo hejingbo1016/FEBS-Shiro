@@ -1,6 +1,5 @@
 package cc.mrbird.febs.system.service.impl;
 
-import cc.mrbird.febs.common.dto.JsonObjectPage;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
@@ -124,8 +123,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     }
 
     @Override
-    public JsonObjectPage getWeChatMettingById(Long id) {
+    public Meeting getWeChatMettingById(Long id) {
         Meeting meeting = meetingMapper.selectById(id);
-        return JsonObjectPage.createJsonObjectPage(meeting);
+        return meeting;
     }
 }

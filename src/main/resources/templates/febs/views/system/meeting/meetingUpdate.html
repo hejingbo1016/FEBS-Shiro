@@ -185,7 +185,7 @@
 
                         if ($view.find('#' + tableId) && $view.find('#' + tableId).length == 0) {
                             $view.find('#hotelTableList')
-                                .append('<h2>酒店名称：' + data.hotelName + '</h2>');
+                                .append('<h2 style="margin-left: 38px">酒店名称：' + data.hotelName + '</h2>');
                             $view.find('#hotelTableList')
                                 .append('<table class="layui-hide" id="' + tableId + '"></table>');
 
@@ -194,6 +194,7 @@
                                 id: '#' + tableId,
                                 url: ctx + 'room/list/' + id,
                                 cols: [[
+                                    {field: 'dateTime', edit: 'text', title: '日期', maxWidth: 100},
                                     {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
                                     {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
                                     {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},

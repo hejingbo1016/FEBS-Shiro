@@ -25,6 +25,13 @@
                                             <input type="text" name="meetingName" class="layui-input">
                                         </div>
                                     </div>
+                                    <!--<div class="layui-inline">-->
+                                    <!--<label class="layui-form-label layui-form-label-sm">会议名称</label>-->
+                                    <!--<div class="layui-input-inline">-->
+                                    <!--<select name="meetingName" id="meetingName" lay-filter="meetingName">-->
+                                    <!--</select>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
                                     <div class="layui-inline">
                                         <label class="layui-form-label">酒店名称</label>
                                         <div class="layui-input-inline">
@@ -221,6 +228,21 @@
                 })
             });
         });
+
+
+        // $.ajax({
+        //     url: ctx + 'meeting/getMeetingNames',
+        //     dataType: 'json',
+        //     type: 'post',
+        //     success: function (data) {
+        //         $.each(data, function (index, item) {
+        //             $('#meetingName').append(new Option(item.name, item.id));//往下拉菜单里添加元素
+        //         })
+        //
+        //         form.render();//菜单渲染 把内容加载进去
+        //     }
+        // })
+
 
         function initTable() {
             tableIns = febs.table.init({

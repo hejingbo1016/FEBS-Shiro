@@ -9,25 +9,24 @@ import cc.mrbird.febs.system.service.IFileService;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
-import lombok.RequiredArgsConstructor;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *  Service实现
+ * Service实现
  *
  * @author Hejingbo
  * @date 2020-08-05 23:40:32
@@ -51,9 +50,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     @Override
     public List<File> findFiles(File file) {
-	    LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(File::getForeignId, file.getForeignId());
-		return this.baseMapper.selectList(queryWrapper);
+        return this.baseMapper.selectList(queryWrapper);
     }
 
     @Override
@@ -73,23 +72,27 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     public void deleteFile(File file) {
         LambdaQueryWrapper<File> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(File::getForeignId, file.getForeignId());
-	    this.remove(wrapper);
-	}
+        this.remove(wrapper);
+    }
 
     @Override
     public List<File> upload(List<MultipartFile> file, String dir, Long fId) {
         List<File> fileList = CollUtil.newArrayList();
 
-        for (MultipartFile multipartFile : file) {
-            fileList.add(this.upload(multipartFile, dir, fId));
+        if (!StringUtils.isEmpty(file) && file.size() > 0) {
+            for (MultipartFile multipartFile : file) {
+                fileList.add(this.upload(multipartFile, dir, fId));
+            }
+        } else {
+            return null;
         }
-
         return fileList;
     }
 
-	@Override
+    @Override
     @Transactional(rollbackFor = Exception.class)
-	public File upload(MultipartFile file, String dir, Long fId) {
+    public File upload(MultipartFile file, String dir, Long fId) {
+
         String pathSeparator = CommonConstants.PATH_SEPARATOR;
         String fullFilePath = null;
         try (InputStream stream = file.getInputStream()) {
@@ -111,10 +114,11 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             File file1 = new File();
             file1.setForeignId(fId);
             file1.setFileExtension(fileSuffix);
-            file1.setFileName(fileName.substring(0, fileName.indexOf('.')));
+            if (!StringUtils.isEmpty(fileName)) {
+                file1.setFileName(fileName.substring(0, fileName.indexOf('.')));
+            }
             file1.setFileSize(file.getSize());
             file1.setUrl(filePath);
-
             fileMapper.insert(file1);
             return file1;
         } catch (IOException e) {
