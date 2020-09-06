@@ -3,10 +3,8 @@ package cc.mrbird.febs.wechat.utils;
 import cc.mrbird.febs.common.utils.ConfigUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.data.redis.core.RedisTemplate;
-import weixin.popular.api.PayMchAPI;
 import weixin.popular.api.TokenAPI;
 import weixin.popular.api.UserAPI;
 import weixin.popular.bean.token.Token;
@@ -15,6 +13,8 @@ import weixin.popular.bean.user.User;
 import weixin.popular.bean.user.UserInfoList;
 
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class WechatUtil {
@@ -22,6 +22,8 @@ public class WechatUtil {
     private static final String WEIXIN_TOKEN_KEY = "wechatToken";
     private static final String APP_ID = ConfigUtil.getProperty("wechat.appid");
     private static final String APP_SECRET = ConfigUtil.getProperty("wechat.appSecret");
+    private static final String AB = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static Random rnd = new Random();
 
     /**
      * 获取token 存入redis 7000过期
@@ -118,5 +120,35 @@ public class WechatUtil {
                 openidList.addAll(CollUtil.toList(openidArr));
             }
         }
+    }
+
+    public static String createNonceStr() {
+        String s = UUID.randomUUID().toString();
+        // 去掉“-”符号
+        return s.replaceAll( "\\-","").toUpperCase();
+    }
+
+    /**
+     * 针对微信支付生成商户订单号，为了避免微信商户订单号重复（下单单位支付），
+     *
+     * @return
+     */
+    public static String generateOrderSN() {
+        StringBuffer orderSNBuffer = new StringBuffer();
+        orderSNBuffer.append(System.currentTimeMillis());
+        orderSNBuffer.append(getRandomString(7));
+        return orderSNBuffer.toString();
+    }
+
+    /**
+     * 获取随机字符串
+     * @param len
+     * @return
+     */
+    public static String getRandomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 }
