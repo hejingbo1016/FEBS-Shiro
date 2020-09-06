@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.MeetingHotelMapper">
 
+
+    <select id="countMeetHotels" resultType="java.lang.Long">
+
+
+        select count(1) from t_meeting_hotel t
+        left join t_hotel h on t.hotel_id = h.id
+        where t.meeting_id =#{meetingHotel.meetingId} and t.deleted =0
+        <if test="meetingHotel.feeName != null and meetingHotel.feeName != ''">
+            AND t.fee_name like CONCAT('%',#{meetingHotel.feeName},'%')
+        </if>
+        <if test="meetingHotel.hotelName != null and meetingHotel.hotelName != ''">
+            AND h.hotel_name like CONCAT('%',#{meetingHotel.hotelName},'%')
+        </if>
+        <if test="meetingHotel.feeType != null and meetingHotel.feeType != ''">
+            AND t.fee_type = #{meetingHotel.feeType}
+        </if>
+
+
+    </select>
+
+
+    <select id="findMeetingHotelsPage" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+
+        select t.*,h.hotel_name from t_meeting_hotel t
+        left join t_hotel h on t.hotel_id = h.id
+        where t.meeting_id = #{meetingHotel.meetingId} and t.deleted =0
+        <if test="meetingHotel.feeName != null and meetingHotel.feeName != ''">
+            AND t.fee_name like CONCAT('%',#{meetingHotel.feeName},'%')
+        </if>
+        <if test="meetingHotel.hotelName != null and meetingHotel.hotelName != ''">
+            AND h.hotel_name like CONCAT('%',#{meetingHotel.hotelName},'%')
+        </if>
+        <if test="meetingHotel.feeType != null and meetingHotel.feeType != ''">
+            AND t.fee_type = #{meetingHotel.feeType}
+        </if>
+
+
+    </select>
 </mapper>

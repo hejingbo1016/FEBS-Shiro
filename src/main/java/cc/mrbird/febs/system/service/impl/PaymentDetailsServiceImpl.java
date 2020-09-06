@@ -1,7 +1,9 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.Snowflake;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.PaymentDetails;
 import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
 import cc.mrbird.febs.system.service.IPaymentDetailsService;
@@ -35,6 +37,7 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
         Page<PaymentDetails> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setTotal(baseMapper.countPaymentDetails(paymentDetails));
         IPage<PaymentDetails> paymentDetailsIPage = paymentDetailsMapper.findPaymentDetailsPage(page, paymentDetails);
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
         return paymentDetailsIPage;
     }
 
