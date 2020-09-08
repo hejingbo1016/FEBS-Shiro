@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
+import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
 import cc.mrbird.febs.system.service.IMeetingService;
@@ -126,5 +127,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     public Meeting getWeChatMettingById(Long id) {
         Meeting meeting = meetingMapper.selectById(id);
         return meeting;
+    }
+
+    @Override
+    public List<HotelName> weChatHotelsByMeetingId(Long id) {
+
+        List<HotelName> list = meetingMapper.weChatHotelsByMeetingId(id);
+        return list;
     }
 }

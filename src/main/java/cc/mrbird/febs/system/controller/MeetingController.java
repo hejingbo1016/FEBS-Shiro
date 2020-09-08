@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.wuwenze.poi.ExcelKit;
@@ -129,10 +130,10 @@ public class MeetingController extends BaseController {
 
 
     @ControllerEndpoint(operation = "微信端通过会议id查酒店列表", exceptionMessage = "微信端通过会议id查酒店列表失败")
-    @PostMapping("weChatHotelsByMeetingId")
+    @GetMapping("weChatHotelsByMeetingId")
     @ResponseBody
     public FebsResponse weChatHotelsByMeetingId(@Valid Long id) {
-//        return meetingService.weChatHotelsByMeetingId(id);
+        List<HotelName> hotelNameList = meetingService.weChatHotelsByMeetingId(id);
         return null;
     }
 
