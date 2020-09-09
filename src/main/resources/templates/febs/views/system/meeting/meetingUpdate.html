@@ -10,6 +10,8 @@
     #meeting-update .layui-input-block {
         margin-left: 120px;
     }
+
+
 </style>
 <div class="layui-fluid" id="meeting-update">
     <form class="layui-form" action="" lay-filter="meeting-update-form">
@@ -194,7 +196,6 @@
                                 id: '#' + tableId,
                                 url: ctx + 'room/list/' + id,
                                 cols: [[
-                                    {field: 'dateTime', edit: 'text', title: '日期', maxWidth: 100},
                                     {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
                                     {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
                                     {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},

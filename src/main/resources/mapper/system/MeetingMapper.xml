@@ -39,19 +39,10 @@
 
     <select id="weChatHotelsByMeetingId" resultType="cc.mrbird.febs.system.entity.HotelName">
 
-        SELECT
-            id,
-            hotel_name
-        FROM
-            t_hotel h
-            LEFT JOIN (
             SELECT
-                hotel_id
-            FROM
-                t_meeting_hotel
-        WHERE
-            meeting_id = #{id} GROUP BY hotel_id) t on t.hotel_id = h.id
-            and h.deleted =0
+            h.id,h.hotel_name  from t_hotel h
+            left join t_meeting_hotel t on  h.id  = t.hotel_id and  t.meeting_id = #{meetingId}
+            where h.deleted = 0
 
 
     </select>

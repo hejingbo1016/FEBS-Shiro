@@ -6,7 +6,6 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.wuwenze.poi.ExcelKit;
@@ -111,31 +110,7 @@ public class MeetingController extends BaseController {
     }
 
 
-    @ControllerEndpoint(operation = "微信端获取会议列表", exceptionMessage = "微信获取会议列表失败")
-    @GetMapping("weChatMettingList")
-    @ResponseBody
-    public FebsResponse weChatMettingList(QueryRequest request, Meeting meeting) {
-        Map<String, Object> dataTable = getDataTable(this.meetingService.weChatMettingList(request, meeting));
-        return new FebsResponse().success().data(dataTable);
-    }
 
-
-    @ControllerEndpoint(operation = "微信端通过会议id获取详细信息", exceptionMessage = "微信端通过会议id获取详细信息")
-    @GetMapping("getWeChatMettingById")
-    @ResponseBody
-    public FebsResponse getWeChatMettingById(@Valid Long id) {
-        Meeting mettings = meetingService.getWeChatMettingById(id);
-        return new FebsResponse().success().data(mettings);
-    }
-
-
-    @ControllerEndpoint(operation = "微信端通过会议id查酒店列表", exceptionMessage = "微信端通过会议id查酒店列表失败")
-    @GetMapping("weChatHotelsByMeetingId")
-    @ResponseBody
-    public FebsResponse weChatHotelsByMeetingId(@Valid Long id) {
-        List<HotelName> hotelNameList = meetingService.weChatHotelsByMeetingId(id);
-        return null;
-    }
 
 
 }
