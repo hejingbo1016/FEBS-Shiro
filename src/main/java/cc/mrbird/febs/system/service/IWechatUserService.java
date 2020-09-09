@@ -1,8 +1,10 @@
 package cc.mrbird.febs.system.service;
 
+import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.system.entity.WechatUser;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.wechat.dto.GetCodeDTO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -54,4 +56,6 @@ public interface IWechatUserService extends IService<WechatUser> {
     void deleteWechatUser(WechatUser wechatUser);
 
     void deleteWeChatUsers(String weChatUserIds);
+
+    ResponseDTO registerUser(GetCodeDTO getCodeDTO);
 }
