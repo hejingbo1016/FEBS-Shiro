@@ -1,6 +1,7 @@
 package cc.mrbird.febs.system.service;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -59,4 +60,6 @@ public interface IMeetingService extends IService<Meeting> {
     IPage<Meeting> weChatMettingList(QueryRequest request, Meeting meeting);
 
     Meeting getWeChatMettingById(Long id);
+
+    List<HotelName> weChatHotelsByMeetingId(Long id);
 }
