@@ -13,10 +13,7 @@ import cc.mrbird.febs.system.service.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -70,15 +67,9 @@ public class WechatApiController extends BaseController {
 
     @ControllerEndpoint(operation = "根据订单编号查详情", exceptionMessage = "根据订单编号查详情失败")
     @GetMapping("getPaymentDetailsByCode")
-    @ResponseBody
     public FebsResponse getPaymentDetailsByCode(@Valid String paymentCode) {
         List<PaymentDetails> paymentDetails = paymentService.getPaymentDetailsByCode(paymentCode);
         return new FebsResponse().success().data(paymentDetails);
     }
-
-
-
-
-
 
 }
