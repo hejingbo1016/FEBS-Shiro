@@ -34,10 +34,10 @@ public class WechatController extends BaseController {
     @RequestMapping(value = "/getCode")
     public ResponseDTO getCode(@RequestBody GetCodeDTO getCodeDTO) {
         log.info("code: "+getCodeDTO.getCode());
-        String openid = weiChatRequestUtils.getOpenid(getCodeDTO.getCode());
-        if (StringUtils.isEmpty(openid)){
-            return ResponseDTO.failture("获取openid失败，授权失败");
-        }
+//        String openid = weiChatRequestUtils.getOpenid(getCodeDTO.getCode());
+//        if (StringUtils.isEmpty(openid)){
+//            return ResponseDTO.failture("获取openid失败，授权失败");
+//        }
         return wechatUserService.registerUser(getCodeDTO);
     }
 
