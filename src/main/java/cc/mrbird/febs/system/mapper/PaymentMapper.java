@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  *  Mapper
  *
@@ -23,4 +25,6 @@ public interface PaymentMapper extends BaseMapper<Payment> {
     void insertPayment(Payment payment);
 
     Payment selectByPaymentId(Long id);
+
+    List<Payment> getPaymentListByUserId(@Param("userId") Long userId);
 }

@@ -107,6 +107,29 @@ public class Payment {
     @ExcelField(value = "酒店名称")
     @TableField(exist = false)
     private String hotelName;
+	
+	
+	  /**
+     * 微信用户id
+     */
+    @TableField("user_id")
+    private Long userId;
+	
+	
+	 /**
+     * 联系方式
+     */
+    @TableField("contact_phone")
+    private Integer contactPhone;
+	
+	
+	    /**
+     * 入住人
+     */
+    @TableField("occupants")
+    private String occupants;
+	
+	
 
 
 }

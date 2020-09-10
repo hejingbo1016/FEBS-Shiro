@@ -129,9 +129,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         return meeting;
     }
 
+
     @Override
     public List<HotelName> weChatHotelsByMeetingId(Long id) {
-
         List<HotelName> list = meetingMapper.weChatHotelsByMeetingId(id);
         return list;
     }

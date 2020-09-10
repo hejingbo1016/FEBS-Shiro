@@ -48,7 +48,7 @@
                                      id="reset">
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
-                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more "
                                      shiro:hasAnyPermissions="meetingHotel:add,meetingHotel:update,meetingHotel:delete,meetingHotel:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
@@ -211,9 +211,6 @@
                     {field: 'feePrice', title: '价格', maxWidth: 80},
                     {field: 'availableNumber', title: '可用数量', maxWidth: 80},
                     {field: 'surplusNumber', title: '剩余数量', maxWidth: 80, sort: true},
-                    {field: 'dateTime', title: '日期', minWidth: 80, sort: true},
-                    // {field: 'startTime', title: '开始时间', minWidth: 80, sort: true},
-                    // {field: 'endTime', title: '结束时间', maxWidth: 80, sort: true},
                     {title: '操作', toolbar: '#meetingHotel-option', minWidth: 80}
                 ]]
             });

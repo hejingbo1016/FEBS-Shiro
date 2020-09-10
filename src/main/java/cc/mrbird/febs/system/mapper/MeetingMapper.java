@@ -20,5 +20,5 @@ public interface MeetingMapper extends BaseMapper<Meeting> {
 
     void auditMeeting(Meeting meeting);
 
-    List<HotelName> weChatHotelsByMeetingId(Long id);
+    List<HotelName> weChatHotelsByMeetingId(@Param("meetingId") Long meetingId);
 }
