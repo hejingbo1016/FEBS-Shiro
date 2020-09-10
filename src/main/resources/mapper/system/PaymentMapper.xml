@@ -153,6 +153,19 @@
         t_payment t
         left join t_meeting m on m.id = t.meeting_id
         left join t_hotel h on h.id = t.hotel_id
-        where t.id = #{id}
+        where t.id = #{id} and t.deleted = 0
+    </select>
+
+
+    <select id="getPaymentListByUserId" resultType="cc.mrbird.febs.system.entity.Payment">
+
+        select  t.payment_Code,t.payment_Amount,
+         t.payType,t.userId,t.createTime,m.meeting_name ,h.hotel_name
+        FROM
+        t_payment t
+        left join t_meeting m on m.id = t.meeting_id
+        left join t_hotel h on h.id = t.hotel_id
+        where t.id = #{id}  and t.deleted = 0
+
     </select>
 </mapper>

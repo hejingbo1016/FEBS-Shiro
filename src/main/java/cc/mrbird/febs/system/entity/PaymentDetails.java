@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
 import java.util.Date;
@@ -21,35 +22,41 @@ import java.util.Date;
 public class PaymentDetails {
 
     /**
-     *
+     *主键
      */
     @JsonSerialize(using = ToStringSerializer.class)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     *
+   /**
+     * 订单编号
      */
     @TableField("payment_Code")
     private Long paymentCode;
 
-    /**
-     *
+       /**
+     * 费用名称
      */
     @TableField("fee_name")
     private String feeName;
 
     /**
-     *
+     *数量
      */
     @TableField("number")
     private Integer number;
 
     /**
-     * 区间金额
+     * 单价
      */
     @TableField("interval_price")
     private Double intervalPrice;
+	
+	 /**
+     * 小计
+     */
+    @TableField("subtotal")
+    private Double subtotal;
 
     /**
      * 入住日期
@@ -92,5 +99,23 @@ public class PaymentDetails {
      */
     @TableField("deleted")
     private Integer deleted;
-
+	
+    /**
+     * 费用类型（1房费，2其他费用）
+     */
+    @TableField("fee_type")
+    private Integer feeType;
+	
+	  /**
+     * 酒店id
+     */
+    @TableField("hotel_id")
+    private Long hotelId;
+	
+	    /**
+     * 酒店名称
+     */
+    @ExcelField(value = "酒店名称")
+    @TableField(exist = false)
+    private String hotelName;
 }

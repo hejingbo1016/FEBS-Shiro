@@ -5,6 +5,8 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
 import cc.mrbird.febs.system.mapper.PaymentMapper;
 import cc.mrbird.febs.system.service.IPaymentService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -32,6 +34,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     private static Snowflake snowflake = Snowflake.getInstanceSnowflake();
 
     private final PaymentMapper paymentMapper;
+    private final PaymentDetailsMapper detailsMapper;
+
 
     @Override
     public IPage<Payment> findPayments(QueryRequest request, Payment payment) {
@@ -101,6 +105,16 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     @Override
     public Payment selectByPaymentId(Long id) {
         return paymentMapper.selectByPaymentId(id);
+    }
+
+    @Override
+    public List<Payment> getPaymentListByUserId(Long userId) {
+        return paymentMapper.getPaymentListByUserId(userId);
+    }
+
+    @Override
+    public List<PaymentDetails> getPaymentDetailsByCode(String paymentCode) {
+        return detailsMapper.getPaymentDetailsByCode(paymentCode);
     }
 
 

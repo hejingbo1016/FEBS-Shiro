@@ -6,7 +6,10 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
+import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.PaymentDetails;
 import cc.mrbird.febs.system.service.IMeetingService;
+import cc.mrbird.febs.system.service.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +30,7 @@ import java.util.Map;
 public class WechatApiController extends BaseController {
 
     private final IMeetingService meetingService;
+    private final IPaymentService paymentService;
 
     @ControllerEndpoint(operation = "微信端获取会议列表", exceptionMessage = "微信获取会议列表失败")
     @GetMapping("weChatMettingList")
@@ -51,7 +55,25 @@ public class WechatApiController extends BaseController {
     @ResponseBody
     public FebsResponse weChatHotelsByMeetingId(@Valid Long id) {
         List<HotelName> hotelNameList = meetingService.weChatHotelsByMeetingId(id);
-        return null;
+        return new FebsResponse().success().data(hotelNameList);
+    }
+
+
+    @ControllerEndpoint(operation = "根据用户id查自己的订单列表", exceptionMessage = "根据用户id查自己的订单列表失败")
+    @GetMapping("getPaymentListByUserId")
+    @ResponseBody
+    public FebsResponse getPaymentListByUserId(@Valid Long userId) {
+        List<Payment> paymentList = paymentService.getPaymentListByUserId(userId);
+        return new FebsResponse().success().data(paymentList);
+    }
+
+
+    @ControllerEndpoint(operation = "根据订单编号查详情", exceptionMessage = "根据订单编号查详情失败")
+    @GetMapping("getPaymentDetailsByCode")
+    @ResponseBody
+    public FebsResponse getPaymentDetailsByCode(@Valid String paymentCode) {
+        List<PaymentDetails> paymentDetails = paymentService.getPaymentDetailsByCode(paymentCode);
+        return new FebsResponse().success().data(paymentDetails);
     }
 
 

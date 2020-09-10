@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.PaymentDetails;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -49,4 +50,8 @@ public interface IPaymentService  extends IService<Payment> {
     void deletePayments(String paymentIds);
 
     Payment selectByPaymentId(Long id);
+
+    List<Payment> getPaymentListByUserId(Long userId);
+
+    List<PaymentDetails> getPaymentDetailsByCode(String paymentCode);
 }
