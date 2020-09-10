@@ -26,7 +26,18 @@
         </if>
 
 
+    </select>
+
+    <select id="getHotels" resultType="cc.mrbird.febs.system.entity.HotelName">
+
+        SELECT  id as hotelId, hotel_name  as hotelName
+        FROM t_hotel where deleted = 0
+
+    </select>
 
 
+    <select id="getHotelRooms" resultType="cc.mrbird.febs.system.entity.Room">
+       SELECT  *
+        FROM t_room where deleted = 0 and hotel_id =#{hotelId}
     </select>
 </mapper>

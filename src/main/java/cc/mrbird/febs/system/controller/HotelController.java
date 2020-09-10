@@ -8,6 +8,8 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.system.entity.Hotel;
+import cc.mrbird.febs.system.entity.HotelName;
+import cc.mrbird.febs.system.entity.Room;
 import cc.mrbird.febs.system.service.IFileService;
 import cc.mrbird.febs.system.service.IHotelService;
 import cn.hutool.http.server.HttpServerRequest;
@@ -118,4 +120,26 @@ public class HotelController extends BaseController {
         List<Hotel> hotels = this.hotelService.findHotels(queryRequest, hotel).getRecords();
         ExcelKit.$Export(Hotel.class, response).downXlsx(hotels, false);
     }
+
+
+    @ControllerEndpoint(operation = "异步加载所有的酒店", exceptionMessage = "异步加载所有的酒店失败")
+    @GetMapping("getHotels")
+    @ResponseBody
+    @RequiresPermissions("hotel:view")
+    public FebsResponse getHotels() {
+        List<HotelName> hotels = hotelService.getHotels();
+        return new FebsResponse().success().data(hotels);
+    }
+
+
+    @ControllerEndpoint(operation = "异步加载所有的酒店费用名称", exceptionMessage = "异步加载所有的酒店费用名称失败")
+    @GetMapping("getHotelRooms")
+    @ResponseBody
+    @RequiresPermissions("hotel:view")
+    public FebsResponse getHotelRooms(@Valid Long hotelId) {
+        List<Room> roomList = hotelService.getHotelRooms(hotelId);
+        return new FebsResponse().success().data(roomList);
+    }
+
+
 }

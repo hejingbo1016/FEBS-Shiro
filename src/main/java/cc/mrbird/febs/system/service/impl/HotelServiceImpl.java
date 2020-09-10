@@ -4,6 +4,8 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.Hotel;
+import cc.mrbird.febs.system.entity.HotelName;
+import cc.mrbird.febs.system.entity.Room;
 import cc.mrbird.febs.system.mapper.HotelMapper;
 import cc.mrbird.febs.system.service.IHotelService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -101,5 +103,17 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
         List<String> list = Arrays.asList(deleteIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Hotel>().lambda().in(Hotel::getId, list));
 
+    }
+
+    @Override
+    public List<HotelName> getHotels() {
+        List<HotelName> list = baseMapper.getHotels();
+        return list;
+    }
+
+    @Override
+    public List<Room> getHotelRooms(Long hotelId) {
+        List<Room> roomList = baseMapper.getHotelRooms(hotelId);
+        return roomList;
     }
 }
