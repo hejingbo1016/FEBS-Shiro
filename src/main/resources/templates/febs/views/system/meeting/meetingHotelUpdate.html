@@ -20,11 +20,16 @@
                 <input type="text" name="id" class="layui-input">
             </div>
         </div>
-
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">hotelId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelId" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="hotelName" maxlength="20"
+                <input type="text" name="hotelName" maxlength="20" id="hotelName"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -84,7 +89,7 @@
         </div>
     </form>
 </div>
-
+<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
 <script data-th-inline="javascript">
     layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
@@ -94,7 +99,6 @@
             $view = $('#meetingHotel-update'),
             validate = layui.validate;
         var laydate = layui.laydate;
-
 
         laydate.render({
             elem: '#febs-form-meetingHotel-start'
@@ -148,5 +152,84 @@
             return false;
         });
 
+        var tableSelect = layui.tableSelect;
+        tableSelect.render({
+            elem: '#hotelName',
+            checkedKey: 'id',
+            searchKey: 'hotelName',	//搜索输入框的name值 默认keyword
+            table: {
+                url: ctx + 'hotel/list',
+                parseData: function (res) {
+                    if (res.code !== 200) {
+                        console.error(res)
+                    }
+                    return {
+                        "code": res.code === 200 ? 0 : res.code,
+                        "count": res.data.total,
+                        "data": res.data.rows
+                    }
+                },
+                cols: [
+                    { type: 'radio' },
+                    { field: 'id', title: 'ID',hide:true },
+                    { field: 'hotelName', title: '酒店名称' },
+                    { field: 'hotelAddress', title: '酒店地址' }
+                ]
+            },
+            done: function (elem, data) {
+                var NEWJSON = []
+                layui.each(data.data, function (index, item) {
+                    NEWJSON.push(item.hotelName)
+                    form.val("meetingHotel-update-form", {
+                        "hotelName": item.hotelName,
+                        "hotelId": item.id
+                        // "dateTime": item.roomDate
+                    });
+                })
+                elem.val(NEWJSON.join(","))
+                getHotelRooms(elem.attr('ts-selected'))
+            }
+        })
+
+        function getHotelRooms(hotelId) {
+            tableSelect.render({
+                elem: '#feeName',
+                checkedKey: 'id',
+                table: {
+                    url: ctx + 'room/list/' + hotelId,
+                    parseData: function (res) {
+                        if (res.code !== 200) {
+                            console.error(res)
+                        }
+                        return {
+                            "code": res.code === 200 ? 0 : res.code,
+                            "count": res.data.total,
+                            "data": res.data.rows
+                        }
+                    },
+                    cols: [
+                        { type: 'radio' },
+                        { field: 'id', title: 'ID',hide:true },
+                        { field: 'roomType', title: '房间类型' },
+                        { field: 'roomCount', title: '房间数量' },
+                        { field: 'surplusNumber', title: '剩余数量' },
+                        { field: 'univalence', title: '单价' }
+                    ]
+                },
+                done: function (elem, data) {
+                    var NEWJSON = []
+                    layui.each(data.data, function (index, item) {
+                        NEWJSON.push(item.roomType)
+                        form.val("meetingHotel-update-form", {
+                            "surplusNumber": item.surplusNumber,
+                            "feePrice": item.univalence,
+                            "availableNumber": item.surplusNumber
+                            // "dateTime": item.roomDate
+                        });
+                    })
+                    elem.val(NEWJSON.join(","))
+                }
+            })
+        }
     });
 </script>
