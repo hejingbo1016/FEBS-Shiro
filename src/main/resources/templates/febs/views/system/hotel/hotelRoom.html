@@ -13,9 +13,9 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">房间类型</label>
+                                        <label class="layui-form-label">费用名称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="roomType" autocomplete="off"
+                                            <input type="text" name="roomName" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </form>
-                    <button type="button" class="layui-btn layui-btn-normal" id="addTable">新增房类</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="addTable">新增</button>
                     <table lay-filter="hotelRoomTable" lay-data="{id: 'hotelRoomTable'}"></table>
                 </div>
             </div>
@@ -49,6 +49,18 @@
     }[d.status];
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+
+<script type="text/html" id="room-type">
+    {{#
+    var roomType = {
+    1: {title: '房型', color: 'green'},
+    2: {title: '餐费', color: 'volcano'},
+    2: {title: '门票', color: 'blue'},
+    3: {title: '其他', color: 'red'}
+    }[d.roomType];
+    }}
+    <span class="layui-badge febs-bg-{{roomType.color}}">{{ roomType.title }}</span>
 </script>
 <script type="text/html" id="hotelRoom-option">
     <span shiro:lacksPermission="room:delete">
@@ -165,7 +177,7 @@
 
             if (layEvent === 'addRoom') {
                 var hotelIds = $("#" + hotelId + "hotelId").text();
-                var roomType = $("#" + hotelId + "roomType").text();
+                var roomName = $("#" + hotelId + "roomName").text();
                 var roomCount = $("#" + hotelId + "roomCount").text();
                 var surplusNumber = $("#" + hotelId + "surplusNumber").text();
                 var univalence = $("#" + hotelId + "univalence").text();
@@ -174,7 +186,7 @@
 
                 var param = {
                     'hotelId': hotelIds,
-                    'roomType': roomType,
+                    'roomName': roomName,
                     'roomCount': roomCount,
                     'surplusNumber': surplusNumber,
                     'univalence': univalence,
@@ -213,11 +225,12 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'hotelId', title: 'ID'},
-                    {field: 'roomType', edit: 'text', title: '房间类型', maxWidth: 100},
+                    {field: 'roomName', edit: 'text', title: '名称', maxWidth: 100},
+                    {title: '类型', templet: '#room-type', maxWidth: 50},
+                    {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
                     {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
                     {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},
-                    {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
-                    {field: 'totalPrice', edit: 'text', title: '总价', maxWidth: 80},
+                    // {field: 'totalPrice', edit: 'text', title: '总价', maxWidth: 80},
                     {title: '操作', toolbar: '#hotelRoom-option', minWidth: 80}
 
                 ]]
@@ -236,11 +249,11 @@
             var tr = " <tr>" +
                 " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
                 " <td data-field='hotelId'> <div id='" + hotelId + "hotelId' class='layui-table-cell laytable-cell-1-hotelId '>" + hotelId + "</div></td>" +
-                " <td data-field='roomType' data-edit='text'> <div id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
+                " <td data-field='roomName' data-edit='text'> <div id='" + hotelId + "roomName' class='layui-table-cell laytable-cell-1-roomName '> </div></td>" +
+                " <td data-field='totalPrice' data-edit='text'> <div  id='" + hotelId + "totalPrice' class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
+                " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
                 " <td data-field='roomCount' data-edit='text'> <div  id='" + hotelId + "roomCount' class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
                 " <td data-field='surplusNumber' data-edit='text'> <div  id='" + hotelId + "surplusNumber' class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
-                " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
-                " <td data-field='totalPrice' data-edit='text'> <div  id='" + hotelId + "totalPrice' class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
                 " <td data-field='操作'  toolbar:'#hotelRoom-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='room:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
                 " </tr>";
             $("[lay-id='hotelRoomTable'] .layui-table-body .layui-table tbody").append(tr);
@@ -254,7 +267,7 @@
             if (data.id != null) {
                 var updateParam = {
                     'hotelId': data.hotelId,
-                    'roomType': data.roomType,
+                    'roomName': data.roomName,
                     'roomCount': data.roomCount,
                     'surplusNumber': data.surplusNumber,
                     'univalence': data.univalence,
