@@ -99,58 +99,6 @@
             $view = $('#meetingHotel-update'),
             validate = layui.validate;
         var laydate = layui.laydate;
-
-        laydate.render({
-            elem: '#febs-form-meetingHotel-start'
-            , type: 'datetime'
-        });
-
-
-        laydate.render({
-            elem: '#febs-form-meetingHotel-end'
-            , type: 'datetime'
-        });
-        laydate.render({
-            elem: '#febs-form-meetingHotel-dateTime'
-            , type: 'datetime'
-        });
-
-        form.verify(validate);
-        form.render();
-
-        initphoneValue();
-
-        function initphoneValue() {
-            form.val("meetingHotel-update-form", {
-                "id": meetingHotel.id,
-                "feeName": meetingHotel.feeName,
-                "surplusNumber": meetingHotel.surplusNumber,
-                "feePrice": meetingHotel.feePrice,
-                "feeType": meetingHotel.feeType,
-                "availableNumber": meetingHotel.availableNumber,
-                "startTime": meetingHotel.startTime,
-                "endTime": meetingHotel.endTime,
-                "dateTime": meetingHotel.dateTime,
-                "hotelName": meetingHotel.hotelName
-            });
-        }
-
-        form.on('submit(meetingHotel-update-form-submit)', function (data) {
-
-            data.field.dateTime = new Date(data.field.dateTime);
-            if (febs.nativeEqual(data.field, meetingHotel)) {
-                febs.alert.warn('数据未作任何修改！');
-                return false;
-            }
-            data.field.modifyTime = new Date();
-            febs.post(ctx + 'meetingHotel/update', data.field, function () {
-                // layer.closeAll();
-                febs.alert.success('费用项修改成功');
-                $('#febs-meetingHotel').find('#query').click();
-            });
-            return false;
-        });
-
         var tableSelect = layui.tableSelect;
         tableSelect.render({
             elem: '#hotelName',
@@ -230,5 +178,59 @@
                 }
             })
         }
+        laydate.render({
+            elem: '#febs-form-meetingHotel-start'
+            , type: 'datetime'
+        });
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-end'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#febs-form-meetingHotel-dateTime'
+            , type: 'datetime'
+        });
+
+        form.verify(validate);
+        form.render();
+
+        initphoneValue();
+
+        function initphoneValue() {
+            form.val("meetingHotel-update-form", {
+                "id": meetingHotel.id,
+                "feeName": meetingHotel.feeName,
+                "surplusNumber": meetingHotel.surplusNumber,
+                "feePrice": meetingHotel.feePrice,
+                "feeType": meetingHotel.feeType,
+                "availableNumber": meetingHotel.availableNumber,
+                "startTime": meetingHotel.startTime,
+                "endTime": meetingHotel.endTime,
+                "dateTime": meetingHotel.dateTime,
+                "hotelName": meetingHotel.hotelName
+            });
+
+            getHotelRooms(meetingHotel.hotelId)
+        }
+
+        form.on('submit(meetingHotel-update-form-submit)', function (data) {
+
+            data.field.dateTime = new Date(data.field.dateTime);
+            if (febs.nativeEqual(data.field, meetingHotel)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            data.field.modifyTime = new Date();
+            febs.post(ctx + 'meetingHotel/update', data.field, function () {
+                // layer.closeAll();
+                febs.alert.success('费用项修改成功');
+                $('#febs-meetingHotel').find('#query').click();
+            });
+            return false;
+        });
+
+
     });
 </script>
