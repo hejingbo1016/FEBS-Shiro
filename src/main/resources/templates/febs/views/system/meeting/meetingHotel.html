@@ -2,6 +2,10 @@
     #febs-meetingHotel .layui-form-label {
         width: 65px;
     }
+
+    .layui-dropdown {
+        z-index: 59891016 !important;
+    }
 </style>
 <div class="layui-fluid layui-anim febs-anim" id="febs-meetingHotel" lay-title="会议费用项">
     <div class="layui-row febs-container">
@@ -178,9 +182,9 @@
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#meetingHotel-update').find('#submit').trigger('click');
+                        layer.close(index);
                     },
                     btn2: function () {
-                        layer.closeAll();
                     }
                 });
             }

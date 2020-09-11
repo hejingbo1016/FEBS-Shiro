@@ -58,14 +58,14 @@
         <div class="layui-inline">
             <label class="layui-form-label">开始时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
+                <input type="text" name="startTime" id="febs-form-meeting-start"
                        placeholder="开始时间" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">结束时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
+                <input type="text" name="endTime" id="febs-form-meeting-end"
                        placeholder="结束时间" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -113,12 +113,13 @@
         laydate.render({
             elem: '#febs-form-meeting-start'
             , type: 'datetime'
+            , format: 'yyyy-MM-dd HH:ss'
         });
-
 
         laydate.render({
             elem: '#febs-form-meeting-end'
             , type: 'datetime'
+            , format: 'yyyy-MM-dd HH:ss'
         });
 
 

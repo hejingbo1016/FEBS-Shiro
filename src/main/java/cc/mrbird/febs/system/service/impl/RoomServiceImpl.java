@@ -53,8 +53,8 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
      */
     private void selectRoom(LambdaQueryWrapper<Room> queryWrapper, Room room) {
 
-        if (StringUtils.isNotBlank(room.getRoomType())) {
-            queryWrapper.like(Room::getRoomType, room.getRoomType());
+        if (StringUtils.isNotBlank(room.getRoomName())) {
+            queryWrapper.like(Room::getRoomName, room.getRoomName());
         }
 
     }

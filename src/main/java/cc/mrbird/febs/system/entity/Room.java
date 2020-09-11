@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- *  Entity
+ * Entity
  *
  * @author Hejingbo
  * @date 2020-08-05 23:39:18
@@ -25,10 +25,16 @@ public class Room {
     private Long id;
 
     /**
-     * 房间类型
+     * 费用类型
      */
     @TableField("room_type")
-    private String roomType;
+    private Integer roomType;
+
+    /**
+     * 费用名称
+     */
+    @TableField("room_name")
+    private String roomName;
 
     /**
      * 酒店id

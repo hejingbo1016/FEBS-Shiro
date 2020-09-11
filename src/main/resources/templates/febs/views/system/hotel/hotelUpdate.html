@@ -62,7 +62,8 @@
                     预览图：
                     <div class="layui-upload-list uploader-list" style="overflow: auto;" id="uploader-list">
                         <div id="" class="file-iteme">
-                            <div class="handle"><i class="layui-icon" style="color: white;margin-right: 40%">&#xe640;</i>
+                            <div class="handle"><i class="layui-icon"
+                                                   style="color: white;margin-right: 40%">&#xe640;</i>
                             </div>
                         </div>
                     </div>
@@ -175,24 +176,18 @@
             }
 
             $(data.form).attr('action', ctx + 'hotel/update');
-            /*debugger
-            febs.post(ctx + 'hotel/update', data.form.serialize(), function () {
-                layer.closeAll();
-                febs.alert.success('任务修改成功');
-                $('#febs-hotel').find('#query').click();
-            });*/
             return true;
         });
 
         //多图片上传
         upload.render({
             elem: '#upload'
-            ,url: '#' //改成您自己的上传接口
-            ,multiple: true
-            ,auto: false
-            ,choose: function(obj){
+            , url: '#' //改成您自己的上传接口
+            , multiple: true
+            , auto: false
+            , choose: function (obj) {
                 //预读本地文件示例，不支持ie8
-                obj.preview(function(index, file, result){
+                obj.preview(function (index, file, result) {
                     if (index == 5) {
                         return false;
                     }
@@ -214,7 +209,7 @@
                     time: 0
                 })
             }
-            ,done: function(res){
+            , done: function (res) {
                 //上传完毕
             }
         });
@@ -232,7 +227,7 @@
             }
         });
 
-        $(document).on("click", ".file-iteme .handle", function(event){
+        $(document).on("click", ".file-iteme .handle", function (event) {
             $(this).parent().remove();
         })
 
