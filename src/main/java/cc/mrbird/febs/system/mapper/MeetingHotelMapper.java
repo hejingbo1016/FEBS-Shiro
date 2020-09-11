@@ -17,4 +17,6 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
     Long countMeetHotels(@Param("meetingHotel") MeetingHotel meetingHotel);
 
     <T>IPage<MeetingHotel> findMeetingHotelsPage(Page<T> page, @Param("meetingHotel") MeetingHotel meetingHotel);
+
+    MeetingHotel selectMeetingHotelById(@Param("id") Long id);
 }

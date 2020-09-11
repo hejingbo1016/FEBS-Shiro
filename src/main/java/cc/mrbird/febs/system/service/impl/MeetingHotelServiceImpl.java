@@ -75,4 +75,9 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         this.baseMapper.delete(new QueryWrapper<MeetingHotel>().lambda().in(MeetingHotel::getId, list));
 
     }
+
+    @Override
+    public MeetingHotel selectMeetingHotelById(Long id) {
+        return baseMapper.selectMeetingHotelById(id);
+    }
 }

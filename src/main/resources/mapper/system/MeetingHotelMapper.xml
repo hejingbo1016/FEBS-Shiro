@@ -40,4 +40,14 @@
 
 
     </select>
+
+    <select id="selectMeetingHotelById" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+
+        SELECT m.id, m.meeting_id, m.fee_type, m.fee_name, m.surplus_number, m.fee_price, m.available_number,
+         m.hotel_id, m.create_time, m.modify_time, m.modifier, m.creater, m.deleted, m.date_time,h.hotel_name
+         FROM t_meeting_hotel m
+         left join t_hotel h on h.id = m.hotel_id
+         WHERE m.id = #{id};
+
+    </select>
 </mapper>

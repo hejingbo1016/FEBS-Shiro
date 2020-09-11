@@ -54,4 +54,6 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
     void deleteMeetingHotel(MeetingHotel meetingHotel);
 
     void deleteMeetingHotels(String ids);
+
+    MeetingHotel selectMeetingHotelById(Long id);
 }
