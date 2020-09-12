@@ -78,7 +78,7 @@ public class WechatApiController extends BaseController {
     @ControllerEndpoint(operation = "微信端下单功能", exceptionMessage = "微信端下单功能失败")
     @PostMapping("placOrders")
     @Transactional(rollbackFor = Exception.class)
-    public FebsResponse placOrders(List<PaymentDetails> paymentDetails) {
+    public FebsResponse placOrders(@RequestBody List<PaymentDetails> paymentDetails) {
         paymentService.placOrders(paymentDetails);
         return new FebsResponse().success();
     }
