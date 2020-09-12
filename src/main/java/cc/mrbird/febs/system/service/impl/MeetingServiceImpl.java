@@ -4,8 +4,12 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
+import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Meeting;
+import cc.mrbird.febs.system.entity.MeetingHotel;
+import cc.mrbird.febs.system.mapper.FileMapper;
+import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -20,8 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Service实现
@@ -35,6 +42,9 @@ import java.util.List;
 public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> implements IMeetingService {
 
     private final MeetingMapper meetingMapper;
+    private final FileMapper fileMapper;
+    private final MeetingHotelMapper meetingHotelMapper;
+
 
     @Override
     public IPage<Meeting> findMeetings(QueryRequest request, Meeting meeting) {
@@ -132,7 +142,31 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     @Override
     public List<HotelName> weChatHotelsByMeetingId(Long id) {
+        List<HotelName> vos = new ArrayList<>();
         List<HotelName> list = meetingMapper.weChatHotelsByMeetingId(id);
-        return list;
+        if (!Objects.isNull(list) && list.size() > 0) {
+            vos = list.stream().map(t -> {
+                List<MeetingHotel> rooms = new ArrayList<>();
+                List<MeetingHotel> others = new ArrayList<>();
+                t.setMeetingId(id);
+                //通过酒店id查图片
+                List<File> files = fileMapper.selectFileByHotelId(t.getHotelId());
+                //通过会议id和酒店id查费用项
+                List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId());
+                //封装所有类型为1的房间的费用项，其他则是其他费用项
+                roomList.forEach(r -> {
+                    if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                        rooms.add(r);
+                    } else {
+                        others.add(r);
+                    }
+                });
+                t.setRoomList(rooms);
+                t.setOtherList(others);
+                t.setFileList(files);
+                return t;
+            }).collect(Collectors.toList());
+        }
+        return vos;
     }
 }

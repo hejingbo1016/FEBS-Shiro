@@ -50,4 +50,15 @@
          WHERE m.id = #{id};
 
     </select>
+
+
+    <select id="selectFeeLists" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+
+         SELECT
+         *
+         FROM t_meeting_hotel
+         WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+
+
+    </select>
 </mapper>

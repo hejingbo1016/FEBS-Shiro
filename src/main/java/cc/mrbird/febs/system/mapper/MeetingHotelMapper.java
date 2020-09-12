@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  *  Mapper
  *
@@ -19,4 +21,6 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
     <T>IPage<MeetingHotel> findMeetingHotelsPage(Page<T> page, @Param("meetingHotel") MeetingHotel meetingHotel);
 
     MeetingHotel selectMeetingHotelById(@Param("id") Long id);
+
+    List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId")Long hotelId);
 }

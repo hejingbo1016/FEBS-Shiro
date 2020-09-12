@@ -4,16 +4,16 @@ import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.system.entity.HotelName;
-import cc.mrbird.febs.system.entity.Meeting;
-import cc.mrbird.febs.system.entity.Payment;
-import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -51,6 +51,7 @@ public class WechatApiController extends BaseController {
     @GetMapping("weChatHotelsByMeetingId")
     @ResponseBody
     public FebsResponse weChatHotelsByMeetingId(@Valid Long id) {
+        //酒店列表
         List<HotelName> hotelNameList = meetingService.weChatHotelsByMeetingId(id);
         return new FebsResponse().success().data(hotelNameList);
     }
@@ -71,5 +72,6 @@ public class WechatApiController extends BaseController {
         List<PaymentDetails> paymentDetails = paymentService.getPaymentDetailsByCode(paymentCode);
         return new FebsResponse().success().data(paymentDetails);
     }
+
 
 }
