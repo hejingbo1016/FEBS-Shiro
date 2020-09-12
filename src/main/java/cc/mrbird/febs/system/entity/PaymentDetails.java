@@ -123,7 +123,7 @@ public class PaymentDetails {
      * 支付金额
      */
     @TableField(exist = false)
-    private String paymentAmount;
+    private Double paymentAmount;
 
 
     /**

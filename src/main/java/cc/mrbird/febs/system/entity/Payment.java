@@ -50,7 +50,7 @@ public class Payment {
      * 支付金额
      */
     @TableField("payment_Amount")
-    private String paymentAmount;
+    private Double paymentAmount;
 
     /**
      * 支付状态（1未支付,2已支付,3申请退款,4已退款）

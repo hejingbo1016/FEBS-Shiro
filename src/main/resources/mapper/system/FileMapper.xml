@@ -5,7 +5,7 @@
     <select id="selectFileByHotelId" resultType="cc.mrbird.febs.system.entity.File">
 
 
-        select  * from t_file where foreign_id = #{foreignId} where deleted = 0
+        select  * from t_file where foreign_id = #{foreignId} and deleted = 0
 
 
 
