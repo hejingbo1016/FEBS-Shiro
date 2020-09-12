@@ -4,16 +4,16 @@ import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.system.entity.*;
+import cc.mrbird.febs.system.entity.HotelName;
+import cc.mrbird.febs.system.entity.Meeting;
+import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.PaymentDetails;
 import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -73,5 +73,19 @@ public class WechatApiController extends BaseController {
         return new FebsResponse().success().data(paymentDetails);
     }
 
+
+    @ControllerEndpoint(operation = "下单功能", exceptionMessage = "根据订单编号查详情失败")
+    @PostMapping("placOrders")
+    public FebsResponse placOrders(List<PaymentDetails> paymentDetails) {
+
+
+
+
+
+
+        paymentService.placOrders(paymentDetails);
+
+        return new FebsResponse().success().data(paymentDetails);
+    }
 
 }

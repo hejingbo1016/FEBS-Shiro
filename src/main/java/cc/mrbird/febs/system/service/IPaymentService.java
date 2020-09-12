@@ -54,4 +54,6 @@ public interface IPaymentService  extends IService<Payment> {
     List<Payment> getPaymentListByUserId(Long userId);
 
     List<PaymentDetails> getPaymentDetailsByCode(String paymentCode);
+
+    void placOrders(List<PaymentDetails> paymentDetails);
 }

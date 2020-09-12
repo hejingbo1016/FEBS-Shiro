@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Service实现
@@ -115,6 +116,25 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     @Override
     public List<PaymentDetails> getPaymentDetailsByCode(String paymentCode) {
         return detailsMapper.getPaymentDetailsByCode(paymentCode);
+    }
+
+    @Override
+    public void placOrders(List<PaymentDetails> paymentDetails) {
+
+        if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
+            //生成订单主表
+            PaymentDetails details = paymentDetails.get(0);
+            Payment payment = new Payment();
+            payment.setId(snowflake.nextId());
+            payment.setPaymentCode(String.valueOf(snowflake.nextId()));
+
+
+
+        }
+
+
+        //生成订单明细表
+
     }
 
 
