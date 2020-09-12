@@ -1,29 +1,53 @@
 <style>
-    #meetingHotel_add {
+    #meetingHotel-add {
         padding: 20px 25px 25px 0;
     }
 
-    #meetingHotel_add .layui-form-label {
+    #meetingHotel-add .layui-form-label {
         width: 88px;
     }
 
-    #meetingHotel_add .layui-input-block {
+    #meetingHotel-add .layui-input-block {
         margin-left: 120px;
     }
 </style>
-<div class="layui-fluid" id="meetingHotel_add">
-    <form class="layui-form" action="" lay-filter="meetingHotel_add-form">
+<div class="layui-fluid" id="meetingHotel-add">
+    <form class="layui-form" action="" lay-filter="meetingHotel-add-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">hotelId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeType：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeType" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">meetingId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingId" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingName" maxlength="20" lay-verify="range|required"
+                <input type="text" name="hotelName" maxlength="20" id="hotelName"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">费用名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="sponsor" maxlength="50" lay-verify="range|required"
+                <input type="text" name="feeName" maxlength="50" lay-verify="range|required" id="feeName"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -48,46 +72,119 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">开始时间</label>
-            <div class="layui-input-inline">
-                <input type="text" name="startTime" id="febs-form-meeting-start" lay-verify="datetime"
-                       placeholder="开始时间" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">结束时间</label>
-            <div class="layui-input-inline">
-                <input type="text" name="endTime" id="febs-form-meeting-end" lay-verify="datetime"
-                       placeholder="结束时间" autocomplete="off" class="layui-input">
-            </div>
-        </div>
 
         <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="meetingHotel_add-form-submit" id="submit"></button>
+            <button class="layui-btn" lay-submit="" lay-filter="meetingHotel-add-form-submit" id="submit"></button>
             <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
 </div>
-
+<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
 <script>
     layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
-            $view = $('#meetingHotel_add'),
+            $view = $('#meetingHotel-add'),
             validate = layui.validate;
         var laydate = layui.laydate;
+        var tableSelect = layui.tableSelect;
+
+        tableSelect.render({
+            elem: '#hotelName',
+            checkedKey: 'id',
+            searchKey: 'hotelName',	//搜索输入框的name值 默认keyword
+            table: {
+                url: ctx + 'hotel/list',
+                parseData: function (res) {
+                    if (res.code !== 200) {
+                        console.error(res)
+                    }
+                    return {
+                        "code": res.code === 200 ? 0 : res.code,
+                        "count": res.data.total,
+                        "data": res.data.rows
+                    }
+                },
+                cols: [
+                    {type: 'radio'},
+                    {field: 'id', title: 'ID', hide: true},
+                    {field: 'hotelName', title: '酒店名称'},
+                    {field: 'hotelAddress', title: '酒店地址'}
+                ]
+            },
+            done: function (elem, data) {
+                var NEWJSON = []
+                layui.each(data.data, function (index, item) {
+                    NEWJSON.push(item.hotelName)
+                    form.val("meetingHotel-add-form", {
+                        "hotelName": item.hotelName,
+                        "hotelId": item.id
+                        // "dateTime": item.roomDate
+                    });
+                })
+                elem.val(NEWJSON.join(","))
+                getHotelRooms(elem.attr('ts-selected'))
+            }
+        })
+
+        function getHotelRooms(hotelId) {
+            tableSelect.render({
+                elem: '#feeName',
+                checkedKey: 'id',
+                searchKey: 'roomName',
+                table: {
+                    url: ctx + 'room/list/' + hotelId,
+                    parseData: function (res) {
+                        if (res.code !== 200) {
+                            console.error(res)
+                        }
+                        return {
+                            "code": res.code === 200 ? 0 : res.code,
+                            "count": res.data.total,
+                            "data": res.data.rows
+                        }
+                    },
+                    cols: [
+                        {type: 'radio'},
+                        {field: 'id', title: 'ID', hide: true},
+                        {field: 'roomName', title: '名称'},
+                        {field: 'roomCount', title: '房间数量'},
+                        {field: 'surplusNumber', title: '剩余数量'},
+                        {field: 'univalence', title: '单价'}
+                    ]
+                },
+                done: function (elem, data) {
+                    var meetingId = sessionStorage.getItem('meetingId');
+                    var NEWJSON = []
+                    layui.each(data.data, function (index, item) {
+                        NEWJSON.push(item.roomName)
+                        form.val("meetingHotel-add-form", {
+                            "surplusNumber": item.surplusNumber,
+                            "feePrice": item.univalence,
+                            "availableNumber": item.surplusNumber,
+                            "feeType": item.roomType,
+                            "meetingId": meetingId
+                        });
+                    })
+                    elem.val(NEWJSON.join(","))
+                }
+            })
+        }
 
 
         laydate.render({
-            elem: '#febs-form-meeting-start'
+            elem: '#febs-form-meetingHotel-start'
             , type: 'datetime'
         });
 
 
         laydate.render({
-            elem: '#febs-form-meeting-end'
+            elem: '#febs-form-meetingHotel-end'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#febs-form-meetingHotel-dateTime'
             , type: 'datetime'
         });
 
@@ -95,13 +192,10 @@
         form.verify(validate);
         form.render();
 
-        form.on('submit(meetingHotel_add-form-submit)', function (data) {
-            data.field.endTime = new Date(data.field.endTime);
-            data.field.startTime = new Date(data.field.startTime);
-            febs.post(ctx + 'meeting', data.field, function () {
-                layer.closeAll();
+        form.on('submit(meetingHotel-add-form-submit)', function (data) {
+            febs.post(ctx + 'meetingHotel/add', data.field, function () {
                 febs.alert.success('新增任务成功');
-                $('#febs-meeting').find('#query').click();
+                $('#febs-meetingHotel').find('#query').click();
             });
             return false;
         });

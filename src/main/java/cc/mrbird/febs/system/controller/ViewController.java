@@ -297,15 +297,20 @@ public class ViewController extends BaseController {
     }
 
 
-
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/meetingHotel/update/{id}")
     @RequiresPermissions("meetingHotel:update")
     public String meetingHotelUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
-        MeetingHotel  meetingHotel = meetingHotelService.selectMeetingHotelById(id);
+        MeetingHotel meetingHotel = meetingHotelService.selectMeetingHotelById(id);
         model.addAttribute("meetingHotel", meetingHotel);
         return FebsUtil.view("system/meeting/meetingHotelUpdate");
     }
 
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/meetingHotel/add")
+    @RequiresPermissions("meetingHotel:add")
+    public String meetingHotelAdd() {
+        return FebsUtil.view("system/meeting/meetingHotelAdd");
+    }
 
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")

@@ -226,9 +226,10 @@
                 sessionStorage.setItem('meetingId', data.id);
                 febs.modal.open('会议费用项', 'system/meeting/meetingHotel', {
                     area: $(window).width() <= 750 ? '90%' : '70%',
-                    btn: ['提交', '取消'],
+                    btn: ['确定', '取消'],
                     yes: function (index, layero) {
-                        $('#meeting-meetingHotel').find('#submit').trigger('click');
+                        // $('#meeting-meetingHotel').find('#submit').trigger('click');
+                        layer.closeAll();
                     },
                     btn2: function () {
                         layer.closeAll();

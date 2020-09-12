@@ -123,6 +123,7 @@
                         area: $(window).width() <= 750 ? '70%' : '50%',
                         yes: function (index, layero) {
                             $('#meetingHotel-add').find('#submit').trigger('click');
+                            layer.close(index);
                         },
                         btn2: function () {
                             $('#meetingHotel-add').find('#reset').trigger('click');

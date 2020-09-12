@@ -26,6 +26,18 @@
                 <input type="text" name="hotelId" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeType：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeType" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">meetingId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingId" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
@@ -36,7 +48,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">费用名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="feeName" maxlength="50" lay-verify="range|required"  id="feeName"
+                <input type="text" name="feeName" maxlength="50" lay-verify="range|required" id="feeName"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -61,13 +73,13 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-     <!--   <div class="layui-inline">
-            <label class="layui-form-label">日期</label>
-            <div class="layui-input-inline">
-                <input type="text" name="dateTime" id="febs-form-meetingHotel-dateTime" lay-verify="datetime"
-                       placeholder="日期" autocomplete="off" class="layui-input">
-            </div>
-        </div>-->
+        <!--   <div class="layui-inline">
+               <label class="layui-form-label">日期</label>
+               <div class="layui-input-inline">
+                   <input type="text" name="dateTime" id="febs-form-meetingHotel-dateTime" lay-verify="datetime"
+                          placeholder="日期" autocomplete="off" class="layui-input">
+               </div>
+           </div>-->
         <!--<div class="layui-inline">-->
         <!--<label class="layui-form-label">开始时间</label>-->
         <!--<div class="layui-input-inline">-->
@@ -117,10 +129,10 @@
                     }
                 },
                 cols: [
-                    { type: 'radio' },
-                    { field: 'id', title: 'ID',hide:true },
-                    { field: 'hotelName', title: '酒店名称' },
-                    { field: 'hotelAddress', title: '酒店地址' }
+                    {type: 'radio'},
+                    {field: 'id', title: 'ID', hide: true},
+                    {field: 'hotelName', title: '酒店名称'},
+                    {field: 'hotelAddress', title: '酒店地址'}
                 ]
             },
             done: function (elem, data) {
@@ -142,6 +154,7 @@
             tableSelect.render({
                 elem: '#feeName',
                 checkedKey: 'id',
+                searchKey: 'roomName',
                 table: {
                     url: ctx + 'room/list/' + hotelId,
                     parseData: function (res) {
@@ -155,29 +168,32 @@
                         }
                     },
                     cols: [
-                        { type: 'radio' },
-                        { field: 'id', title: 'ID',hide:true },
-                        { field: 'roomType', title: '房间类型' },
-                        { field: 'roomCount', title: '房间数量' },
-                        { field: 'surplusNumber', title: '剩余数量' },
-                        { field: 'univalence', title: '单价' }
+                        {type: 'radio'},
+                        {field: 'id', title: 'ID', hide: true},
+                        {field: 'roomName', title: '名称'},
+                        {field: 'roomCount', title: '房间数量'},
+                        {field: 'surplusNumber', title: '剩余数量'},
+                        {field: 'univalence', title: '单价'}
                     ]
                 },
                 done: function (elem, data) {
+                    var meetingId = sessionStorage.getItem('meetingId');
                     var NEWJSON = []
                     layui.each(data.data, function (index, item) {
-                        NEWJSON.push(item.roomType)
+                        NEWJSON.push(item.roomName)
                         form.val("meetingHotel-update-form", {
                             "surplusNumber": item.surplusNumber,
                             "feePrice": item.univalence,
-                            "availableNumber": item.surplusNumber
-                            // "dateTime": item.roomDate
+                            "availableNumber": item.surplusNumber,
+                            "feeType": item.roomType,
+                            "meetingId": meetingId
                         });
                     })
                     elem.val(NEWJSON.join(","))
                 }
             })
         }
+
         laydate.render({
             elem: '#febs-form-meetingHotel-start'
             , type: 'datetime'
@@ -208,7 +224,6 @@
                 "availableNumber": meetingHotel.availableNumber,
                 "startTime": meetingHotel.startTime,
                 "endTime": meetingHotel.endTime,
-                "dateTime": meetingHotel.dateTime,
                 "hotelName": meetingHotel.hotelName
             });
 
@@ -217,14 +232,12 @@
 
         form.on('submit(meetingHotel-update-form-submit)', function (data) {
 
-            data.field.dateTime = new Date(data.field.dateTime);
             if (febs.nativeEqual(data.field, meetingHotel)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
             data.field.modifyTime = new Date();
             febs.post(ctx + 'meetingHotel/update', data.field, function () {
-                // layer.closeAll();
                 febs.alert.success('费用项修改成功');
                 $('#febs-meetingHotel').find('#query').click();
             });

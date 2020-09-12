@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.MeetingHotel;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
@@ -32,6 +33,7 @@ import java.util.List;
 public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, MeetingHotel> implements IMeetingHotelService {
 
     private final MeetingHotelMapper meetingHotelMapper;
+    private static Snowflake snowflake = Snowflake.getInstanceSnowflake();
 
     @Override
     public IPage<MeetingHotel> findMeetingHotels(QueryRequest request, MeetingHotel meetingHotel) {
@@ -52,6 +54,7 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMeetingHotel(MeetingHotel meetingHotel) {
+        meetingHotel.setId(snowflake.nextId());
         this.save(meetingHotel);
     }
 

@@ -36,6 +36,7 @@ public class MeetingHotelController extends BaseController {
 
     private final IMeetingHotelService meetingHotelService;
 
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "meetingHotel")
     public String meetingHotelIndex() {
         return FebsUtil.view("meetingHotel/meetingHotel");
@@ -55,7 +56,7 @@ public class MeetingHotelController extends BaseController {
     }
 
     @ControllerEndpoint(operation = "新增MeetingHotel", exceptionMessage = "新增MeetingHotel失败")
-    @PostMapping()
+    @PostMapping("add")
     @ResponseBody
     @RequiresPermissions("meetingHotel:add")
     public FebsResponse addMeetingHotel(@Valid MeetingHotel meetingHotel) {
