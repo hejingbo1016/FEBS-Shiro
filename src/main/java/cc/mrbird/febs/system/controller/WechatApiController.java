@@ -12,6 +12,7 @@ import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,18 +75,12 @@ public class WechatApiController extends BaseController {
     }
 
 
-    @ControllerEndpoint(operation = "下单功能", exceptionMessage = "根据订单编号查详情失败")
+    @ControllerEndpoint(operation = "微信端下单功能", exceptionMessage = "微信端下单功能失败")
     @PostMapping("placOrders")
+    @Transactional(rollbackFor = Exception.class)
     public FebsResponse placOrders(List<PaymentDetails> paymentDetails) {
-
-
-
-
-
-
         paymentService.placOrders(paymentDetails);
-
-        return new FebsResponse().success().data(paymentDetails);
+        return new FebsResponse().success();
     }
 
 }

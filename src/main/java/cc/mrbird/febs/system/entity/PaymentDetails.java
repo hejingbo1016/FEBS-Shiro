@@ -22,26 +22,26 @@ import java.util.Date;
 public class PaymentDetails {
 
     /**
-     *主键
+     * 主键
      */
     @JsonSerialize(using = ToStringSerializer.class)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-   /**
+    /**
      * 订单编号
      */
     @TableField("payment_Code")
     private Long paymentCode;
 
-       /**
+    /**
      * 费用名称
      */
     @TableField("fee_name")
     private String feeName;
 
     /**
-     *数量
+     * 数量
      */
     @TableField("number")
     private Integer number;
@@ -51,8 +51,8 @@ public class PaymentDetails {
      */
     @TableField("interval_price")
     private Double intervalPrice;
-	
-	 /**
+
+    /**
      * 小计
      */
     @TableField("subtotal")
@@ -99,23 +99,50 @@ public class PaymentDetails {
      */
     @TableField("deleted")
     private Integer deleted;
-	
+
     /**
      * 费用类型（1房费，2其他费用）
      */
     @TableField("fee_type")
     private Integer feeType;
-	
-	  /**
+
+    /**
      * 酒店id
      */
     @TableField("hotel_id")
     private Long hotelId;
-	
-	    /**
+
+    /**
      * 酒店名称
      */
     @ExcelField(value = "酒店名称")
     @TableField(exist = false)
     private String hotelName;
+
+    /**
+     * 支付金额
+     */
+    @TableField(exist = false)
+    private String paymentAmount;
+
+
+    /**
+     * 联系方式
+     */
+    @TableField(exist = false)
+    private Integer contactPhone;
+
+
+    /**
+     * 入住人
+     */
+    @TableField(exist = false)
+    private String occupants;
+
+    /**
+     * 会议id
+     */
+    @TableField(exist = false)
+    private Long meetingId;
+
 }

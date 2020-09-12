@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,24 +119,26 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         return detailsMapper.getPaymentDetailsByCode(paymentCode);
     }
 
+
     @Override
     public void placOrders(List<PaymentDetails> paymentDetails) {
-
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
             //生成订单主表
             PaymentDetails details = paymentDetails.get(0);
+            Long paymentCode = snowflake.nextId();
             Payment payment = new Payment();
+            BeanUtils.copyProperties(details, payment);
             payment.setId(snowflake.nextId());
-            payment.setPaymentCode(String.valueOf(snowflake.nextId()));
-
-
-
+            payment.setPaymentCode(String.valueOf(paymentCode));
+            int count = paymentMapper.insert(payment);
+            if (count > 0) {
+                //生成订单明细表
+                paymentDetails.forEach(p -> {
+                    p.setId(snowflake.nextId());
+                    p.setPaymentCode(paymentCode);
+                    detailsMapper.insert(p);
+                });
+            }
         }
-
-
-        //生成订单明细表
-
     }
-
-
 }
