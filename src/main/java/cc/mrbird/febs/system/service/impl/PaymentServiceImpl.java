@@ -131,6 +131,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
 
     @Override
     public ResponseDTO placOrders(OrderPay orderPay) {
+        Double totalFee = new Double(0);
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
             //生成订单主表
@@ -141,6 +142,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             payment.setId(snowflake.nextId());
             payment.setPaymentCode(String.valueOf(paymentCode));
             payment.setUserId(orderPay.getUserId());
+            totalFee = details.getPaymentAmount();
             int count = paymentMapper.insertPayment(payment);
             if (count > 0) {
                 //生成订单明细表
@@ -151,7 +153,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 });
             }
 
-            return onlinePay("下单", String.valueOf(paymentCode), 0.01, orderPay.getOpenid());
+            return onlinePay("下单", String.valueOf(paymentCode), totalFee, orderPay.getOpenid());
         }
         return ResponseDTO.failture();
     }
