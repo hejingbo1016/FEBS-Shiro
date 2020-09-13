@@ -31,6 +31,32 @@ public class HotelName implements Serializable {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long hotelId;
 
+
+    /**
+     * 酒店负责人
+     */
+    private String hotelPrincipal;
+
+    /**
+     * 联系方式
+     */
+    private String contactPhone;
+
+    /**
+     * 接待服务
+     */
+    private String receptionService;
+
+    /**
+     * 酒店地址
+     */
+    private String hotelAddress;
+
+    /**
+     * 路线指引
+     */
+    private String metroGuidelines;
+
     /**
      * 照片集
      */
