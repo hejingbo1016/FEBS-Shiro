@@ -55,7 +55,7 @@ public class Hotel {
     private String hotelAddress;
 
     /**
-     * 地铁指引
+     * 路线指引
      */
     @TableField("metro_guidelines")
     private String metroGuidelines;

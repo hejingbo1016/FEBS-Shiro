@@ -22,7 +22,7 @@ public interface PaymentMapper extends BaseMapper<Payment> {
 
     int deletePayments(@Param("ids") String paymentIds);
 
-    void insertPayment(Payment payment);
+    int insertPayment(Payment payment);
 
     Payment selectByPaymentId(Long id);
 

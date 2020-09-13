@@ -12,4 +12,6 @@ public class OrderPay {
     private String openid;
 
     private Double paymentAmount;
+
+    private Long userId;
 }

@@ -41,6 +41,9 @@
             <if test="feeName != null">
                 fee_name,
             </if>
+            <if test="feeType != null">
+                fee_type,
+            </if>
             <if test="number != null">
                 number,
             </if>
@@ -50,6 +53,7 @@
             <if test="startTime != null">
                 start_time,
             </if>
+
             <if test="endTime != null">
                 end_time,
             </if>
@@ -68,6 +72,9 @@
             <if test="deleted != null">
                 deleted,
             </if>
+            <if test="subtotal != null">
+                subtotal,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -78,6 +85,9 @@
             </if>
             <if test="feeName != null">
                 #{feeName,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null">
+                #{feeType,jdbcType=INTEGER},
             </if>
             <if test="number != null">
                 #{number,jdbcType=INTEGER},
@@ -105,6 +115,9 @@
             </if>
             <if test="deleted != null">
                 #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="subtotal != null">
+                #{subtotal,jdbcType=DOUBLE},
             </if>
 
         </trim>

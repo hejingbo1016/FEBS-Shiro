@@ -19,22 +19,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.wxpay.sdk.WXPayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
-import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Service实现
@@ -141,23 +134,24 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
             //生成订单主表
-//            PaymentDetails details = paymentDetails.get(0);
+            PaymentDetails details = paymentDetails.get(0);
             Long paymentCode = snowflake.nextId();
-//            Payment payment = new Payment();
-//            BeanUtils.copyProperties(details, payment);
-//            payment.setId(snowflake.nextId());
-//            payment.setPaymentCode(String.valueOf(paymentCode));
-//            int count = paymentMapper.insert(payment);
-//            if (count > 0) {
-//                //生成订单明细表
-//                paymentDetails.forEach(p -> {
-//                    p.setId(snowflake.nextId());
-//                    p.setPaymentCode(paymentCode);
-//                    detailsMapper.insert(p);
-//                });
-//            }
+            Payment payment = new Payment();
+            BeanUtils.copyProperties(details, payment);
+            payment.setId(snowflake.nextId());
+            payment.setPaymentCode(String.valueOf(paymentCode));
+            payment.setUserId(orderPay.getUserId());
+            int count = paymentMapper.insertPayment(payment);
+            if (count > 0) {
+                //生成订单明细表
+                paymentDetails.forEach(p -> {
+                    p.setId(snowflake.nextId());
+                    p.setPaymentCode(paymentCode);
+                    detailsMapper.addPaymentDetails(p);
+                });
+            }
 
-            return onlinePay("下单",String.valueOf(paymentCode),0.01,orderPay.getOpenid());
+            return onlinePay("下单", String.valueOf(paymentCode), 0.01, orderPay.getOpenid());
         }
         return ResponseDTO.failture();
     }
@@ -176,24 +170,25 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
 
                 if (out_trade_no == null) {
                     log.info("微信支付回调失败订单号: {}", notifyMap);
-                    return String.format(xmlBack,"FAIL","订单号为空");
+                    return String.format(xmlBack, "FAIL", "订单号为空");
                 }
 
                 // 业务
 
-                return String.format(xmlBack,"SUCCESS","OK");
+                return String.format(xmlBack, "SUCCESS", "OK");
             } else {
                 log.error("微信支付回调通知签名错误");
-                return String.format(xmlBack,"FAIL","签名错误");
+                return String.format(xmlBack, "FAIL", "签名错误");
             }
         } catch (Exception e) {
-            log.error("微信支付回调通知失败",e);
-            return String.format(xmlBack,"FAIL","失败");
+            log.error("微信支付回调通知失败", e);
+            return String.format(xmlBack, "FAIL", "失败");
         }
     }
 
     /**
      * 调用微信支付统一下单接口
+     *
      * @param orderName
      * @param orderNo
      * @param totalFee
@@ -201,22 +196,23 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
      * @return
      * @throws Exception
      */
-    private ResponseDTO onlinePay(String orderName, String orderNo, Double totalFee, String openid){
+    private ResponseDTO onlinePay(String orderName, String orderNo, Double totalFee, String openid) {
         try {
-            log.info("openid: "+openid);
+            log.info("openid: " + openid);
             log.info("开始进行调用统一下单接口");
-            Map<String, String> map = weiChatRequestUtils.wxPay(orderName,orderNo,totalFee,openid);
-            log.info("调用统一下单接口返回参数"+map);
-            if (!"SUCCESS".equals(map.get ("return_code"))) {
+            Map<String, String> map = weiChatRequestUtils.wxPay(orderName, orderNo, totalFee, openid);
+            log.info("调用统一下单接口返回参数" + map);
+            if (!"SUCCESS".equals(map.get("return_code"))) {
                 return ResponseDTO.failture(map.get("return_msg"));
             }
-            if (!"SUCCESS".equals(map.get("result_code"))){
+            if (!"SUCCESS".equals(map.get("result_code"))) {
                 return ResponseDTO.failture(map.get("err_code_des"));
             }
-            return ResponseDTO.success("订单创建成功",weiChatRequestUtils.sign(map));
-        }catch (Exception e){
+            return ResponseDTO.success("订单创建成功", weiChatRequestUtils.sign(map));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseDTO.failture();
     }
+
 }
