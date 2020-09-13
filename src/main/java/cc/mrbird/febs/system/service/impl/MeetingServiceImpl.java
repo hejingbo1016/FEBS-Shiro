@@ -1,13 +1,14 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.entity.File;
-import cc.mrbird.febs.system.entity.HotelName;
-import cc.mrbird.febs.system.entity.Meeting;
-import cc.mrbird.febs.system.entity.MeetingHotel;
 import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
@@ -18,16 +19,23 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +52,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     private final MeetingMapper meetingMapper;
     private final FileMapper fileMapper;
     private final MeetingHotelMapper meetingHotelMapper;
+
+    private static Snowflake snowflake = Snowflake.getInstanceSnowflake();
 
 
     @Override
@@ -168,5 +178,66 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             }).collect(Collectors.toList());
         }
         return vos;
+    }
+
+    @Override
+    public ResponseDTO generateQRCode(GenerateQRCodeDTO generateQRCodeDTO) {
+        String fileName = generateQRCodeDTO.getId()+".jpg";
+        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
+        Object o = redisTemplate.opsForValue().get(fileName);
+        if (o != null){
+            String url = "http://knightmedia.ltd:9090/" + fileName;
+            return ResponseDTO.success("",url);
+        }
+
+        try {
+            Hashtable hints = new Hashtable();
+            //指定纠错等级
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+
+            String content = String.valueOf(generateQRCodeDTO.getId());
+            log.debug(content);
+            //生成二维码矩阵
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 350, 350, hints);
+
+            //获取矩阵宽度、高度,生成二维码图片
+            BufferedImage image = new BufferedImage(bitMatrix.getWidth(),bitMatrix.getHeight(),BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < 350; x++) {
+                for (int y = 0; y < 350; y++) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                }
+            }
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(image, "jpg", os);
+            InputStream input = new ByteArrayInputStream(os.toByteArray());
+            String url = saveFile(input);
+            return ResponseDTO.success("",url);
+
+        } catch ( IOException | WriterException e) {
+            e.printStackTrace();
+        }
+        return ResponseDTO.failture();
+    }
+
+    private String saveFile(InputStream is){
+        long id = snowflake.nextId();
+        java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
+        if (!fil.exists()){
+            fil.mkdir();
+        }else {
+            return null;
+        }
+        try (FileOutputStream fos = new FileOutputStream(fil.getAbsolutePath()+"/"+id+".jpg");){
+            byte bytes[]=new byte[1024];
+            int temp=0;
+            while((temp = is.read(bytes)) != -1){
+                fos.write(bytes,0,temp);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
     }
 }
