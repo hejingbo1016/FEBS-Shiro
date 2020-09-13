@@ -1,15 +1,15 @@
 package cc.mrbird.febs.system.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author Hejingbo
  * @date 2020-08-24 16:51:24
@@ -127,7 +127,7 @@ public class WechatUser {
     private String city;
 
     /**
-     * 性别 0男 1女 2保密
+     * 性别 0未知，1男 2女
      */
     @TableField("sex")
     private String sex;

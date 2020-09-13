@@ -57,7 +57,7 @@ public class MeetingHotel {
     private Double feePrice;
 
     /**
-     * 可用数量
+     * 总数
      */
     @TableField("available_number")
     private Integer availableNumber;

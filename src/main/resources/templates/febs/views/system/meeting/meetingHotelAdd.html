@@ -52,6 +52,13 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">总数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">剩余数量：</label>
             <div class="layui-input-block">
                 <input type="text" name="surplusNumber" maxlength="50" lay-verify="range"
@@ -65,13 +72,7 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">可用数量：</label>
-            <div class="layui-input-block">
-                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
+
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="meetingHotel-add-form-submit" id="submit"></button>
@@ -149,7 +150,7 @@
                         {type: 'radio'},
                         {field: 'id', title: 'ID', hide: true},
                         {field: 'roomName', title: '名称'},
-                        {field: 'roomCount', title: '房间数量'},
+                        {field: 'roomCount', title: '总数'},
                         {field: 'surplusNumber', title: '剩余数量'},
                         {field: 'univalence', title: '单价'}
                     ]
@@ -162,7 +163,7 @@
                         form.val("meetingHotel-add-form", {
                             "surplusNumber": item.surplusNumber,
                             "feePrice": item.univalence,
-                            "availableNumber": item.surplusNumber,
+                            "availableNumber": item.roomCount,
                             "feeType": item.roomType,
                             "meetingId": meetingId
                         });
