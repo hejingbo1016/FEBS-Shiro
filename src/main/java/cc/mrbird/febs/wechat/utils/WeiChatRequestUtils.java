@@ -32,14 +32,14 @@ public class WeiChatRequestUtils {
     private String SECRET ="40972028a294e4701194fe2ed4e38f72";
 
     // 商户平台 设置的密钥key
-    private String KEY;
+    private String KEY="qwertyuiop1234567890qwertyuiopqw";
 
     private String SPBILL_CREATE_IP = "120.24.81.225";
 
-    private String APP_SERVER_HOST;
+    private String APP_SERVER_HOST = "http://knightmedia.ltd";
 
     // 商户号id
-    private String MCHID;
+    private String MCHID="1492460372";
 
     //公众号Token
     private String TOKEN = "test";
@@ -54,7 +54,7 @@ public class WeiChatRequestUtils {
 
     private String REDIRECT_URL = "http://knightmedia.ltd/login";
 
-    private String WX_PAY_NOTIFY_URL = "/api/csOrder/notify";
+    private String WX_PAY_NOTIFY_URL = "/api/weChatUser/payNotify";
 
     private String GET_ACCESS_TOKEN_URL= "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuwenze.poi.annotation.ExcelField;
@@ -19,6 +21,7 @@ import java.util.Date;
  */
 @Data
 @TableName("t_payment_details")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentDetails {
 
     /**
@@ -62,12 +65,14 @@ public class PaymentDetails {
      * 入住日期
      */
     @TableField("start_time")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date startTime;
 
     /**
      * 截止日期
      */
     @TableField("end_time")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date endTime;
 
     /**
@@ -130,7 +135,7 @@ public class PaymentDetails {
      * 联系方式
      */
     @TableField(exist = false)
-    private Integer contactPhone;
+    private String contactPhone;
 
 
     /**

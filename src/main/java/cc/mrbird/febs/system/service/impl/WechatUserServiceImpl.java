@@ -138,6 +138,7 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
             this.baseMapper.insert(wechatUser);
             map.put("userId", wechatUser.getId());
         }
+        map.put("openid", openid);
         return ResponseDTO.success(map);
     }
 }

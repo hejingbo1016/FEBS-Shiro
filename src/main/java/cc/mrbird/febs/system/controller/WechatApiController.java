@@ -2,21 +2,25 @@ package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.system.entity.HotelName;
-import cc.mrbird.febs.system.entity.Meeting;
-import cc.mrbird.febs.system.entity.Payment;
-import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPaymentService;
+import com.github.wxpay.sdk.WXPayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -78,9 +82,37 @@ public class WechatApiController extends BaseController {
     @ControllerEndpoint(operation = "微信端下单功能", exceptionMessage = "微信端下单功能失败")
     @PostMapping("placOrders")
     @Transactional(rollbackFor = Exception.class)
-    public FebsResponse placOrders(@RequestBody List<PaymentDetails> paymentDetails) {
-        paymentService.placOrders(paymentDetails);
-        return new FebsResponse().success();
+    public ResponseDTO placOrders(@RequestBody OrderPay orderPay) {
+        return paymentService.placOrders(orderPay);
     }
 
+    /**
+     * 微信那边支付处理完毕之后，会进行回调，通知系统支付的结果
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("payNotify")
+    public String weiChatPayNotify(HttpServletRequest request, HttpServletResponse response){
+        String resXml="";
+        try{
+            InputStream is = request.getInputStream();
+            //将InputStream转换成String
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            is.close();
+
+            resXml=sb.toString();
+            return paymentService.weiChatPayNotify(resXml);
+        }catch (Exception e){
+            log.error("微信支付回调通知失败",e);
+            String result = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文获取失败]]></return_msg>" + "</xml> ";
+            return result;
+        }
+
+    }
 }
