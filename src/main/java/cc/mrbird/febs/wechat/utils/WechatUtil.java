@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.utils.ConfigUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import weixin.popular.api.TokenAPI;
 import weixin.popular.api.UserAPI;

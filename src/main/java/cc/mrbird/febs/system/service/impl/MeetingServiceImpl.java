@@ -3,6 +3,7 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.RedisUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
@@ -27,6 +28,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -187,7 +189,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         Object o = redisTemplate.opsForValue().get(fileName);
         if (o != null){
             String url = "http://knightmedia.ltd:9090/" + fileName;
-            return ResponseDTO.success("",url);
+            return new ResponseDTO(200,"",url);
         }
 
         try {
@@ -212,7 +214,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             ImageIO.write(image, "jpg", os);
             InputStream input = new ByteArrayInputStream(os.toByteArray());
             String url = saveFile(input);
-            return ResponseDTO.success("",url);
+            redisTemplate.opsForValue().set(fileName,url);
+            return new ResponseDTO(200,"",url);
 
         } catch ( IOException | WriterException e) {
             e.printStackTrace();
@@ -222,7 +225,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     private String saveFile(InputStream is){
         long id = snowflake.nextId();
-        java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
+//        java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
+        java.io.File fil = new java.io.File("F:\\w\\" + id);
         if (!fil.exists()){
             fil.mkdir();
         }else {
@@ -238,6 +242,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             e.printStackTrace();
         }
 
-        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
+        return "F:\\w\\"  + id + "\\" +id+".jpg";
+//        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
     }
 }
