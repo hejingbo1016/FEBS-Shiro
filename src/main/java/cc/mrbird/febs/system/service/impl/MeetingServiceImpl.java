@@ -188,8 +188,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
         Object o = redisTemplate.opsForValue().get(fileName);
         if (o != null){
-            String url = "http://knightmedia.ltd:9090/" + fileName;
-            return new ResponseDTO(200,"",url);
+            return new ResponseDTO(200,"",o);
         }
 
         try {
@@ -198,7 +197,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
 
-            String content = String.valueOf(generateQRCodeDTO.getId());
+            String content = "http://knightmedia.ltd/booking?id="+generateQRCodeDTO.getId();
             log.debug(content);
             //生成二维码矩阵
             BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 350, 350, hints);
@@ -225,8 +224,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     private String saveFile(InputStream is){
         long id = snowflake.nextId();
-//        java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
-        java.io.File fil = new java.io.File("F:\\w\\" + id);
+        java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
+//        java.io.File fil = new java.io.File("F:\\w\\" + id);
         if (!fil.exists()){
             fil.mkdir();
         }else {
@@ -242,7 +241,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             e.printStackTrace();
         }
 
-        return "F:\\w\\"  + id + "\\" +id+".jpg";
-//        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
+//        return "F:\\w\\"  + id + "\\" +id+".jpg";
+        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
     }
 }
