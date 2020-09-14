@@ -22,4 +22,198 @@
 
 
     </select>
+
+    <insert id="inserts">
+
+
+        insert into t_wechat_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="openid != null">
+                openid,
+            </if>
+            <if test="headimgurl != null">
+                headimgurl,
+            </if>
+            <if test="unionid != null">
+                unionid,
+            </if>
+            <if test="subscribeScene != null">
+                subscribe_scene,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+
+            <if test="userName != null">
+                user_name,
+            </if>
+
+            <if test="qrScene != null">
+                qr_scene,
+            </if>
+
+            <if test="qrSceneStr != null">
+                qr_scene_str,
+            </if>
+
+            <if test="tagidList != null">
+                tagid_list,
+            </if>
+
+            <if test="language != null">
+                language,
+            </if>
+            <if test="subscribe != null">
+                subscribe,
+            </if>
+
+            <if test="subscribeTime != null">
+                subscribe_time,
+            </if>
+
+            <if test="province != null">
+                province,
+            </if>
+
+            <if test="country != null">
+                country,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="isTab != null">
+                is_tab,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="customerType != null">
+                customer_type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="creater != null">
+                creater,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="openid != null">
+                #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="headimgurl != null">
+                #{headimgurl,jdbcType=VARCHAR},
+            </if>
+            <if test="unionid != null">
+                #{unionid,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribeScene != null">
+                #{subscribeScene,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+
+            <if test="qrScene != null">
+                #{qrScene,jdbcType=INTEGER},
+            </if>
+
+            <if test="qrSceneStr != null">
+                #{qrSceneStr,jdbcType=VARCHAR},
+            </if>
+
+            <if test="tagidList != null">
+                #{tagidList,jdbcType=VARCHAR},
+            </if>
+
+            <if test="language != null">
+                #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribe != null">
+                #{subscribe,jdbcType=VARCHAR},
+            </if>
+
+            <if test="subscribeTime != null">
+                #{subscribeTime,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+
+            <if test="country != null">
+                #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="isTab != null">
+                #{isTab,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null">
+                #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="creater != null">
+                #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+
+        </trim>
+
+
+    </insert>
+
+
 </mapper>

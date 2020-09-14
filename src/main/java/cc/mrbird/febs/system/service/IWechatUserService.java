@@ -58,4 +58,6 @@ public interface IWechatUserService extends IService<WechatUser> {
     void deleteWeChatUsers(String weChatUserIds);
 
     ResponseDTO registerUser(GetCodeDTO getCodeDTO);
+
+    void getTest(String openid);
 }

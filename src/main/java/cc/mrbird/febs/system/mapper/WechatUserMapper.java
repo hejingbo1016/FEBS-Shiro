@@ -13,4 +13,7 @@ import org.apache.ibatis.annotations.Param;
 public interface WechatUserMapper extends BaseMapper<WechatUser> {
 
     Long countWeChatUsers(@Param("wechatUser") WechatUser wechatUser);
+
+    int inserts(WechatUser wechatUser);
+
 }
