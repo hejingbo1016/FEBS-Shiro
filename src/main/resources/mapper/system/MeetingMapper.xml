@@ -38,13 +38,25 @@
 
 
     <select id="weChatHotelsByMeetingId" resultType="cc.mrbird.febs.system.entity.HotelName">
-            SELECT
-            h.id as hotelId,h.hotel_name, h.contact_phone,
-            h.reception_service,h.hotel_address,h.metro_guidelines,h.hotel_principal
-            from t_hotel h
-            left join t_meeting_hotel t on  h.id  = t.hotel_id and  t.meeting_id = #{meetingId}
-            where h.deleted = 0
-            GROUP BY h.id
+                    SELECT
+                h.id AS hotelId,
+                h.hotel_name,
+                h.contact_phone,
+                h.reception_service,
+                h.hotel_address,
+                h.metro_guidelines,
+                h.hotel_principal
+            FROM
+                t_meeting_hotel t
+                LEFT JOIN t_hotel h ON h.id = t.hotel_id
+                LEFT JOIN t_meeting m ON m.id = t.meeting_id
+                AND t.meeting_id = #{meetingId}
+            WHERE
+                h.deleted = 0
+                AND m.deleted = 0
+                AND t.deleted = 0
+            GROUP BY
+                h.id
     </select>
 
 </mapper>

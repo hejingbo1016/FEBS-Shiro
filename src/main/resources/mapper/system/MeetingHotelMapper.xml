@@ -8,7 +8,7 @@
 
         select count(1) from t_meeting_hotel t
         left join t_hotel h on t.hotel_id = h.id
-        where t.meeting_id =#{meetingHotel.meetingId} and t.deleted =0
+        where t.meeting_id =#{meetingHotel.meetingId} and t.deleted =0 and h.deleted = 0
         <if test="meetingHotel.feeName != null and meetingHotel.feeName != ''">
             AND t.fee_name like CONCAT('%',#{meetingHotel.feeName},'%')
         </if>
@@ -27,7 +27,7 @@
 
         select t.*,h.hotel_name from t_meeting_hotel t
         left join t_hotel h on t.hotel_id = h.id
-        where t.meeting_id = #{meetingHotel.meetingId} and t.deleted =0
+        where t.meeting_id = #{meetingHotel.meetingId} and t.deleted =0 and h.deleted = 0
         <if test="meetingHotel.feeName != null and meetingHotel.feeName != ''">
             AND t.fee_name like CONCAT('%',#{meetingHotel.feeName},'%')
         </if>
