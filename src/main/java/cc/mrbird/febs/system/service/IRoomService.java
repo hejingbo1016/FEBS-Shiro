@@ -20,10 +20,10 @@ public interface IRoomService extends IService<Room> {
      *
      * @param request QueryRequest
      * @param room room
-     * @param hotelId
+     * @param
      * @return IPage<Room>
      */
-    IPage<Room> findRooms(QueryRequest request, Room room, String hotelId);
+    IPage<Room> findRooms(QueryRequest request, Room room);
 
     /**
      * 查询（所有）
