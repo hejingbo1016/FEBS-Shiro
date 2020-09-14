@@ -4,8 +4,9 @@ import cc.mrbird.febs.common.utils.ConfigUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
 import weixin.popular.api.TokenAPI;
 import weixin.popular.api.UserAPI;
 import weixin.popular.bean.token.Token;

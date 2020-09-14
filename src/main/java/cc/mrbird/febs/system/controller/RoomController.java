@@ -49,11 +49,11 @@ public class RoomController extends BaseController {
         return new FebsResponse().success().data(roomService.findRooms(room));
     }
 
-    @GetMapping("list/{id}")
+    @GetMapping("list/{hotelId}")
     @ResponseBody
     @RequiresPermissions("hotel:room")
-    public FebsResponse roomList(QueryRequest request, Room room, String id) {
-        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room, id));
+    public FebsResponse roomList(QueryRequest request, Room room) {
+        Map<String, Object> dataTable = getDataTable(this.roomService.findRooms(request, room));
         return new FebsResponse().success().data(dataTable);
     }
 
@@ -95,7 +95,7 @@ public class RoomController extends BaseController {
     @ResponseBody
     @RequiresPermissions("room:export")
     public void export(QueryRequest queryRequest, Room room, HttpServletResponse response, String hotelId) {
-        List<Room> rooms = this.roomService.findRooms(queryRequest, room, hotelId).getRecords();
+        List<Room> rooms = this.roomService.findRooms(queryRequest, room).getRecords();
         ExcelKit.$Export(Room.class, response).downXlsx(rooms, false);
     }
 }

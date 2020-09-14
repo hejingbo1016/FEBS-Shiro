@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RoomMapper extends BaseMapper<Room> {
 
-    Long countRoom(@Param("room")Room room, @Param("hotelId") String hotelId);
+    Long countRoom(@Param("room")Room room);
 }
