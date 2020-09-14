@@ -43,6 +43,8 @@
                                             <input type="text" name="meetingAddress" class="layui-input">
                                         </div>
                                     </div>
+
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">状态</label>
                                         <div class="layui-input-inline">
@@ -98,13 +100,13 @@
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
     <a lay-event="generate"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+            class="layui-icon febs-edit-area febs-blue">&#xe641;</i></a>
     <a lay-event="edit" shiro:hasPermission="meeting:update"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+            class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
     <a lay-event="audit" shiro:hasPermission="meeting:audit"><i
-            class="layui-icon febs-edit-area febs-green">&#xe89f;</i></a>
+            class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
     <a lay-event="meetHotel"><i
-            class="layui-icon febs-edit-area febs-green">&#xe8b9;</i></a>
+            class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
     <a lay-event="del" shiro:hasPermission="meeting:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
@@ -127,6 +129,7 @@
 
         form.render();
         initTable();
+
 
         $query.on('click', function () {
             var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});

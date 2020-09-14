@@ -64,7 +64,7 @@ public class WechatUser {
      * 二维码扫码场景（开发者自定义）
      */
     @TableField("qr_scene")
-    private String qrScene;
+    private Integer qrScene;
 
     /**
      * 二维码扫码场景描述（开发者自定义）
@@ -88,7 +88,7 @@ public class WechatUser {
      * 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
      */
     @TableField("subscribe")
-    private String subscribe;
+    private Integer subscribe;
 
     /**
      * 用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间

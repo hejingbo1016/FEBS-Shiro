@@ -4,7 +4,7 @@ import cc.mrbird.febs.common.utils.ConfigUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.boot.CommandLineRunner;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import weixin.popular.api.TokenAPI;
 import weixin.popular.api.UserAPI;
@@ -28,6 +28,7 @@ public class WechatUtil {
 
     /**
      * 获取token 存入redis 7000过期
+     *
      * @return
      */
     public static synchronized String getToken() {
@@ -76,6 +77,7 @@ public class WechatUtil {
 
     /**
      * 根据openid 获取用户信息
+     *
      * @param openidList
      * @return
      */
@@ -99,8 +101,25 @@ public class WechatUtil {
         return userList;
     }
 
+
+    /**
+     * 根据openid 获取用户信息
+     *
+     * @param openid
+     * @return
+     */
+    public static User getUser(String openid) {
+        if (StringUtils.isEmpty(openid)) {
+            return null;
+        }
+        String token = getToken();
+        User user = UserAPI.userInfo(token, openid);
+        return user;
+    }
+
     /**
      * 获取所有openid
+     *
      * @param nextOpenid
      * @param openidList
      */
@@ -126,7 +145,7 @@ public class WechatUtil {
     public static String createNonceStr() {
         String s = UUID.randomUUID().toString();
         // 去掉“-”符号
-        return s.replaceAll( "\\-","").toUpperCase();
+        return s.replaceAll("\\-", "").toUpperCase();
     }
 
     /**
@@ -143,6 +162,7 @@ public class WechatUtil {
 
     /**
      * 获取随机字符串
+     *
      * @param len
      * @return
      */
