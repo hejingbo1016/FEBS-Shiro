@@ -6,14 +6,16 @@ import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.*;
+import cc.mrbird.febs.system.service.IFileService;
+import cc.mrbird.febs.system.service.IHotelService;
 import cc.mrbird.febs.system.service.IMeetingService;
 import cc.mrbird.febs.system.service.IPaymentService;
-import com.github.wxpay.sdk.WXPayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +35,8 @@ public class WechatApiController extends BaseController {
 
     private final IMeetingService meetingService;
     private final IPaymentService paymentService;
+    private final IHotelService hotelService;
+    private final IFileService fileService;
 
     @ControllerEndpoint(operation = "微信端获取会议列表", exceptionMessage = "微信获取会议列表失败")
     @GetMapping("weChatMettingList")
@@ -88,14 +92,15 @@ public class WechatApiController extends BaseController {
 
     /**
      * 微信那边支付处理完毕之后，会进行回调，通知系统支付的结果
+     *
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("payNotify")
-    public String weiChatPayNotify(HttpServletRequest request, HttpServletResponse response){
-        String resXml="";
-        try{
+    public String weiChatPayNotify(HttpServletRequest request, HttpServletResponse response) {
+        String resXml = "";
+        try {
             InputStream is = request.getInputStream();
             //将InputStream转换成String
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -106,13 +111,25 @@ public class WechatApiController extends BaseController {
             }
             is.close();
 
-            resXml=sb.toString();
+            resXml = sb.toString();
             return paymentService.weiChatPayNotify(resXml);
-        }catch (Exception e){
-            log.error("微信支付回调通知失败",e);
+        } catch (Exception e) {
+            log.error("微信支付回调通知失败", e);
             String result = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文获取失败]]></return_msg>" + "</xml> ";
             return result;
         }
 
+    }
+
+    @ControllerEndpoint(operation = "新增addFile", exceptionMessage = "新增addFile失败")
+    @PostMapping("addFile")
+//    @RequiresPermissions("hotel:add")
+    public FebsResponse addHotel(@RequestParam(value = "file", required = false) MultipartFile[] file, Hotel hotel) {
+        this.hotelService.createHotel(hotel);
+        Long id = hotel.getId();
+        if (id != null) {
+            fileService.uploadFile(file, id);
+        }
+        return new FebsResponse().success();
     }
 }

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.FileMapper">
 
+
     <select id="selectFileByHotelId" resultType="cc.mrbird.febs.system.entity.File">
 
 
@@ -10,4 +11,112 @@
 
 
     </select>
+
+
+    <insert id="inserts">
+
+
+        insert into t_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="foreignId != null">
+                foreign_id,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="fileExtension != null">
+                file_extension,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="fileSize != null">
+                file_size,
+            </if>
+
+            <if test="thumbnailUrl != null">
+                thumbnail_url,
+            </if>
+
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="creater != null">
+                creater,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="md5Val != null">
+                md5Val,
+            </if>
+            <if test="attachTime != null">
+                attachTime,
+            </if>
+            <if test="noSuffixFileName != null">
+                noSuffixFileName,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="foreignId != null">
+                #{foreignId,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="fileExtension != null">
+                #{fileExtension,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="thumbnailUrl != null">
+                #{thumbnailUrl,jdbcType=VARCHAR},
+            </if>
+
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="creater != null">
+                #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="md5Val != null">
+                #{md5Val,jdbcType=VARCHAR},
+            </if>
+            <if test="attachTime != null">
+                #{attachTime,jdbcType=VARCHAR},
+            </if>
+            <if test="noSuffixFileName != null">
+                #{noSuffixFileName,jdbcType=VARCHAR},
+            </if>
+
+        </trim>
+
+
+    </insert>
 </mapper>

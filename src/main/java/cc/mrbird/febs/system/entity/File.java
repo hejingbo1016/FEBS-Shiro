@@ -1,15 +1,15 @@
 package cc.mrbird.febs.system.entity;
 
-import java.util.Date;
-
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- *  Entity
+ * Entity
  *
  * @author Hejingbo
  * @date 2020-08-05 23:40:32
@@ -89,5 +89,24 @@ public class File {
      */
     @TableField("deleted")
     private Integer deleted;
+
+    /**
+     * md5
+     */
+    @TableField("md5Val")
+    private String md5Val;
+
+    /**
+     * 拍摄时间
+     */
+    @TableField("attachTime")
+    private String attachTime;
+
+    /**
+     * 文件名不带后缀
+     */
+    @TableField("noSuffixFileName")
+    private String noSuffixFileName;
+
 
 }

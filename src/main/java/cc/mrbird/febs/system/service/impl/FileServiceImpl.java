@@ -1,8 +1,9 @@
 package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.common.utils.CommonConstants;
-import cc.mrbird.febs.common.utils.ConfigUtil;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
+import cc.mrbird.febs.common.service.ImgHelperService;
+import cc.mrbird.febs.common.utils.*;
 import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.service.IFileService;
@@ -14,6 +15,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Service实现
@@ -39,6 +42,13 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     private final FileMapper fileMapper;
 
     private final String ROOT_DIR = ConfigUtil.getProperty("attachment.upload.root");
+    @Autowired
+    private FilePathConfig filePathConfig;
+    @Value("${minio.imageUrl}")
+    private String imgUrl = ""; //读取图片保存路径
+    @Value("${minio.imageShowUrl}")
+    private String imageShowUrl = ""; //读取图片保存路径
+    private static Snowflake snowflake = Snowflake.getInstanceSnowflake();
 
     @Override
     public IPage<File> findFiles(QueryRequest request, File file) {
@@ -132,5 +142,84 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         }
 
         return null;
+    }
+
+    /**
+     * 批量上传
+     *
+     * @param file
+     * @param fId
+     * @return
+     */
+    @Override
+    public List<File> uploadFile(MultipartFile[] file, Long fId) {
+        //用于接收上传到服务器的照片，后续用于批量传入到附件表中
+        List<File> fileList = new ArrayList<>();
+        if (!StringUtils.isEmpty(fId)) {
+            if (!StringUtils.isEmpty(file)) {
+                //上传通用方法
+                setFileList(file, fId, fileList);
+                if (!Objects.isNull(fileList) && fileList.size() > 0) {
+                    //因生成的mapper方法是只能适应自增id模式，所以不支持该批量插入操作
+                    fileList.stream().forEach(f -> {
+                        fileMapper.inserts(f);
+                    });
+                }
+            } else {
+                throw new BusinessRuntimeException("上传的图片为空,请检查后上传");
+            }
+        } else {
+            throw new BusinessRuntimeException("上传图片异常,生成的关联主键不能为空");
+        }
+        return fileList;
+    }
+
+    private void setFileList(MultipartFile[] multipartFile, Long fId, List<File> fileList) {
+        for (int i = 0; i < multipartFile.length; i++) {
+            File file = new File();
+            //图片名称
+            String originalFilename = multipartFile[i].getOriginalFilename();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            //获取文件后缀名
+            String suffixName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            //获取文件名，不带后缀
+            String fileName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+            //获取文件的哈希值
+            String md5 = MultipartFileUtil.md5HashCodes(multipartFile[i]);
+            //判断是否是图片
+            if (MultipartFileUtil.isPhotoType(suffixName, originalFilename)) {
+                ImgHelperService imgHelperService = new ImgHelperService();
+                String uuid = UUID.randomUUID().toString();//文件唯一标识uuid
+                //判断图片是否相同
+                try {
+                    //获取静态资源的路径
+                    String staticFile = filePathConfig.getBasePath();
+                    String filePath = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + originalFilename;
+                    //缩略图
+                    String thumbnail = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + "1_" + originalFilename;
+                    //完整图片路径
+                    String imgUrls = staticFile + filePath;
+                    //缩略图完整路径
+                    String thumbnailFath = staticFile + thumbnail;
+                    //生成图片和缩略图
+                    Map<String, Map> integerMap = imgHelperService.setUpThumbnailPhoto(imgUrls, thumbnailFath, originalFilename, multipartFile[i], imgHelperService);
+                    file.setId(snowflake.nextId());
+                    file.setFileName(originalFilename);
+                    file.setFileExtension(suffixName);
+                    file.setNoSuffixFileName(fileName);
+                    file.setUrl(filePath.replace(imgUrl, ""));
+                    file.setThumbnailUrl(thumbnail.replace(imgUrl, ""));
+                    file.setForeignId(fId);
+                    file.setCreateTime(new Date());
+                    file.setAttachTime(String.valueOf(integerMap.get("createTime").get("imageCreateTime")));
+                    file.setFileSize(multipartFile[i].getSize());
+                    file.setMd5Val(md5);
+                    fileList.add(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new BusinessRuntimeException("上传图片异常");
+                }
+            }
+        }
     }
 }

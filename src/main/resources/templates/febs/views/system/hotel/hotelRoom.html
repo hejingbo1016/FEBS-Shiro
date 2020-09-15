@@ -206,7 +206,6 @@
 
 
             if (layEvent === 'addRoom') {
-                var hotelIds = $("#" + hotelId + "hotelId").text();
                 var roomName = $("#" + hotelId + "roomName").text();
                 var roomCount = $("#" + hotelId + "roomCount").text();
                 var surplusNumber = $("#" + hotelId + "surplusNumber").text();
@@ -215,7 +214,7 @@
 
 
                 var param = {
-                    'hotelId': hotelIds,
+                    'hotelId': hotelId,
                     'roomName': roomName,
                     'roomCount': roomCount,
                     'surplusNumber': surplusNumber,
@@ -254,7 +253,6 @@
                 url: ctx + 'room/list/' + hotelId,
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'hotelId', title: 'ID'},
                     {field: 'roomName', edit: 'text', title: '名称', maxWidth: 100},
                     {title: '类型', templet: '#selectGxmc', maxWidth: 50},
                     {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
@@ -278,9 +276,8 @@
             var hotelId = sessionStorage.getItem('hotelId');
             var tr = " <tr>" +
                 " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
-                " <td data-field='hotelId'> <div id='" + hotelId + "hotelId' class='layui-table-cell laytable-cell-1-hotelId '>" + hotelId + "</div></td>" +
                 " <td data-field='roomName' data-edit='text'> <div id='" + hotelId + "roomName' class='layui-table-cell laytable-cell-1-roomName '> </div></td>" +
-                " <td data-field='roomType' templet = '#selectGxmc'> <div  id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
+                " <td data-field='roomType' data-edit='text' templet = '#selectGxmc'> <div  id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
                 " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
                 " <td data-field='roomCount' data-edit='text'> <div  id='" + hotelId + "roomCount' class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
                 " <td data-field='surplusNumber' data-edit='text'> <div  id='" + hotelId + "surplusNumber' class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +

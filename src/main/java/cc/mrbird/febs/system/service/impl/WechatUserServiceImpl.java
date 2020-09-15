@@ -124,7 +124,7 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
 
         Map map = new HashMap();
         Long userByOpenid = insertUserByOpenid(openid, map);
-        if (Objects.isNull(userByOpenid)){
+        if (Objects.isNull(userByOpenid)) {
             return ResponseDTO.failture("获取openid失败，授权失败");
         }
         map.put("openid", openid);
@@ -147,7 +147,6 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
             if (!Objects.isNull(openUser) && !StringUtils.isEmpty(openUser.getOpenid())) {
                 BeanUtils.copyProperties(openUser, wechatUser);
                 if (!org.springframework.util.StringUtils.isEmpty(openUser.getSubscribe_time())) {
-
                     wechatUser.setSubscribeTime(new Date(openUser.getSubscribe_time() * 1000));
                 }
                 wechatUser.setQrScene(openUser.getQr_scene());

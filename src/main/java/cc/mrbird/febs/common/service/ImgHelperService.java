@@ -178,7 +178,7 @@ public class ImgHelperService {
             return getModel(path, jpegFile, metadata);
         } catch (Exception ex) {
             log.error("读取图片信息异常:", ex);
-            throw new RuntimeException("读取图片信息异常: " + ex.getMessage());
+            throw new BusinessRuntimeException("读取图片信息异常: " + ex.getMessage());
         }
     }
 

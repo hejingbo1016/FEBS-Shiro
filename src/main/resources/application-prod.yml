@@ -54,7 +54,7 @@ mybatis:
     map-underscore-to-camel-case: true
 minio:  #设置minio相关配置
   imageUrl: "/system/image/" #保存图片的路径
-  imageShowUrl: "http://192.168.123.8:12085" #图片显示的服务器路径
+  imageShowUrl: "http://120.24.81.225/:12085" #图片显示的服务器路径
   basePath: /usr/local/opt/df-image/df-repository
 
 mybatis-plus:
