@@ -11,19 +11,18 @@ import cc.mrbird.febs.system.service.IWechatUserService;
 import cc.mrbird.febs.wechat.dto.GetCodeDTO;
 import cc.mrbird.febs.wechat.utils.WechatUtil;
 import cc.mrbird.febs.wechat.utils.WeiChatRequestUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
-import lombok.RequiredArgsConstructor;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 import weixin.popular.bean.user.User;
 
 import java.util.*;
@@ -124,31 +123,42 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
         }
 
         Map map = new HashMap();
-        insertUserByOpenid(openid, map);
+        Long userByOpenid = insertUserByOpenid(openid, map);
+        if (Objects.isNull(userByOpenid)){
+            return ResponseDTO.failture("获取openid失败，授权失败");
+        }
         map.put("openid", openid);
         return ResponseDTO.success(map);
     }
 
-    private void insertUserByOpenid(String openid, Map map) {
+    private Long insertUserByOpenid(String openid, Map map) {
         QueryWrapper<WechatUser> wrapper = new QueryWrapper<>();
         wrapper.eq("openid", openid);
         WechatUser user = this.baseMapper.selectOne(wrapper);
 
         if (user != null) {
             map.put("userId", user.getId());
+            return user.getId();
         } else {
             WechatUser wechatUser = new WechatUser();
             wechatUser.setId(snowflake.nextId());
             User openUser = WechatUtil.getUser(openid);
-            BeanUtils.copyProperties(openUser, wechatUser);
-            if (!org.springframework.util.StringUtils.isEmpty(openUser.getSubscribe_time())) {
+            //判断微信公众号是否有该openid，当没则不支持新增
+            if (!Objects.isNull(openUser) && !StringUtils.isEmpty(openUser.getOpenid())) {
+                BeanUtils.copyProperties(openUser, wechatUser);
+                if (!org.springframework.util.StringUtils.isEmpty(openUser.getSubscribe_time())) {
 
-                wechatUser.setSubscribeTime(new Date(openUser.getSubscribe_time() * 1000));
+                    wechatUser.setSubscribeTime(new Date(openUser.getSubscribe_time() * 1000));
+                }
+                wechatUser.setQrScene(openUser.getQr_scene());
+                wechatUser.setQrSceneStr(openUser.getQr_scene_str());
+                map.put("userId", wechatUser.getId());
+                wechatUserMapper.inserts(wechatUser);
+                return wechatUser.getId();
+            } else {
+                return null;
             }
-            wechatUser.setQrScene(openUser.getQr_scene());
-            wechatUser.setQrSceneStr(openUser.getQr_scene_str());
-            map.put("userId", wechatUser.getId());
-            wechatUserMapper.inserts(wechatUser);
+
         }
     }
 

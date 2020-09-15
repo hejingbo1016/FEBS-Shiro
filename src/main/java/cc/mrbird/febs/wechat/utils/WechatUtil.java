@@ -115,6 +115,7 @@ public class WechatUtil {
         }
         String token = getToken();
         User user = UserAPI.userInfo(token, openid);
+
         return user;
     }
 
