@@ -6,13 +6,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 /**
  * 时间工具类
- *
- *
  */
 public class DateUtil {
 
@@ -45,5 +44,14 @@ public class DateUtil {
     public static String formatInstant(Instant instant, String format) {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         return localDateTime.format(DateTimeFormatter.ofPattern(format));
+    }
+
+    /**
+     * 获取当前系统日期、时间
+     *
+     * @return 当前系统日期、时间
+     */
+    public static Date getDate() {
+        return Calendar.getInstance().getTime();
     }
 }
