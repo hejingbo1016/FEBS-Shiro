@@ -211,7 +211,7 @@
                 var roomCount = $("#" + hotelId + "roomCount").text();
                 var surplusNumber = $("#" + hotelId + "surplusNumber").text();
                 var univalence = $("#" + hotelId + "univalence").text();
-                var totalPrice = $("#" + hotelId + "totalPrice").text();
+                var roomType = $("#" + hotelId + "roomType").text();
 
 
                 var param = {
@@ -220,7 +220,7 @@
                     'roomCount': roomCount,
                     'surplusNumber': surplusNumber,
                     'univalence': univalence,
-                    'totalPrice': totalPrice
+                    'roomType': roomType
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
@@ -280,7 +280,7 @@
                 " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
                 " <td data-field='hotelId'> <div id='" + hotelId + "hotelId' class='layui-table-cell laytable-cell-1-hotelId '>" + hotelId + "</div></td>" +
                 " <td data-field='roomName' data-edit='text'> <div id='" + hotelId + "roomName' class='layui-table-cell laytable-cell-1-roomName '> </div></td>" +
-                " <td data-field='totalPrice' templet = '#selectGxmc'> <div  id='" + hotelId + "totalPrice' class='layui-table-cell laytable-cell-1-totalPrice '> </div></td>" +
+                " <td data-field='roomType' templet = '#selectGxmc'> <div  id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
                 " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
                 " <td data-field='roomCount' data-edit='text'> <div  id='" + hotelId + "roomCount' class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
                 " <td data-field='surplusNumber' data-edit='text'> <div  id='" + hotelId + "surplusNumber' class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
@@ -298,10 +298,10 @@
                 var updateParam = {
                     'hotelId': data.hotelId,
                     'roomName': data.roomName,
+                    'roomType': data.roomType,
                     'roomCount': data.roomCount,
                     'surplusNumber': data.surplusNumber,
                     'univalence': data.univalence,
-                    'totalPrice': data.totalPrice,
                     'id': data.id
                 }
                 febs.post(ctx + 'room/update', updateParam, function () {
