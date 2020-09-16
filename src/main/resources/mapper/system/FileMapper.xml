@@ -119,4 +119,15 @@
 
 
     </insert>
+
+
+    <update id="deletesByFids">
+
+        update t_file set deleted = 1 where
+        <foreach close=")" collection="fids" item="foreignId" open="foreign_id in (" separator=",">
+            #{foreignId}
+        </foreach>
+
+
+    </update>
 </mapper>

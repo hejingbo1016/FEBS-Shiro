@@ -62,8 +62,7 @@ public class HotelController extends BaseController {
 
     @ControllerEndpoint(operation = "新增Hotel", exceptionMessage = "新增Hotel失败")
     @PostMapping("add")
-    @ResponseBody
-//    @RequiresPermissions("hotel:add")
+    @RequiresPermissions("hotel:add")
     public FebsResponse addHotel(@RequestParam(value = "file", required = false) MultipartFile[] file, Hotel hotel) {
         this.hotelService.createHotel(hotel);
         Long id = hotel.getId();
@@ -77,6 +76,7 @@ public class HotelController extends BaseController {
     @GetMapping("delete/{deleteIds}")
     @ResponseBody
     @RequiresPermissions("hotel:delete")
+    @Transactional(rollbackFor = Exception.class)
     public FebsResponse deleteHotels(@NotBlank(message = "{required}") @PathVariable String deleteIds) {
         this.hotelService.deleteHotels(deleteIds);
         return new FebsResponse().success();
@@ -84,7 +84,6 @@ public class HotelController extends BaseController {
 
     @ControllerEndpoint(operation = "修改Hotel", exceptionMessage = "修改Hotel失败")
     @PostMapping("update")
-    @ResponseBody
     @RequiresPermissions("hotel:update")
     @Transactional(rollbackFor = Exception.class)
     public FebsResponse updateHotel(Hotel hotel, MultipartFile[] file) {

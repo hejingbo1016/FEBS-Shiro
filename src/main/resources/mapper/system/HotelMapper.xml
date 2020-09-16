@@ -8,7 +8,7 @@
         COUNT(1)
         FROM
         t_hotel t
-        WHERE 1 = 1
+        WHERE deleted = 0
         <if test="hotel.hotelName != null and hotel.hotelName != ''">
             AND t.hotel_name like CONCAT('%',#{hotel.hotelName},'%')
         </if>

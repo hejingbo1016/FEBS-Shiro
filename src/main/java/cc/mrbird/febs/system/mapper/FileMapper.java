@@ -17,4 +17,6 @@ public interface FileMapper extends BaseMapper<File> {
     List<File> selectFileByHotelId(@Param("foreignId") Long foreignId);
 
     int inserts(File f);
+
+    int deletesByFids(@Param("fids") String fids);
 }

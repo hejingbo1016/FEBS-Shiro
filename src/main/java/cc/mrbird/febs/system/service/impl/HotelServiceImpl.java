@@ -3,9 +3,11 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.Hotel;
 import cc.mrbird.febs.system.entity.HotelName;
 import cc.mrbird.febs.system.entity.Room;
+import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.mapper.HotelMapper;
 import cc.mrbird.febs.system.service.IHotelService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -35,6 +37,7 @@ import java.util.List;
 public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements IHotelService {
 
     private final HotelMapper hotelMapper;
+    private final FileMapper fileMapper;
 
     @Override
     public IPage<Hotel> findHotels(QueryRequest request, Hotel hotel) {
@@ -67,6 +70,7 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
         if (StringUtils.isNotBlank(hotel.getHotelAddress())) {
             queryWrapper.like(Hotel::getHotelAddress, hotel.getHotelAddress());
         }
+        queryWrapper.eq(Hotel::getDeleted, AdminConstants.DATA_N_DELETED);
 
 
     }
@@ -102,7 +106,8 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
     public void deleteHotels(String deleteIds) {
         List<String> list = Arrays.asList(deleteIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Hotel>().lambda().in(Hotel::getId, list));
-
+        //删除酒店对应的附件
+        fileMapper.deletesByFids(deleteIds);
     }
 
     @Override
