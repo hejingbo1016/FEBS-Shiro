@@ -3,13 +3,13 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.common.utils.RedisUtils;
+import cc.mrbird.febs.common.utils.FileHepler;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
-import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.entity.File;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
@@ -28,7 +28,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -54,6 +54,10 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     private final MeetingMapper meetingMapper;
     private final FileMapper fileMapper;
     private final MeetingHotelMapper meetingHotelMapper;
+    @Value("${minio.imageUrl}")
+    private String imgUrl = ""; //读取图片保存路径
+    @Value("${minio.imageShowUrl}")
+    private String imageShowUrl = ""; //读取图片保存路径
 
     private static Snowflake snowflake = Snowflake.getInstanceSnowflake();
 
@@ -163,6 +167,10 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                 t.setMeetingId(id);
                 //通过酒店id查图片
                 List<File> files = fileMapper.selectFileByHotelId(t.getHotelId());
+                List<File> fileList = files.stream().map(f -> {
+                    FileHepler.getFileVo(f, imageShowUrl, imgUrl);
+                    return f;
+                }).collect(Collectors.toList());
                 //通过会议id和酒店id查费用项
                 List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId());
                 //封装所有类型为1的房间的费用项，其他则是其他费用项
@@ -175,7 +183,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                 });
                 t.setRoomList(rooms);
                 t.setOtherList(others);
-                t.setFileList(files);
+                t.setFileList(fileList);
                 return t;
             }).collect(Collectors.toList());
         }
@@ -184,11 +192,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     @Override
     public ResponseDTO generateQRCode(GenerateQRCodeDTO generateQRCodeDTO) {
-        String fileName = generateQRCodeDTO.getId()+".jpg";
+        String fileName = generateQRCodeDTO.getId() + ".jpg";
         RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
         Object o = redisTemplate.opsForValue().get(fileName);
-        if (o != null){
-            return new ResponseDTO(200,"",o);
+        if (o != null) {
+            return new ResponseDTO(200, "", o);
         }
 
         try {
@@ -197,13 +205,13 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
 
-            String content = "http://knightmedia.ltd/booking?id="+generateQRCodeDTO.getId();
+            String content = "http://knightmedia.ltd/booking?id=" + generateQRCodeDTO.getId();
             log.debug(content);
             //生成二维码矩阵
             BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 350, 350, hints);
 
             //获取矩阵宽度、高度,生成二维码图片
-            BufferedImage image = new BufferedImage(bitMatrix.getWidth(),bitMatrix.getHeight(),BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(), BufferedImage.TYPE_INT_RGB);
             for (int x = 0; x < 350; x++) {
                 for (int y = 0; y < 350; y++) {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
@@ -213,35 +221,35 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             ImageIO.write(image, "jpg", os);
             InputStream input = new ByteArrayInputStream(os.toByteArray());
             String url = saveFile(input);
-            redisTemplate.opsForValue().set(fileName,url);
-            return new ResponseDTO(200,"",url);
+            redisTemplate.opsForValue().set(fileName, url);
+            return new ResponseDTO(200, "", url);
 
-        } catch ( IOException | WriterException e) {
+        } catch (IOException | WriterException e) {
             e.printStackTrace();
         }
         return ResponseDTO.failture();
     }
 
-    private String saveFile(InputStream is){
+    private String saveFile(InputStream is) {
         long id = snowflake.nextId();
         java.io.File fil = new java.io.File("/www/server/nginx/imge/" + id);
 //        java.io.File fil = new java.io.File("F:\\w\\" + id);
-        if (!fil.exists()){
+        if (!fil.exists()) {
             fil.mkdir();
-        }else {
+        } else {
             return null;
         }
-        try (FileOutputStream fos = new FileOutputStream(fil.getAbsolutePath()+"/"+id+".jpg");){
-            byte bytes[]=new byte[1024];
-            int temp=0;
-            while((temp = is.read(bytes)) != -1){
-                fos.write(bytes,0,temp);
+        try (FileOutputStream fos = new FileOutputStream(fil.getAbsolutePath() + "/" + id + ".jpg");) {
+            byte bytes[] = new byte[1024];
+            int temp = 0;
+            while ((temp = is.read(bytes)) != -1) {
+                fos.write(bytes, 0, temp);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 //        return "F:\\w\\"  + id + "\\" +id+".jpg";
-        return "http://knightmedia.ltd:9090/"  + id + "/" +id+".jpg";
+        return "http://knightmedia.ltd:9090/" + id + "/" + id + ".jpg";
     }
 }

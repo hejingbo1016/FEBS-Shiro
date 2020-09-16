@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service实现
@@ -62,8 +63,17 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     public List<File> findFiles(File file) {
         LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(File::getForeignId, file.getForeignId());
-        return this.baseMapper.selectList(queryWrapper);
+        List<File> files = baseMapper.selectList(queryWrapper);
+        List<File> fileList = new ArrayList<>();
+        if (!Objects.isNull(files) && files.size() > 0) {
+            fileList = files.stream().map(f -> {
+                FileHepler.getFileVo(f,imageShowUrl,imgUrl);
+                return f;
+            }).collect(Collectors.toList());
+        }
+        return fileList;
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

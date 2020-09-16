@@ -245,6 +245,22 @@ public class FileHepler {
     }
 
     /**
+     * 封装原图和缩略图url
+     *
+     * @param f
+     * @param imageShowUrl
+     * @param imgUrl
+     */
+    public static void getFileVo(cc.mrbird.febs.system.entity.File f, String imageShowUrl, String imgUrl) {
+        if (!StringUtils.isEmpty(f.getUrl())) {
+            f.setThumbnailUrl(imageShowUrl + imgUrl + f.getUrl());
+        }
+        if (!StringUtils.isEmpty(f.getThumbnailUrl())) {
+            f.setThumbnailUrl(imageShowUrl + imgUrl + f.getThumbnailUrl());
+        }
+    }
+
+    /**
      * 获取项目路径
      *
      * @return
@@ -366,4 +382,5 @@ public class FileHepler {
 
         return true;
     }
+
 }

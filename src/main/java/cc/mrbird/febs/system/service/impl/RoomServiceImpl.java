@@ -1,6 +1,7 @@
 package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.Room;
 import cc.mrbird.febs.system.mapper.RoomMapper;
 import cc.mrbird.febs.system.service.IRoomService;
@@ -58,6 +59,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
             queryWrapper.eq(Room::getHotelId, room.getHotelId());
 
         }
+        queryWrapper.eq(Room::getDeleted, AdminConstants.DATA_N_DELETED);
 
 
     }
