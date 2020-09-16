@@ -13,6 +13,7 @@ import cc.mrbird.febs.system.mapper.PaymentMapper;
 import cc.mrbird.febs.system.service.IPaymentService;
 import cc.mrbird.febs.wechat.utils.WeiChatRequestUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -176,7 +177,13 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 }
 
                 // 业务
-
+                if (!"SUCCESS".equals(notifyMap.get("result_code"))){
+                    return String.format(xmlBack, "FAIL", "");
+                }
+                UpdateWrapper<Payment> wrapper = new UpdateWrapper<>();
+                wrapper.eq("payment_Code",out_trade_no)
+                        .set("pay_type",2);
+                paymentMapper.update(null,wrapper);
                 return String.format(xmlBack, "SUCCESS", "OK");
             } else {
                 log.error("微信支付回调通知签名错误");

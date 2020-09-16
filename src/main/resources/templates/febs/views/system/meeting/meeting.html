@@ -204,10 +204,17 @@
                 });
             }
             if (layEvent === 'generate') {
+                if (data.status != 1){
+                    febs.alert.warn('该会议未审核通过，不能分享');
+                    return
+                }
                 febs.get(ctx + 'meeting/generateQrcode/' + data.id,null, function (res) {
                     console.log("-----------------------res")
                     console.log(res.data)
-                    window.location.href=res.data
+                    layer.open({
+                        title: '分享二维码'
+                        ,content: '<img border="0" src="'+res.data+'" alt="Pulpit rock" width="350" height="350">'
+                    });
                 });
             }
             if (layEvent === 'edit') {
