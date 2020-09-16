@@ -253,7 +253,7 @@ public class FileHepler {
      */
     public static void getFileVo(cc.mrbird.febs.system.entity.File f, String imageShowUrl, String imgUrl) {
         if (!StringUtils.isEmpty(f.getUrl())) {
-            f.setThumbnailUrl(imageShowUrl + imgUrl + f.getUrl());
+            f.setUrl(imageShowUrl + imgUrl + f.getUrl());
         }
         if (!StringUtils.isEmpty(f.getThumbnailUrl())) {
             f.setThumbnailUrl(imageShowUrl + imgUrl + f.getThumbnailUrl());
