@@ -83,13 +83,24 @@
     <span class="layui-badge febs-bg-{{roomType.color}}">{{ roomType.title }}</span>
 </script>
 
+
 <script type="text/html" id="selectGxmc">
+    {{#
+    var roomType = {
+    1: {value: '1',title: '房型', color: 'green'},
+    2: {value: '2',title: '餐费', color: 'volcano'},
+    3: {value: '3',title: '门票', color: 'blue'},
+    4: {value: '4',title: '其他', color: 'red'}
+    };
+    }}
     <select name='roomType' lay-verify='' lay-search=''>
-        <option value=""></option>
-        <option value="1">房类</option>
-        <option value="2">餐费</option>
-        <option value="3">门票</option>
-        <option value="4">其他</option>
+        {{#  layui.each(roomType, function(index, item){ }}
+        {{#  if(+item.value === +d.roomType){ }}
+        <option value="{{item.value}}"  selected = "selected">{{ item.title }}</option>
+        {{#  }else{ }}
+        <option value="{{item.value}}">{{ item.title }}</option>
+        {{#  } }}
+        {{#  }); }}
     </select>
 </script>
 <script type="text/html" id="hotelRoom-option">
@@ -273,6 +284,7 @@
         }
 
         $("#addTable").click(function () {
+            /*
             var hotelId = sessionStorage.getItem('hotelId');
             var tr = " <tr>" +
                 " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
@@ -284,6 +296,32 @@
                 " <td data-field='操作'  toolbar:'#hotelRoom-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='room:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
                 " </tr>";
             $("[lay-id='hotelRoomTable'] .layui-table-body .layui-table tbody").append(tr);
+             */
+            var Data = table.cache["hotelRoomTable"];
+            var datas = {
+                LAY_TABLE_INDEX: 0,
+                // createTime: 1599985840000,
+                creater: null,
+                deleted: 0,
+                endTime: null,
+                hotelId: "0",
+                id: "0",
+                modifier: null,
+                // modifyTime: 1599985840000,
+                roomCount: 0,
+                roomDate: null,
+                roomName: "",
+                roomType: 1,
+                startTime: null,
+                surplusNumber: 0,
+                totalPrice: 0,
+                univalence: 0
+            }
+            Data.push(datas);
+            tableIns.reload({
+                url:'',
+                data: Data
+            });
         });
 
         //监听单元格编辑
