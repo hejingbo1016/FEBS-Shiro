@@ -43,7 +43,7 @@ public class Hotel {
     private String contactPhone;
 
     /**
-     * 接待服务
+     * 备注
      */
     @TableField("reception_service")
     private String receptionService;

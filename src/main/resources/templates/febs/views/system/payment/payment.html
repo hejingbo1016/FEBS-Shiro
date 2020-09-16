@@ -25,13 +25,6 @@
                                             <input type="text" name="meetingName" class="layui-input">
                                         </div>
                                     </div>
-                                    <!--<div class="layui-inline">-->
-                                    <!--<label class="layui-form-label layui-form-label-sm">会议名称</label>-->
-                                    <!--<div class="layui-input-inline">-->
-                                    <!--<select name="meetingName" id="meetingName" lay-filter="meetingName">-->
-                                    <!--</select>-->
-                                    <!--</div>-->
-                                    <!--</div>-->
                                     <div class="layui-inline">
                                         <label class="layui-form-label">酒店名称</label>
                                         <div class="layui-input-inline">
@@ -90,16 +83,18 @@
 </script>
 
 
-<script type="text/html" id="payment-option">
-    <span shiro:lacksPermission="payment:update,payment:delete">
+<!--<span shiro:lacksPermission="payment:update,payment:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="edit" shiro:hasPermission="payment:update"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
+<a lay-event="edit" shiro:hasPermission="payment:update"><i
+        class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
+
+<a lay-event="del" shiro:hasPermission="payment:delete"><i
+        class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>-->
+
+<script type="text/html" id="payment-option">
     <a lay-event="paymentDetails" shiro:hasPermission="payment:details"><i
             class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
-    <a lay-event="del" shiro:hasPermission="payment:delete"><i
-            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -251,13 +246,13 @@
                 url: ctx + 'payment/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'paymentCode', title: '订单编号', maxWidth: 100},
-                    {field: 'meetingName', title: '会议名称', maxWidth: 80},
-                    {field: 'hotelName', title: '酒店名称', maxWidth: 80},
-                    {field: 'paymentAmount', title: '支付金额', maxWidth: 80, sort: true},
+                    {field: 'paymentCode', title: '订单编号', maxWidth: 120},
+                    {field: 'meetingName', title: '会议名称', maxWidth: 120},
+                    {field: 'hotelName', title: '酒店名称', maxWidth: 120},
+                    {field: 'paymentAmount', title: '支付金额', maxWidth: 60, sort: true},
                     {title: '状态', templet: '#payment-payType'},
                     {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
-                    {title: '操作', toolbar: '#payment-option', minWidth: 80}
+                    {title: '操作', toolbar: '#payment-option', minWidth: 50}
                 ]]
             });
         }

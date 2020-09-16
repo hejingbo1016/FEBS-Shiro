@@ -43,7 +43,7 @@ public class HotelName implements Serializable {
     private String contactPhone;
 
     /**
-     * 接待服务
+     * 备注
      */
     private String receptionService;
 

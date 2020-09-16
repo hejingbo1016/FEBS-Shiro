@@ -50,7 +50,7 @@
     }}
     <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="paymentDetails-option">
+<!--<script type="text/html" id="paymentDetails-option">
     <span shiro:lacksPermission="paymentDetails:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
@@ -58,7 +58,7 @@
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 
 
-</script>
+</script>-->
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
         var $ = layui.jquery,
@@ -234,8 +234,7 @@
                     {field: 'intervalPrice', edit: 'text', title: '区间金额', maxWidth: 80},
                     {field: 'number', edit: 'text', title: '数量', maxWidth: 80},
                     {field: 'startTime', edit: 'text', title: '入住日期', maxWidth: 80},
-                    {field: 'endTime', edit: 'text', title: '截止日期', maxWidth: 80},
-                    {title: '操作', toolbar: '#paymentDetails-option', minWidth: 80}
+                    {field: 'endTime', edit: 'text', title: '截止日期', maxWidth: 80}
 
                 ]]
             });
@@ -258,7 +257,7 @@
                 " <td data-field='number' data-edit='text'> <div  id='" + paymentCode + "number' class='layui-table-cell laytable-cell-1-number '> </div></td>" +
                 // " <td data-field='startTime'  data-edit='text'> <div  id='" + paymentCode + "startTime'  class='layui-table-cell laytable-cell-1-startTime  '> </div></td>" +
                 // " <td data-field='endTime' data-edit='text' event:'date',> <div  id='" + paymentCode + "endTime' class='layui-table-cell laytable-cell-1-endTime '> </div></td>" +
-                " <td data-field='操作'  toolbar:'#paymentDetails-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='paymentDetails:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
+                // " <td data-field='操作'  toolbar:'#paymentDetails-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='paymentDetails:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
                 " </tr>";
             $("[lay-id='paymentDetailsTable'] .layui-table-body .layui-table tbody").append(tr);
         });
