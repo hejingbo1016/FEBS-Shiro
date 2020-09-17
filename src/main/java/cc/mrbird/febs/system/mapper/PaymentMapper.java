@@ -27,4 +27,9 @@ public interface PaymentMapper extends BaseMapper<Payment> {
     Payment selectByPaymentId(Long id);
 
     List<Payment> getPaymentListByUserId(@Param("userId") Long userId);
+
+
+    /*更改订单支付状态*/
+
+    int updatePayType(@Param("paymentCode") String paymentCode,@Param("payType") Integer payType);
 }

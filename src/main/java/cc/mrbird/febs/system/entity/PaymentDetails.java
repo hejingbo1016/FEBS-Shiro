@@ -65,14 +65,14 @@ public class PaymentDetails {
      * 入住日期
      */
     @TableField("start_time")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
     /**
      * 截止日期
      */
     @TableField("end_time")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
     /**
@@ -149,5 +149,11 @@ public class PaymentDetails {
      */
     @TableField(exist = false)
     private Long meetingId;
+
+    /**
+     * 支付状态（1未支付,2已支付,3申请退款,4已退款）
+     */
+    @TableField(exist = false)
+    private Integer payType;
 
 }

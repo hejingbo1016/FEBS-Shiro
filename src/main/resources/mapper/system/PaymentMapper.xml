@@ -188,4 +188,10 @@
         where t.user_id = #{userId}  and t.deleted = 0
 
     </select>
+
+
+    <update id="updatePayType">
+     update  t_payment set pay_type = #{payType} where payment_Code = #{paymentCode}
+    </update>
+
 </mapper>
