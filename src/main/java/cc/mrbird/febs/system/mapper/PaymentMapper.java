@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author Hejingbo
  * @date 2020-09-05 21:06:30
@@ -29,7 +29,12 @@ public interface PaymentMapper extends BaseMapper<Payment> {
     List<Payment> getPaymentListByUserId(@Param("userId") Long userId);
 
 
-    /*更改订单支付状态*/
-
-    int updatePayType(@Param("paymentCode") String paymentCode,@Param("payType") Integer payType);
+    /**
+     * 更改订单支付状态
+     *
+     * @param paymentCode
+     * @param payType
+     * @return
+     */
+    int updatePayType(@Param("paymentCode") String paymentCode, @Param("payType") Integer payType);
 }
