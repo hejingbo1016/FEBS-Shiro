@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -63,13 +64,14 @@ public class HotelController extends BaseController {
     @ControllerEndpoint(operation = "新增Hotel", exceptionMessage = "新增Hotel失败")
     @PostMapping("add")
     @RequiresPermissions("hotel:add")
-    public FebsResponse addHotel(@RequestParam(value = "file", required = false) MultipartFile[] file, Hotel hotel) {
+    public void addHotel( Hotel hotel,MultipartFile[] file,HttpServletResponse response) throws IOException {
         this.hotelService.createHotel(hotel);
         Long id = hotel.getId();
         if (id != null) {
             fileService.uploadFile(file, id);
         }
-        return new FebsResponse().success();
+        response.sendRedirect("/index#/system/hotel");
+//        return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "删除Hotel", exceptionMessage = "删除Hotel失败")
@@ -86,13 +88,14 @@ public class HotelController extends BaseController {
     @PostMapping("update")
     @RequiresPermissions("hotel:update")
     @Transactional(rollbackFor = Exception.class)
-    public FebsResponse updateHotel(Hotel hotel, MultipartFile[] file) {
+    public void updateHotel(Hotel hotel,MultipartFile[] file,HttpServletResponse response) throws IOException {
         this.hotelService.updateHotel(hotel);
         Long id = hotel.getId();
         if (id != null) {
             fileService.uploadFile(file, id);
         }
-        return new FebsResponse().success();
+        response.sendRedirect("/index#/system/hotel");
+//        return new FebsResponse().success();
     }
 
     @ControllerEndpoint(operation = "修改Hotel", exceptionMessage = "导出Excel失败")

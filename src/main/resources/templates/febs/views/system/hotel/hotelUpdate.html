@@ -12,7 +12,7 @@
     }
 </style>
 <div class="layui-fluid" id="hotel-update">
-    <form class="layui-form" action="" lay-filter="hotel-update-form" enctype="multipart/form-data" method="post">
+    <form id="hotelform" class="layui-form" action="" lay-filter="hotel-update-form" enctype="multipart/form-data" method="post">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">id：</label>
             <div class="layui-input-block">
@@ -80,7 +80,7 @@
         </div>
 
         <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="hotel-update-form-submit" id="submit"></button>
+            <button class="layui-btn" lay-submit lay-filter="hotel-update-form-submit" id="submit"></button>
             <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
@@ -145,7 +145,8 @@
             $view = $('#hotel-update'),
             validate = layui.validate,
             layer = layui.layer,
-            upload = layui.upload;
+            upload = layui.upload,
+            fileList = [];
 
         form.verify(validate);
         form.render();
@@ -169,7 +170,7 @@
                     $('#uploader-list').append(
                         '<div id="" class="file-iteme">' +
                         '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
-                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="' + virtualPath + file.url + '" class="layui-upload-img">' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="'  + file.url + '" class="layui-upload-img">' +
                         '</div>'
                     );
                 }
@@ -178,6 +179,7 @@
         }
 
         form.on('submit(hotel-update-form-submit)', function (data) {
+            console.log(data)
             if (febs.nativeEqual(data.field, hotel)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
@@ -190,7 +192,7 @@
         //多图片上传
         upload.render({
             elem: '#upload'
-            , url: '#' //改成您自己的上传接口
+            , url: '' //改成您自己的上传接口
             , multiple: true
             , auto: false
             , choose: function (obj) {
@@ -199,7 +201,6 @@
                     if (index == 5) {
                         return false;
                     }
-
                     $('#uploader-list').append(
                         '<div id="" class="file-iteme">' +
                         '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
@@ -211,13 +212,19 @@
                 });
             }
             , before: function (obj) {
+                console.log('--------')
+                console.log(obj)
                 layer.msg('图片上传中...', {
                     icon: 16,
                     shade: 0.01,
                     time: 0
                 })
             }
+            ,success: function(res){
+                console.log('上传完毕');
+            }
             , done: function (res) {
+                console.log('上传成功')
                 //上传完毕
             }
         });

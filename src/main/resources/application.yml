@@ -16,6 +16,11 @@ spring:
 
   aop:
     proxy-target-class: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 30MB
 
 mybatis-plus:
   type-aliases-package: cc.mrbird.febs.*.entity
@@ -39,3 +44,4 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+
