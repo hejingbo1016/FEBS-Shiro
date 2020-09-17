@@ -189,50 +189,57 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     private void setFileList(MultipartFile[] multipartFile, Long fId, List<File> fileList) {
         for (int i = 0; i < multipartFile.length; i++) {
-            File file = new File();
-            //图片名称
-            String originalFilename = multipartFile[i].getOriginalFilename();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-            //获取文件后缀名
-            String suffixName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-            //获取文件名，不带后缀
-            String fileName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
-            //获取文件的哈希值
-            String md5 = MultipartFileUtil.md5HashCodes(multipartFile[i]);
-            //判断是否是图片
-            if (MultipartFileUtil.isPhotoType(suffixName, originalFilename)) {
-                ImgHelperService imgHelperService = new ImgHelperService();
-                String uuid = UUID.randomUUID().toString();//文件唯一标识uuid
-                //判断图片是否相同
-                try {
-                    //获取静态资源的路径
-                    String staticFile = filePathConfig.getBasePath();
-                    String filePath = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + originalFilename;
-                    //缩略图
-                    String thumbnail = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + "1_" + originalFilename;
-                    //完整图片路径
-                    String imgUrls = staticFile + filePath;
-                    //缩略图完整路径
-                    String thumbnailFath = staticFile + thumbnail;
-                    //生成图片和缩略图
-                    Map<String, Map> integerMap = imgHelperService.setUpThumbnailPhoto(imgUrls, thumbnailFath, originalFilename, multipartFile[i], imgHelperService);
-                    file.setId(snowflake.nextId());
-                    file.setFileName(originalFilename);
-                    file.setFileExtension(suffixName);
-                    file.setNoSuffixFileName(fileName);
-                    file.setUrl(filePath.replace(imgUrl, ""));
-                    file.setThumbnailUrl(thumbnail.replace(imgUrl, ""));
-                    file.setForeignId(fId);
-                    file.setCreateTime(new Date());
-                    file.setAttachTime(String.valueOf(integerMap.get("createTime").get("imageCreateTime")));
-                    file.setFileSize(multipartFile[i].getSize());
-                    file.setMd5Val(md5);
-                    fileList.add(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new BusinessRuntimeException("上传图片异常");
+
+            if (multipartFile[i].isEmpty()) {
+                throw new BusinessRuntimeException("上传图片不能为空");
+            } else {
+                File file = new File();
+                //图片名称
+                String originalFilename = multipartFile[i].getOriginalFilename();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+                //获取文件后缀名
+                String suffixName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+                //获取文件名，不带后缀
+                String fileName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+                //获取文件的哈希值
+                String md5 = MultipartFileUtil.md5HashCodes(multipartFile[i]);
+                //判断是否是图片
+                if (MultipartFileUtil.isPhotoType(suffixName, originalFilename)) {
+                    ImgHelperService imgHelperService = new ImgHelperService();
+                    String uuid = UUID.randomUUID().toString();//文件唯一标识uuid
+                    //判断图片是否相同
+                    try {
+                        //获取静态资源的路径
+                        String staticFile = filePathConfig.getBasePath();
+                        String filePath = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + originalFilename;
+                        //缩略图
+                        String thumbnail = imgUrl + sdf.format(new Date()) + "/" + uuid + "/" + "1_" + originalFilename;
+                        //完整图片路径
+                        String imgUrls = staticFile + filePath;
+                        //缩略图完整路径
+                        String thumbnailFath = staticFile + thumbnail;
+                        //生成图片和缩略图
+                        Map<String, Map> integerMap = imgHelperService.setUpThumbnailPhoto(imgUrls, thumbnailFath, originalFilename, multipartFile[i], imgHelperService);
+                        file.setId(snowflake.nextId());
+                        file.setFileName(originalFilename);
+                        file.setFileExtension(suffixName);
+                        file.setNoSuffixFileName(fileName);
+                        file.setUrl(filePath.replace(imgUrl, ""));
+                        file.setThumbnailUrl(thumbnail.replace(imgUrl, ""));
+                        file.setForeignId(fId);
+                        file.setCreateTime(new Date());
+                        file.setAttachTime(String.valueOf(integerMap.get("createTime").get("imageCreateTime")));
+                        file.setFileSize(multipartFile[i].getSize());
+                        file.setMd5Val(md5);
+                        fileList.add(file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new BusinessRuntimeException("上传图片异常");
+                    }
                 }
             }
+
+
         }
     }
 
