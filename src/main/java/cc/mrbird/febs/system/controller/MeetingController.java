@@ -9,6 +9,7 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.GenerateQRCodeDTO;
 import cc.mrbird.febs.system.entity.Meeting;
+import cc.mrbird.febs.system.service.IFileService;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import java.util.Map;
 public class MeetingController extends BaseController {
 
     private final IMeetingService meetingService;
+    private final IFileService fileService;
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "meeting")
     public String meetingIndex() {
@@ -57,20 +59,15 @@ public class MeetingController extends BaseController {
     }
 
 
-//    @GetMapping("getMeetingNames")
-//    @ResponseBody
-//    @RequiresPermissions("meeting:view")
-//    public FebsResponse getMeetingNames(QueryRequest request, Meeting meeting) {
-//        Map<String, Object> dataTable = getDataTable(this.meetingService.getMeetingNames(request, meeting));
-//        return new FebsResponse().success().data(dataTable);
-//    }
-
     @ControllerEndpoint(operation = "新增Meeting", exceptionMessage = "新增Meeting失败")
     @PostMapping
-    @ResponseBody
     @RequiresPermissions("meeting:add")
-    public FebsResponse addMeeting(@Valid Meeting meeting) {
+    public FebsResponse addMeeting(@RequestParam(value = "file", required = false) MultipartFile[] file, Meeting meeting) {
         this.meetingService.createMeeting(meeting);
+        Long meetingId = meeting.getId();
+        if (meetingId != null) {
+            fileService.uploadFile(file, meetingId);
+        }
         return new FebsResponse().success();
     }
 
@@ -85,14 +82,17 @@ public class MeetingController extends BaseController {
 
     @ControllerEndpoint(operation = "修改Meeting", exceptionMessage = "修改Meeting失败")
     @PostMapping("update")
-    @ResponseBody
     @RequiresPermissions("meeting:update")
-    public FebsResponse updateMeeting(Meeting meeting) {
+    public FebsResponse updateMeeting(@RequestParam(value = "file", required = false) MultipartFile[] file, Meeting meeting) {
         this.meetingService.updateMeeting(meeting);
+        Long meetingId = meeting.getId();
+        if (meetingId != null) {
+            fileService.uploadFile(file, meetingId);
+        }
         return new FebsResponse().success();
     }
 
-    @ControllerEndpoint(operation = "修改Meeting", exceptionMessage = "导出Excel失败")
+    @ControllerEndpoint(operation = "导出Excel", exceptionMessage = "导出Excel失败")
     @PostMapping("excel")
     @ResponseBody
     @RequiresPermissions("meeting:export")

@@ -16,21 +16,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">会议名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingName" maxlength="20" lay-verify="range|required"
+                <input type="text" name="meetingName" maxlength="200" lay-verify="range|required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">主办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="sponsor" maxlength="50" lay-verify="range|required"
+                <input type="text" name="sponsor" maxlength="200" lay-verify="range|required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">会议负责人：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingPrincipal" maxlength="50" lay-verify="range"
+                <input type="text" name="meetingPrincipal" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -44,14 +44,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">会议地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingAddress" maxlength="50" lay-verify="range"
+                <input type="text" name="meetingAddress" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">承办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="organizer" maxlength="20" lay-verify="range"
+                <input type="text" name="organizer" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -78,19 +78,26 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
             <div class="layui-input-block">
-                <textarea name="synopsis" maxlength="100" class="layui-textarea"></textarea>
+                <textarea name="synopsis" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
             <div class="layui-input-block">
-                <textarea name="activityNotes" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityNotes" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
             <div class="layui-input-block">
-                <textarea name="activityFlow" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityFlow" maxlength="1000" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">预定说明：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item febs-hide">

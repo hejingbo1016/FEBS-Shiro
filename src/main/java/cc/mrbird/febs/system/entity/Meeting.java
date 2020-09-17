@@ -135,4 +135,10 @@ public class Meeting {
      */
     @TableField("status")
     private Integer status;
+
+    /**
+     * 预定说明
+     */
+    @TableField("description")
+    private String description;
 }
