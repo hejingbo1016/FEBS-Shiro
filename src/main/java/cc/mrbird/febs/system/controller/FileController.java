@@ -1,5 +1,6 @@
 package cc.mrbird.febs.system.controller;
 
+import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.system.entity.File;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  *  Controller
@@ -48,4 +51,20 @@ public class FileController extends BaseController {
 
         return new FebsResponse().success().data(upload);
     }
+
+
+    @ControllerEndpoint(operation = "删除附件", exceptionMessage = "删除附件失败")
+    @GetMapping("delete/{ids}")
+    @ResponseBody
+    public FebsResponse deletePhones(@NotBlank(message = "{required}") @PathVariable String ids) {
+        this.fileService.deleteFiles(ids);
+        return new FebsResponse().success();
+    }
+
+
+
+
+
+
+
 }

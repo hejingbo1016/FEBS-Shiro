@@ -11,7 +11,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +69,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         List<File> fileList = new ArrayList<>();
         if (!Objects.isNull(files) && files.size() > 0) {
             fileList = files.stream().map(f -> {
-                FileHepler.getFileVo(f,imageShowUrl,imgUrl);
+                FileHepler.getFileVo(f, imageShowUrl, imgUrl);
                 return f;
             }).collect(Collectors.toList());
         }
@@ -184,6 +186,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         return fileList;
     }
 
+
     private void setFileList(MultipartFile[] multipartFile, Long fId, List<File> fileList) {
         for (int i = 0; i < multipartFile.length; i++) {
             File file = new File();
@@ -231,5 +234,12 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
                 }
             }
         }
+    }
+
+
+    @Override
+    public void deleteFiles(String ids) {
+        List<String> list = Arrays.asList(ids.split(StringPool.COMMA));
+        this.baseMapper.delete(new QueryWrapper<File>().lambda().in(File::getId, list));
     }
 }
