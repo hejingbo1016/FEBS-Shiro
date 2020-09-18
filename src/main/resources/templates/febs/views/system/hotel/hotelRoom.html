@@ -107,10 +107,12 @@
     <span shiro:lacksPermission="room:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
+    {{#  if(d.isNew&&d.isNew === 1){ }}
+    <a lay-event="addRoom" shiro:hasPermission="room:add"><i class="layui-icon febs-edit-area febs-blue">保存</i></a>
+    {{#  }else{ }}
     <a lay-event="del" shiro:hasPermission="room:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
-
-
+    {{#  } }}
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -182,6 +184,7 @@
         });
 
         table.on('tool(hotelRoomTable)', function (obj) {
+            var hotelId = sessionStorage.getItem('hotelId');
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
@@ -224,13 +227,21 @@
                 var roomType = $("#" + hotelId + "roomType").text();
 
 
+                // var param = {
+                //     'hotelId': hotelId,
+                //     'roomName': roomName,
+                //     'roomCount': roomCount,
+                //     'surplusNumber': surplusNumber,
+                //     'univalence': univalence,
+                //     'roomType': roomType
+                // }
                 var param = {
                     'hotelId': hotelId,
-                    'roomName': roomName,
-                    'roomCount': roomCount,
-                    'surplusNumber': surplusNumber,
-                    'univalence': univalence,
-                    'roomType': roomType
+                    'roomName': data.roomName,
+                    'roomCount': data.roomCount,
+                    'surplusNumber': data.surplusNumber,
+                    'univalence': data.univalence,
+                    'roomType': data.roomType
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
@@ -315,7 +326,8 @@
                 startTime: null,
                 surplusNumber: 0,
                 totalPrice: 0,
-                univalence: 0
+                univalence: 0,
+                isNew:1
             }
             Data.push(datas);
             tableIns.reload({
