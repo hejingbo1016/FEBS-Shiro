@@ -18,5 +18,5 @@ public interface FileMapper extends BaseMapper<File> {
 
     int inserts(File f);
 
-    int deletesByFids(@Param("fids") String fids);
+    int deletesByFids(@Param("fids") String[] ids);
 }

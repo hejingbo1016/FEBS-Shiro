@@ -106,7 +106,8 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
         List<String> list = Arrays.asList(deleteIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Hotel>().lambda().in(Hotel::getId, list));
         //删除酒店对应的附件
-        fileMapper.deletesByFids(deleteIds);
+        String[] ids = deleteIds.split(",");
+        fileMapper.deletesByFids(ids);
     }
 
     @Override

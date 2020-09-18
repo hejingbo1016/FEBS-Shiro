@@ -62,3 +62,4 @@ public interface IFileService extends IService<File> {
 
     void deleteFiles(String ids);
 }
+

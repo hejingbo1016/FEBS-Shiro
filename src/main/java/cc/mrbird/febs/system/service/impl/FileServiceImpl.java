@@ -178,10 +178,11 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
                     });
                 }
             } else {
-                throw new BusinessRuntimeException("上传的图片为空,请检查后上传");
+                /*throw new BusinessRuntimeException("上传的图片为空,请检查后上传");*/
+                //不上传图片
             }
         } else {
-            throw new BusinessRuntimeException("上传图片异常,生成的关联主键不能为空");
+           /* throw new BusinessRuntimeException("上传图片异常,生成的关联主键不能为空");*/
         }
         return fileList;
     }
@@ -191,7 +192,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         for (int i = 0; i < multipartFile.length; i++) {
 
             if (multipartFile[i].isEmpty()) {
-                throw new BusinessRuntimeException("上传图片不能为空");
+//                throw new BusinessRuntimeException("上传图片不能为空");
+
             } else {
                 File file = new File();
                 //图片名称
