@@ -93,7 +93,7 @@
     4: {value: '4',title: '其他', color: 'red'}
     };
     }}
-    <select name='roomType' lay-verify='' lay-search=''>
+    <select lay-filter="selectGxmc" name='roomType' lay-search=''>
         {{# layui.each(roomType, function(index, item){ }}
         {{# if(+item.value === +d.roomType){ }}
         <option value="{{item.value}}" selected="selected">{{ item.title }}</option>
@@ -125,6 +125,7 @@
             $view = $('#febs-hotelRoom'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
+            $selectGxmc = $view.find('#selectGxmc'),
             $searchForm = $view.find('form'),
             sortObject = {field: 'roomCount', type: null},
             tableIns;
@@ -219,7 +220,24 @@
             }
 
 
+            /*
+                        form.on('select(dictName)', function (data) {
+                            var selectElem = $(data.elem);
+                            var tdElem = selectElem.closest("td");
+                            var trElem = tdElem.closest("tr");
+                            var tableView = trElem.closest(".layui-table-view");
+                            table.cache[tableView.attr("lay-id")][trElem.data("index")][tdElem.data("field")] = data.value;
+
+                        });
+            */
+
+
             if (layEvent === 'addRoom') {
+                var userName = null;  //定义一个空值
+                $selectGxmc.on('select(selectGxmc)', function (data) {
+                    userName = data.value;  //取选中下拉框的文本并赋值给userName
+                    alert(userName)
+                });
                 var param = {
                     'hotelId': hotelId,
                     'roomName': data.roomName,
@@ -230,7 +248,9 @@
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
-                        $query.click();
+                        alert("我寄来了")
+                        // $query.click();
+                        $('#febs-hotelRoom').find('#query').click();
                     } else {
                         layer.msg(r.message);
                     }
