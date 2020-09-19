@@ -21,4 +21,7 @@ public interface HotelMapper extends BaseMapper<Hotel> {
     List<HotelName> getHotels();
 
     List<Room> getHotelRooms(@Param("hotelId") Long hotelId);
+
+    int deleteByIds(@Param("ids") String[] ids);
+
 }

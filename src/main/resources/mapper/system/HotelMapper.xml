@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.HotelMapper">
 
+
     <select id="countHotel" resultType="java.lang.Long">
 
         SELECT
@@ -40,4 +41,15 @@
        SELECT  *
         FROM t_room where deleted = 0 and hotel_id =#{hotelId}
     </select>
+
+
+    <update id="deleteByIds">
+
+        update t_hotel set deleted = 1 where
+        <foreach close=")" collection="ids" item="id" open="id in (" separator=",">
+            #{id}
+        </foreach>
+
+
+    </update>
 </mapper>
