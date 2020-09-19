@@ -3,6 +3,7 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.FileHepler;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
@@ -100,6 +101,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (meeting.getStatus() != null) {
             queryWrapper.eq(Meeting::getStatus, meeting.getStatus());
         }
+        queryWrapper.eq(Meeting::getDeleted, AdminConstants.DATA_N_DELETED);
     }
 
     @Override
@@ -131,6 +133,21 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     @Override
     public void deleteMeetings(String meetingIds) {
+
+        if (!StringUtils.isEmpty(meetingIds)) {
+            String[] split = meetingIds.split(",");
+            int count = meetingMapper.deleteMeetingByIds(split);
+            //删除酒店对应的附件
+            if (count>0){
+                fileMapper.deletesByFids(split);
+            }
+
+        } else {
+            throw new BusinessRuntimeException("所传id为空，检查是否传值有误");
+        }
+
+
+
         List<String> list = Arrays.asList(meetingIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Meeting>().lambda().in(Meeting::getId, list));
         //删除会议对应的附件

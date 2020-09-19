@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.Hotel;
@@ -11,9 +12,7 @@ import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.mapper.HotelMapper;
 import cc.mrbird.febs.system.service.IHotelService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -103,11 +101,20 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
 
     @Override
     public void deleteHotels(String deleteIds) {
-        List<String> list = Arrays.asList(deleteIds.split(StringPool.COMMA));
-        this.baseMapper.delete(new QueryWrapper<Hotel>().lambda().in(Hotel::getId, list));
-        //删除酒店对应的附件
-        String[] ids = deleteIds.split(",");
-        fileMapper.deletesByFids(ids);
+
+        if (!StringUtils.isEmpty(deleteIds)) {
+            String[] split = deleteIds.split(",");
+            int count = hotelMapper.deleteByIds(split);
+            //删除酒店对应的附件
+            if (count>0){
+                fileMapper.deletesByFids(split);
+            }
+
+        } else {
+            throw new BusinessRuntimeException("所传id为空，检查是否传值有误");
+        }
+
+
     }
 
     @Override
