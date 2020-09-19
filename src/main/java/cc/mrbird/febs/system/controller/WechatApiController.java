@@ -48,7 +48,8 @@ public class WechatApiController extends BaseController {
 
 
     @ControllerEndpoint(operation = "微信端通过会议id获取详细信息", exceptionMessage = "微信端通过会议id获取详细信息")
-    @GetMapping("getWeChatMettingById")
+    @GetMapping("" +
+            "")
     @ResponseBody
     public FebsResponse getWeChatMettingById(@Valid Long id) {
         Meeting mettings = meetingService.getWeChatMettingById(id);

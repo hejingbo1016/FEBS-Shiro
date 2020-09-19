@@ -228,7 +228,10 @@
                     {title: '性别', templet: '#weChatUser-sex'},
                     {field: 'phone', title: '联系方式', maxWidth: 80},
                     {title: '订阅', templet: '#weChatUser-subscribe'},
-                    {field: 'subscribeTime', title: '关注时间', maxWidth: 80, sort: true},
+                    {field: 'subscribeTime', title: '关注时间',
+                        templet: function (data) {
+                            return layui.util.toDateString(data.subscribeTime, "yyyy-MM-dd HH:mm:ss");
+                        },maxWidth: 80, sort: true},
                     {title: '操作', toolbar: '#weChatUser-option', minWidth: 80}
                 ]]
             });

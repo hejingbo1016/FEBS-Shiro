@@ -147,7 +147,8 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
             if (!Objects.isNull(openUser) && !StringUtils.isEmpty(openUser.getOpenid())) {
                 BeanUtils.copyProperties(openUser, wechatUser);
                 if (!org.springframework.util.StringUtils.isEmpty(openUser.getSubscribe_time())) {
-                    wechatUser.setSubscribeTime(new Date(openUser.getSubscribe_time() * 1000));
+                    Long subscribeTime = Long.parseLong(String.valueOf(openUser.getSubscribe_time()));
+                    wechatUser.setSubscribeTime(new Date(subscribeTime * 1000));
                 }
                 wechatUser.setQrScene(openUser.getQr_scene());
                 wechatUser.setQrSceneStr(openUser.getQr_scene_str());

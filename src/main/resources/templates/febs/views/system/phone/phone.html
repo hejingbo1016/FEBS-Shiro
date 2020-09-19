@@ -207,11 +207,14 @@
                     {field: 'retailPrice', title: '零售价', maxWidth: 80, sort: true},
                     {field: 'agencyPrice', title: '批发价', minWidth: 80, sort: true},
                     {field: 'phoneCount', title: '数量', maxWidth: 80},
-                    {field: 'modifyTime', title: '修改时间', minWidth: 100, sort: true},
+                    {field: 'modifyTime', title: '修改时间',  templet: function (data) {
+                            return layui.util.toDateString(data.modifyTime, "yyyy-MM-dd HH:mm:ss");
+                        }, minWidth: 100, sort: true},
                     {title: '操作', toolbar: '#phone-option', minWidth: 80}
                 ]]
             });
         }
+
 
         function deleteJobs(phoneIds) {
             febs.get(ctx + 'phone/delete/' + phoneIds, null, function () {

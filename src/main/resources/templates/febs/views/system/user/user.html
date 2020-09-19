@@ -278,7 +278,9 @@
                     {field: 'mobile', title: '手机', minWidth: 165},
                     {field: 'email', title: '邮箱', minWidth: 180},
                     {title: '状态', templet: '#user-status'},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {field: 'createTime', title: '创建时间',      templet: function (data) {
+                            return layui.util.toDateString(data.createTime, "yyyy-MM-dd HH:mm:ss");
+                        }, minWidth: 180, sort: true},
                     {title: '操作', toolbar: '#user-option', minWidth: 140}
                 ]]
             });

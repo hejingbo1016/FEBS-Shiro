@@ -251,7 +251,11 @@
                     {field: 'hotelName', title: '酒店名称', maxWidth: 120},
                     {field: 'paymentAmount', title: '支付金额', maxWidth: 60, sort: true},
                     {title: '状态', templet: '#payment-payType'},
-                    {field: 'createTime', title: '创建时间', minWidth: 80, sort: true},
+                    {
+                        field: 'createTime', title: '创建时间', templet: function (data) {
+                            return layui.util.toDateString(data.createTime, "yyyy-MM-dd HH:mm:ss");
+                        }, minWidth: 80, sort: true
+                    },
                     {title: '操作', toolbar: '#payment-option', minWidth: 50}
                 ]]
             });
