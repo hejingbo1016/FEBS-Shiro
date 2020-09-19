@@ -77,27 +77,27 @@
         <!--</div>-->
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
-            <div class="layui-input-block">
-                <textarea name="synopsis" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea" lay-verify="synopsis"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
-            <div class="layui-input-block">
-                <textarea name="activityNotes" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="activityNotes" name="activityNotes" maxlength="1000" class="layui-textarea" lay-verify="activityNotes"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
-            <div class="layui-input-block">
-                <textarea name="activityFlow" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="activityFlow" name="activityFlow" maxlength="1000" class="layui-textarea" lay-verify="activityFlow"></textarea>
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">预定说明：</label>
-            <div class="layui-input-block">
-                <textarea name="description" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="description" name="description" maxlength="1000" class="layui-textarea" lay-verify="description"></textarea>
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -108,14 +108,18 @@
 </div>
 
 <script>
-    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate','layedit'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             $view = $('#meeting-add'),
             validate = layui.validate;
         var laydate = layui.laydate;
-
+        var layedit = layui.layedit;
+        var one = layedit.build('synopsis',{height: 80}); //建立编辑器
+        var two = layedit.build('activityNotes',{height: 80}); //建立编辑器
+        var three = layedit.build('activityFlow',{height: 80}); //建立编辑器
+        var four = layedit.build('description',{height: 80}); //建立编辑器
 
         laydate.render({
             elem: '#febs-form-meeting-start'
@@ -134,6 +138,11 @@
         form.render();
 
         form.on('submit(meeting-add-form-submit)', function (data) {
+            data.field.synopsis = layedit.getContent(one);
+            data.field.activityNotes = layedit.getContent(two);
+            data.field.activityFlow = layedit.getContent(three);
+            data.field.description = layedit.getContent(four);
+            console.log(data)
             data.field.endTime = new Date(data.field.endTime);
             data.field.startTime = new Date(data.field.startTime);
             febs.post(ctx + 'meeting', data.field, function () {

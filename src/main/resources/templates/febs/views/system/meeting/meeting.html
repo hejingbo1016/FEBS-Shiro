@@ -149,6 +149,9 @@
                 if (name === 'add') {
                     febs.modal.open('新增会议', 'system/meeting/add', {
                         btn: ['提交', '重置'],
+                        move: false,
+                        offset: '0px',
+                        fixed: false,
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
                             $('#meeting-add').find('#submit').trigger('click');
@@ -220,6 +223,9 @@
             if (layEvent === 'edit') {
                 febs.modal.open('修改会议', 'system/meeting/update/' + data.id, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
+                    move: false,
+                    offset: '0px',
+                    fixed: false,
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#meeting-update').find('#submit').trigger('click');

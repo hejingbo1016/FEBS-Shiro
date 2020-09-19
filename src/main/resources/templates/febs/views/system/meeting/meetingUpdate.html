@@ -80,29 +80,30 @@
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
-            <div class="layui-input-block">
-                <textarea name="synopsis" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea" style="display: none;"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
-            <div class="layui-input-block">
-                <textarea name="activityNotes" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="activityNotes" name="activityNotes" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
-            <div class="layui-input-block">
-                <textarea name="activityFlow" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="activityFlow" name="activityFlow" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">预定说明：</label>
-            <div class="layui-input-block">
-                <textarea name="description" maxlength="1000" class="layui-textarea"></textarea>
+            <div class="layui-input-block" style="border: 1px solid gray;">
+                <textarea id="description" name="description" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
-        <textarea id="demo" style="display: none;"></textarea>
+<!--        <textarea id="demo" style="display: none;"></textarea>-->
         <!--      <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">酒店选择：</label>
                   <div class="layui-input-block">
@@ -121,7 +122,7 @@
 </div>
 
 <script data-th-inline="javascript">
-    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'table'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'table', 'layedit'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
@@ -130,7 +131,20 @@
             $view = $('#meeting-update'),
             validate = layui.validate;
         var laydate = layui.laydate;
-
+        var layedit;
+        var one; //建立编辑器
+        var two; //建立编辑器
+        var three; //建立编辑器
+        var four; //建立编辑器
+        // var layedit = layui.layedit;
+        // var one = layedit.build('synopsis',{height: 80}); //建立编辑器
+        // var two = layedit.build('activityNotes',{height: 80}); //建立编辑器
+        // var three = layedit.build('activityFlow',{height: 80}); //建立编辑器
+        // var four = layedit.build('description',{height: 80}); //建立编辑器
+        // layedit.setContent(one,meeting.synopsis,false);
+        // layedit.setContent(two,meeting.activityNotes,false);
+        // layedit.setContent(three,meeting.activityFlow,false);
+        // layedit.setContent(four,meeting.description,false);
 
         laydate.render({
             elem: '#febs-form-meeting-start'
@@ -166,11 +180,20 @@
                 "activityFlow": meeting.activityFlow,
                 "participants": meeting.participants
             });
+            layedit = layui.layedit;
+            one = layedit.build('synopsis',{height: 80}); //建立编辑器
+            two = layedit.build('activityNotes',{height: 80}); //建立编辑器
+            three = layedit.build('activityFlow',{height: 80}); //建立编辑器
+            four = layedit.build('description',{height: 80}); //建立编辑器
         }
 
         form.on('submit(meeting-update-form-submit)', function (data) {
             data.field.endTime = new Date(data.field.endTime);
             data.field.startTime = new Date(data.field.startTime);
+            data.field.synopsis = layedit.getContent(one);
+            data.field.activityNotes = layedit.getContent(two);
+            data.field.activityFlow = layedit.getContent(three);
+            data.field.description = layedit.getContent(four);
             if (febs.nativeEqual(data.field, meeting)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
@@ -225,30 +248,30 @@
     });
 
 
-    //编辑器
-    layui.use('layedit', function () {
-        var layedit = layui.layedit;
-        layedit.build('demo');   //建立编辑器
-        layedit.set({
-            //暴露layupload参数设置接口 --详细查看layupload参数说明
-            uploadImage: {
-                url: ''    //上传接口url
-                , type: 'post' //默认post
-            }
-            , devmode: true
-            //插入代码设置
-            , codeConfig: {
-                hide: true,  //是否显示编码语言选择框
-                default: 'javascript' //hide为true时的默认语言格式
-            }
-            , tool: [
-                'html', 'code', 'strong', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
-                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'images', 'image_alt',
-                , '|', 'fullScreen'
-            ]
-            , height: 500, //设置编辑器高度
-        });
-    });
+    // //编辑器
+    // layui.use('layedit', function () {
+    //     var layedit = layui.layedit;
+    //     layedit.build('demo');   //建立编辑器
+    //     layedit.set({
+    //         //暴露layupload参数设置接口 --详细查看layupload参数说明
+    //         uploadImage: {
+    //             url: ''    //上传接口url
+    //             , type: 'post' //默认post
+    //         }
+    //         , devmode: true
+    //         //插入代码设置
+    //         , codeConfig: {
+    //             hide: true,  //是否显示编码语言选择框
+    //             default: 'javascript' //hide为true时的默认语言格式
+    //         }
+    //         , tool: [
+    //             'html', 'code', 'strong', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+    //             , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'images', 'image_alt',
+    //             , '|', 'fullScreen'
+    //         ]
+    //         , height: 500, //设置编辑器高度
+    //     });
+    // });
 
 /*    //  取值：
     var layedit = layui.layedit;
