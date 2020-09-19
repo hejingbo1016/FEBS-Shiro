@@ -15,12 +15,14 @@ import com.wuwenze.poi.ExcelKit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -62,13 +64,13 @@ public class MeetingController extends BaseController {
     @ControllerEndpoint(operation = "新增Meeting", exceptionMessage = "新增Meeting失败")
     @PostMapping
     @RequiresPermissions("meeting:add")
-    public FebsResponse addMeeting(@RequestParam(value = "file", required = false) MultipartFile[] file, Meeting meeting) {
+    public void addMeeting(HttpServletResponse response, MultipartFile[] file, Meeting meeting) throws IOException {
         this.meetingService.createMeeting(meeting);
         Long meetingId = meeting.getId();
         if (meetingId != null) {
             fileService.uploadFile(file, meetingId);
         }
-        return new FebsResponse().success();
+        response.sendRedirect("/index#/system/meeting");
     }
 
     @ControllerEndpoint(operation = "删除Meeting", exceptionMessage = "删除Meeting失败")
@@ -83,13 +85,14 @@ public class MeetingController extends BaseController {
     @ControllerEndpoint(operation = "修改Meeting", exceptionMessage = "修改Meeting失败")
     @PostMapping("update")
     @RequiresPermissions("meeting:update")
-    public FebsResponse updateMeeting(@RequestParam(value = "file", required = false) MultipartFile[] file, Meeting meeting) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMeeting(HttpServletResponse response, MultipartFile[] file, Meeting meeting) throws IOException {
         this.meetingService.updateMeeting(meeting);
         Long meetingId = meeting.getId();
         if (meetingId != null) {
             fileService.uploadFile(file, meetingId);
         }
-        return new FebsResponse().success();
+        response.sendRedirect("/index#/system/meeting");
     }
 
     @ControllerEndpoint(operation = "导出Excel", exceptionMessage = "导出Excel失败")

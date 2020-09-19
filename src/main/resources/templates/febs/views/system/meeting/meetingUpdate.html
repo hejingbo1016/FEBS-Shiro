@@ -81,7 +81,8 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
             <div class="layui-input-block" style="border: 1px solid gray;">
-                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea" style="display: none;"></textarea>
+                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea"
+                          style="display: none;"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
@@ -103,7 +104,7 @@
                 <textarea id="description" name="description" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
-<!--        <textarea id="demo" style="display: none;"></textarea>-->
+        <!--        <textarea id="demo" style="display: none;"></textarea>-->
         <!--      <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">酒店选择：</label>
                   <div class="layui-input-block">
@@ -113,6 +114,21 @@
               <div id="hotelTableList">
 
               </div>-->
+        <div class="layui-form-item">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="upload">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;width: 88%">
+                    预览图：
+                    <div class="layui-upload-list uploader-list" style="overflow: auto;" id="uploader-list">
+                        <div id="" class="file-iteme">
+                            <div class="handle"><i class="layui-icon"
+                                                   style="color: white;margin-right: 40%">&#xe640;</i>
+                            </div>
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="meeting-update-form-submit" id="submit"></button>
@@ -121,30 +137,75 @@
     </form>
 </div>
 
+<style type="text/css">
+    .layui-form-label {
+        width: 110px;
+    }
+
+    .uploader-list {
+        margin-left: -15px;
+    }
+
+    .uploader-list .info {
+        position: relative;
+        margin-top: -25px;
+        background-color: black;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        opacity: 0.5;
+        width: 100px;
+        height: 25px;
+        text-align: center;
+        display: none;
+    }
+
+    .uploader-list .handle {
+        position: relative;
+        background-color: #ff6a00;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        width: 100px;
+        text-align: right;
+        height: 18px;
+        margin-bottom: -18px;
+        display: none;
+    }
+
+    .uploader-list .handle span {
+        margin-right: 5px;
+    }
+
+    .uploader-list .handle span:hover {
+        cursor: pointer;
+    }
+
+    .uploader-list .file-iteme {
+        margin: 12px 0 0 15px;
+        padding: 1px;
+        float: left;
+    }
+</style>
+
 <script data-th-inline="javascript">
-    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'table', 'layedit'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'table', 'layedit', 'upload', 'layer'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
             meeting = [[${meeting}]],
+            files = [[${files}]],
             $view = $('#meeting-update'),
-            validate = layui.validate;
-        var laydate = layui.laydate;
+            validate = layui.validate,
+            upload = layui.upload,
+            laydate = layui.laydate;
         var layedit;
         var one; //建立编辑器
         var two; //建立编辑器
         var three; //建立编辑器
         var four; //建立编辑器
-        // var layedit = layui.layedit;
-        // var one = layedit.build('synopsis',{height: 80}); //建立编辑器
-        // var two = layedit.build('activityNotes',{height: 80}); //建立编辑器
-        // var three = layedit.build('activityFlow',{height: 80}); //建立编辑器
-        // var four = layedit.build('description',{height: 80}); //建立编辑器
-        // layedit.setContent(one,meeting.synopsis,false);
-        // layedit.setContent(two,meeting.activityNotes,false);
-        // layedit.setContent(three,meeting.activityFlow,false);
-        // layedit.setContent(four,meeting.description,false);
+
 
         laydate.render({
             elem: '#febs-form-meeting-start'
@@ -178,13 +239,26 @@
                 "synopsis": meeting.synopsis,
                 "activityNotes": meeting.activityNotes,
                 "activityFlow": meeting.activityFlow,
-                "participants": meeting.participants
+                "participants": meeting.participants,
+                "description": meeting.description
             });
             layedit = layui.layedit;
-            one = layedit.build('synopsis',{height: 80}); //建立编辑器
-            two = layedit.build('activityNotes',{height: 80}); //建立编辑器
-            three = layedit.build('activityFlow',{height: 80}); //建立编辑器
-            four = layedit.build('description',{height: 80}); //建立编辑器
+            one = layedit.build('synopsis', {height: 80}); //建立编辑器
+            two = layedit.build('activityNotes', {height: 80}); //建立编辑器
+            three = layedit.build('activityFlow', {height: 80}); //建立编辑器
+            four = layedit.build('description', {height: 80}); //建立编辑器
+
+            if (files.length > 0) {
+                for (var i in files) {
+                    var file = files[i];
+                    $('#uploader-list').append(
+                        '<div id="" class="file-iteme" data-id="' + file.id + '" >' +
+                        '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="' + file.url + '" class="layui-upload-img">' +
+                        '</div>'
+                    );
+                }
+            }
         }
 
         form.on('submit(meeting-update-form-submit)', function (data) {
@@ -198,13 +272,55 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-            febs.post(ctx + 'meeting/update', data.field, function () {
-                layer.closeAll();
-                febs.alert.success('任务修改成功');
-                $('#febs-meeting').find('#query').click();
-            });
-            return false;
+            /*        febs.post(ctx + 'meeting/update', data.field, function () {
+                        layer.closeAll();
+                        febs.alert.success('任务修改成功');
+                        $('#febs-meeting').find('#query').click();
+                    });*/
+            $(data.form).attr('action', ctx + 'meeting/update');
+            return true;
         });
+
+        //多图片上传
+        upload.render({
+            elem: '#upload'
+            , url: '' //改成您自己的上传接口
+            , multiple: true
+            , auto: false
+            , choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    if (index == 5) {
+                        return false;
+                    }
+                    $('#uploader-list').append(
+                        '<div id="" class="file-iteme">' +
+                        '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="' + result + '" class="layui-upload-img">' +
+                        '</div>'
+                    );
+
+                    // $('#quote').append('<img width="100px" height="100px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+            }
+            , before: function (obj) {
+                console.log('--------')
+                console.log(obj)
+                layer.msg('图片上传中...', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 0
+                })
+            }
+            , success: function (res) {
+                console.log('上传完毕');
+            }
+            , done: function (res) {
+                console.log('上传成功')
+                //上传完毕
+            }
+        });
+
 
         $('#meeting-update #selectHotel').click(function () {
             febs.modal.open('选择酒店', 'system/meeting/selectHotel', {
@@ -245,37 +361,25 @@
                 }
             });
         });
+
+
+        $(document).on("mouseenter mouseleave", ".file-iteme", function (event) {
+            if (event.type === "mouseenter") {
+                //鼠标悬浮
+                $(this).children(".info").fadeIn("fast");
+                $(this).children(".handle").fadeIn("fast");
+            } else if (event.type === "mouseleave") {
+                //鼠标离开
+                $(this).children(".info").hide();
+                $(this).children(".handle").hide();
+            }
+        });
+
+        $(document).on("click", ".file-iteme .handle", function (event) {
+            $(this).parent().remove();
+        })
+
     });
 
-
-    // //编辑器
-    // layui.use('layedit', function () {
-    //     var layedit = layui.layedit;
-    //     layedit.build('demo');   //建立编辑器
-    //     layedit.set({
-    //         //暴露layupload参数设置接口 --详细查看layupload参数说明
-    //         uploadImage: {
-    //             url: ''    //上传接口url
-    //             , type: 'post' //默认post
-    //         }
-    //         , devmode: true
-    //         //插入代码设置
-    //         , codeConfig: {
-    //             hide: true,  //是否显示编码语言选择框
-    //             default: 'javascript' //hide为true时的默认语言格式
-    //         }
-    //         , tool: [
-    //             'html', 'code', 'strong', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
-    //             , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'images', 'image_alt',
-    //             , '|', 'fullScreen'
-    //         ]
-    //         , height: 500, //设置编辑器高度
-    //     });
-    // });
-
-/*    //  取值：
-    var layedit = layui.layedit;
-    var index = layedit.build('demo', {});
-    var content = layedit.getContent(index);  //获取html*/
 
 </script>

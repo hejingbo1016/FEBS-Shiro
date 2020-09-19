@@ -69,35 +69,50 @@
                        placeholder="结束时间" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <!--<div class="layui-inline">-->
-        <!--<label class="layui-form-label">日期时间范围</label>-->
-        <!--<div class="layui-input-inline">-->
-        <!--<input type="text" class="layui-input" id="test10" placeholder=" - ">-->
-        <!--</div>-->
-        <!--</div>-->
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
             <div class="layui-input-block" style="border: 1px solid gray;">
-                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea" lay-verify="synopsis"></textarea>
+                <textarea id="synopsis" name="synopsis" maxlength="1000" class="layui-textarea"
+                          lay-verify="synopsis"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
             <div class="layui-input-block" style="border: 1px solid gray;">
-                <textarea id="activityNotes" name="activityNotes" maxlength="1000" class="layui-textarea" lay-verify="activityNotes"></textarea>
+                <textarea id="activityNotes" name="activityNotes" maxlength="1000" class="layui-textarea"
+                          lay-verify="activityNotes"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
             <div class="layui-input-block" style="border: 1px solid gray;">
-                <textarea id="activityFlow" name="activityFlow" maxlength="1000" class="layui-textarea" lay-verify="activityFlow"></textarea>
+                <textarea id="activityFlow" name="activityFlow" maxlength="1000" class="layui-textarea"
+                          lay-verify="activityFlow"></textarea>
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">预定说明：</label>
             <div class="layui-input-block" style="border: 1px solid gray;">
-                <textarea id="description" name="description" maxlength="1000" class="layui-textarea" lay-verify="description"></textarea>
+                <textarea id="description" name="description" maxlength="1000" class="layui-textarea"
+                          lay-verify="description"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="upload">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;width: 88%">
+                    预览图：
+                    <div class="layui-upload-list uploader-list" style="overflow: auto;" id="uploader-list">
+                        <div id="" class="file-iteme">
+                            <div class="handle"><i class="layui-icon"
+                                                   style="color: white;margin-right: 40%">&#xe640;</i>
+                            </div>
+                        </div>
+                    </div>
+                </blockquote>
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -107,19 +122,71 @@
     </form>
 </div>
 
+<style type="text/css">
+    .layui-form-label {
+        width: 110px;
+    }
+
+    .uploader-list {
+        margin-left: -15px;
+    }
+
+    .uploader-list .info {
+        position: relative;
+        margin-top: -25px;
+        background-color: black;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        opacity: 0.5;
+        width: 100px;
+        height: 25px;
+        text-align: center;
+        display: none;
+    }
+
+    .uploader-list .handle {
+        position: relative;
+        background-color: #ff6a00;
+        color: white;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.5;
+        width: 100px;
+        text-align: right;
+        height: 18px;
+        margin-bottom: -18px;
+        display: none;
+    }
+
+    .uploader-list .handle span {
+        margin-right: 5px;
+    }
+
+    .uploader-list .handle span:hover {
+        cursor: pointer;
+    }
+
+    .uploader-list .file-iteme {
+        margin: 12px 0 0 15px;
+        padding: 1px;
+        float: left;
+    }
+</style>
+
 <script>
-    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate','layedit'], function () {
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate', 'layedit', 'upload', 'layer'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             $view = $('#meeting-add'),
-            validate = layui.validate;
-        var laydate = layui.laydate;
-        var layedit = layui.layedit;
-        var one = layedit.build('synopsis',{height: 80}); //建立编辑器
-        var two = layedit.build('activityNotes',{height: 80}); //建立编辑器
-        var three = layedit.build('activityFlow',{height: 80}); //建立编辑器
-        var four = layedit.build('description',{height: 80}); //建立编辑器
+            validate = layui.validate,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layedit = layui.layedit;
+        var one = layedit.build('synopsis', {height: 80}); //建立编辑器
+        var two = layedit.build('activityNotes', {height: 80}); //建立编辑器
+        var three = layedit.build('activityFlow', {height: 80}); //建立编辑器
+        var four = layedit.build('description', {height: 80}); //建立编辑器
 
         laydate.render({
             elem: '#febs-form-meeting-start'
@@ -142,16 +209,75 @@
             data.field.activityNotes = layedit.getContent(two);
             data.field.activityFlow = layedit.getContent(three);
             data.field.description = layedit.getContent(four);
-            console.log(data)
             data.field.endTime = new Date(data.field.endTime);
             data.field.startTime = new Date(data.field.startTime);
-            febs.post(ctx + 'meeting', data.field, function () {
-                layer.closeAll();
-                febs.alert.success('新增任务成功');
-                $('#febs-meeting').find('#query').click();
-            });
-            return false;
+
+            $(data.form).attr('action', ctx + 'meeting');
+            return true;
+
+
         });
+        //多图片上传
+        upload.render({
+            elem: '#upload'
+            , url: '' //改成您自己的上传接口
+            , multiple: true
+            , auto: false
+            , choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    if (index == 5) {
+                        return false;
+                    }
+                    $('#uploader-list').append(
+                        '<div id="" class="file-iteme">' +
+                        '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
+                        '<img style="color: white;width: 100px; height: 100px" onclick="" src="' + result + '" class="layui-upload-img">' +
+                        '</div>'
+                    );
+
+                    // $('#quote').append('<img width="100px" height="100px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+            }
+            , before: function (obj) {
+                console.log('--------')
+                console.log(obj)
+                layer.msg('图片上传中...', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 0
+                })
+            }
+            , success: function (res) {
+                console.log('上传完毕');
+            }
+            , done: function (res) {
+                console.log('上传成功')
+                //上传完毕
+            }
+        });
+
+
+        $(document).on("mouseenter mouseleave", ".file-iteme", function (event) {
+            if (event.type === "mouseenter") {
+                //鼠标悬浮
+                $(this).children(".info").fadeIn("fast");
+                $(this).children(".handle").fadeIn("fast");
+            } else if (event.type === "mouseleave") {
+                //鼠标离开
+                $(this).children(".info").hide();
+                $(this).children(".handle").hide();
+            }
+        });
+
+        $(document).on("click", ".file-iteme .handle", function (event) {
+            var parent = $(this).parent()
+            var id = parent.attr('data-id')
+            febs.get(ctx + 'file/delete/' + id, null, function () {
+                febs.alert.warn('删除成功！');
+            });
+            $(this).parent().remove();
+        })
 
     });
 </script>
