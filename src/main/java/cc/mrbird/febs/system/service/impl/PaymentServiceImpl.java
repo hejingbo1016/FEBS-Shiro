@@ -131,6 +131,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO placOrders(OrderPay orderPay) {
         Double totalFee = new Double(0);
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
