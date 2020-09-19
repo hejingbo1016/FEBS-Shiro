@@ -119,6 +119,7 @@ public class Payment {
 	 /**
      * 联系方式
      */
+
     @TableField("contact_phone")
     private Integer contactPhone;
 	

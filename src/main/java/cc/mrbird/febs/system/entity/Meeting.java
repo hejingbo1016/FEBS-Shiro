@@ -11,6 +11,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entity
@@ -147,4 +148,7 @@ public class Meeting {
      */
     @TableField("description")
     private String description;
+
+    @TableField(exist = false)
+    private List<File> meetingFiles;
 }

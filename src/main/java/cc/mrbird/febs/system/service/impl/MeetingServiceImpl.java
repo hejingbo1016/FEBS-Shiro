@@ -138,14 +138,13 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             String[] split = meetingIds.split(",");
             int count = meetingMapper.deleteMeetingByIds(split);
             //删除酒店对应的附件
-            if (count>0){
+            if (count > 0) {
                 fileMapper.deletesByFids(split);
             }
 
         } else {
             throw new BusinessRuntimeException("所传id为空，检查是否传值有误");
         }
-
 
 
         List<String> list = Arrays.asList(meetingIds.split(StringPool.COMMA));
@@ -171,6 +170,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public Meeting getWeChatMettingById(Long id) {
         Meeting meeting = meetingMapper.selectById(id);
+        List<File> fileList = fileMapper.selectFileByHotelId(id);
+        meeting.setMeetingFiles(fileList);
         return meeting;
     }
 
