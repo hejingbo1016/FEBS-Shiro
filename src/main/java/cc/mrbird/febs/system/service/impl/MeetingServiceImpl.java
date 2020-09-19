@@ -133,7 +133,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     public void deleteMeetings(String meetingIds) {
         List<String> list = Arrays.asList(meetingIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Meeting>().lambda().in(Meeting::getId, list));
-
+        //删除会议对应的附件
+        String[] ids = meetingIds.split(",");
+        fileMapper.deletesByFids(ids);
     }
 
     @Override

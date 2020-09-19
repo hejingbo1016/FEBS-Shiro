@@ -25,21 +25,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">会议名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingName" maxlength="20" lay-verify="range|required"
+                <input type="text" name="meetingName" maxlength="200" lay-verify="range|required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">主办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="sponsor" maxlength="50" lay-verify="range|required"
+                <input type="text" name="sponsor" maxlength="200" lay-verify="range|required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">会议负责人：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingPrincipal" maxlength="50" lay-verify="range"
+                <input type="text" name="meetingPrincipal" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -53,14 +53,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">会议地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="meetingAddress" maxlength="50" lay-verify="range"
+                <input type="text" name="meetingAddress" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">承办方：</label>
             <div class="layui-input-block">
-                <input type="text" name="organizer" maxlength="50" lay-verify="range"
+                <input type="text" name="organizer" maxlength="200" lay-verify="range"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -81,30 +81,37 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动简介：</label>
             <div class="layui-input-block">
-                <textarea name="synopsis" maxlength="100" class="layui-textarea"></textarea>
+                <textarea name="synopsis" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动须知：</label>
             <div class="layui-input-block">
-                <textarea name="activityNotes" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityNotes" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">活动流程：</label>
             <div class="layui-input-block">
-                <textarea name="activityFlow" maxlength="50" class="layui-textarea"></textarea>
+                <textarea name="activityFlow" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
-  <!--      <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">酒店选择：</label>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">预定说明：</label>
             <div class="layui-input-block">
-                <button type="button" id="selectHotel" class="layui-btn">选择</button>
+                <textarea name="description" maxlength="1000" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div id="hotelTableList">
+        <textarea id="demo" style="display: none;"></textarea>
+        <!--      <div class="layui-form-item layui-form-text">
+                  <label class="layui-form-label">酒店选择：</label>
+                  <div class="layui-input-block">
+                      <button type="button" id="selectHotel" class="layui-btn">选择</button>
+                  </div>
+              </div>
+              <div id="hotelTableList">
 
-        </div>-->
+              </div>-->
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="meeting-update-form-submit" id="submit"></button>
@@ -216,5 +223,36 @@
             });
         });
     });
+
+
+    //编辑器
+    layui.use('layedit', function () {
+        var layedit = layui.layedit;
+        layedit.build('demo');   //建立编辑器
+        layedit.set({
+            //暴露layupload参数设置接口 --详细查看layupload参数说明
+            uploadImage: {
+                url: ''    //上传接口url
+                , type: 'post' //默认post
+            }
+            , devmode: true
+            //插入代码设置
+            , codeConfig: {
+                hide: true,  //是否显示编码语言选择框
+                default: 'javascript' //hide为true时的默认语言格式
+            }
+            , tool: [
+                'html', 'code', 'strong', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'images', 'image_alt',
+                , '|', 'fullScreen'
+            ]
+            , height: 500, //设置编辑器高度
+        });
+    });
+
+/*    //  取值：
+    var layedit = layui.layedit;
+    var index = layedit.build('demo', {});
+    var content = layedit.getContent(index);  //获取html*/
 
 </script>

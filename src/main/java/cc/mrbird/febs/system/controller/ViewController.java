@@ -182,7 +182,12 @@ public class ViewController extends BaseController {
     @RequiresPermissions("meeting:update")
     public String meetingUpdate(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
         Meeting meeting = meetingService.getById(id);
+        File file = new File();
+        file.setForeignId(id);
+        List<File> files = fileService.findFiles(file);
+        model.addAttribute("files", files);
         model.addAttribute("meeting", meeting);
+
         return FebsUtil.view("system/meeting/meetingUpdate");
     }
 

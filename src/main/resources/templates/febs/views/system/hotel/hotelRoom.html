@@ -93,24 +93,26 @@
     4: {value: '4',title: '其他', color: 'red'}
     };
     }}
-    <select name='roomType' lay-verify='' lay-search=''>
-        {{#  layui.each(roomType, function(index, item){ }}
-        {{#  if(+item.value === +d.roomType){ }}
-        <option value="{{item.value}}"  selected = "selected">{{ item.title }}</option>
-        {{#  }else{ }}
+    <select lay-filter="selectGxmc" name='roomType' lay-search=''>
+        {{# layui.each(roomType, function(index, item){ }}
+        {{# if(+item.value === +d.roomType){ }}
+        <option value="{{item.value}}" selected="selected">{{ item.title }}</option>
+        {{# }else{ }}
         <option value="{{item.value}}">{{ item.title }}</option>
-        {{#  } }}
-        {{#  }); }}
+        {{# } }}
+        {{# }); }}
     </select>
 </script>
 <script type="text/html" id="hotelRoom-option">
     <span shiro:lacksPermission="room:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
+    {{#  if(d.isNew&&d.isNew === 1){ }}
+    <a lay-event="addRoom" shiro:hasPermission="room:add"><i class="layui-icon febs-edit-area febs-blue">保存</i></a>
+    {{#  }else{ }}
     <a lay-event="del" shiro:hasPermission="room:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
-
-
+    {{#  } }}
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -123,8 +125,9 @@
             $view = $('#febs-hotelRoom'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
+            $selectGxmc = $view.find('#selectGxmc'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'createTime', type: null},
+            sortObject = {field: 'roomCount', type: null},
             tableIns;
 
         form.render();
@@ -182,6 +185,7 @@
         });
 
         table.on('tool(hotelRoomTable)', function (obj) {
+            var hotelId = sessionStorage.getItem('hotelId');
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
@@ -216,25 +220,37 @@
             }
 
 
+            /*
+                        form.on('select(dictName)', function (data) {
+                            var selectElem = $(data.elem);
+                            var tdElem = selectElem.closest("td");
+                            var trElem = tdElem.closest("tr");
+                            var tableView = trElem.closest(".layui-table-view");
+                            table.cache[tableView.attr("lay-id")][trElem.data("index")][tdElem.data("field")] = data.value;
+
+                        });
+            */
+
+
             if (layEvent === 'addRoom') {
-                var roomName = $("#" + hotelId + "roomName").text();
-                var roomCount = $("#" + hotelId + "roomCount").text();
-                var surplusNumber = $("#" + hotelId + "surplusNumber").text();
-                var univalence = $("#" + hotelId + "univalence").text();
-                var roomType = $("#" + hotelId + "roomType").text();
-
-
+                var userName = null;  //定义一个空值
+                $selectGxmc.on('select(selectGxmc)', function (data) {
+                    userName = data.value;  //取选中下拉框的文本并赋值给userName
+                    alert(userName)
+                });
                 var param = {
                     'hotelId': hotelId,
-                    'roomName': roomName,
-                    'roomCount': roomCount,
-                    'surplusNumber': surplusNumber,
-                    'univalence': univalence,
-                    'roomType': roomType
+                    'roomName': data.roomName,
+                    'roomCount': data.roomCount,
+                    'surplusNumber': data.surplusNumber,
+                    'univalence': data.univalence,
+                    'roomType': data.roomType
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
-                        $query.click();
+                        alert("我寄来了")
+                        // $query.click();
+                        $('#febs-hotelRoom').find('#query').click();
                     } else {
                         layer.msg(r.message);
                     }
@@ -267,7 +283,7 @@
                     {field: 'roomName', edit: 'text', title: '名称', maxWidth: 100},
                     {title: '类型', templet: '#selectGxmc', maxWidth: 50},
                     {field: 'univalence', edit: 'text', title: '单价', maxWidth: 80},
-                    {field: 'roomCount', edit: 'text', title: '房间数量', maxWidth: 80},
+                    {field: 'roomCount', edit: 'text', title: '总数', maxWidth: 80},
                     {field: 'surplusNumber', edit: 'text', title: '剩余数量', maxWidth: 80},
                     // {field: 'totalPrice', edit: 'text', title: '总价', maxWidth: 80},
                     {title: '操作', toolbar: '#hotelRoom-option', minWidth: 80}
@@ -284,30 +300,15 @@
         }
 
         $("#addTable").click(function () {
-            /*
-            var hotelId = sessionStorage.getItem('hotelId');
-            var tr = " <tr>" +
-                " <td data-type='checkbox' > <div class='layui-table-cell'> </div></td>" +
-                " <td data-field='roomName' data-edit='text'> <div id='" + hotelId + "roomName' class='layui-table-cell laytable-cell-1-roomName '> </div></td>" +
-                " <td data-field='roomType' data-edit='text' templet = '#selectGxmc'> <div  id='" + hotelId + "roomType' class='layui-table-cell laytable-cell-1-roomType '> </div></td>" +
-                " <td data-field='univalence'  data-edit='text'> <div  id='" + hotelId + "univalence'  class='layui-table-cell laytable-cell-1-univalence  '> </div></td>" +
-                " <td data-field='roomCount' data-edit='text'> <div  id='" + hotelId + "roomCount' class='layui-table-cell laytable-cell-1-roomCount '> </div></td>" +
-                " <td data-field='surplusNumber' data-edit='text'> <div  id='" + hotelId + "surplusNumber' class='layui-table-cell laytable-cell-1-surplusNumber '> </div></td>" +
-                " <td data-field='操作'  toolbar:'#hotelRoom-option'> <div class='layui-table-cell' >  <a lay-event='addRoom' shiro:hasPermission='room:add'><iclass='layui-icon febs-edit-area febs-blue'>保存</i></a></div></td>" +
-                " </tr>";
-            $("[lay-id='hotelRoomTable'] .layui-table-body .layui-table tbody").append(tr);
-             */
             var Data = table.cache["hotelRoomTable"];
             var datas = {
                 LAY_TABLE_INDEX: 0,
-                // createTime: 1599985840000,
                 creater: null,
                 deleted: 0,
                 endTime: null,
                 hotelId: "0",
                 id: "0",
                 modifier: null,
-                // modifyTime: 1599985840000,
                 roomCount: 0,
                 roomDate: null,
                 roomName: "",
@@ -315,11 +316,12 @@
                 startTime: null,
                 surplusNumber: 0,
                 totalPrice: 0,
-                univalence: 0
+                univalence: 0,
+                isNew: 1
             }
             Data.push(datas);
             tableIns.reload({
-                url:'',
+                url: '',
                 data: Data
             });
         });
@@ -339,8 +341,12 @@
                     'univalence': data.univalence,
                     'id': data.id
                 }
-                febs.post(ctx + 'room/update', updateParam, function () {
-                });
+                if (data.id != 0) {
+                    febs.post(ctx + 'room/update', updateParam, function () {
+                    });
+                }
+
+
             }
 
 

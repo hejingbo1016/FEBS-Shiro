@@ -59,4 +59,7 @@ public interface IFileService extends IService<File> {
     File upload(MultipartFile file, String dir, Long fId);
 
     List<File> uploadFile(MultipartFile[] file,Long fId);
+
+    void deleteFiles(String ids);
 }
+
