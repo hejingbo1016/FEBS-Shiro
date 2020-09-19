@@ -52,6 +52,16 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">费用类型：</label>
+            <div class="layui-input-block">
+                <select name="feeType" lay-filter="aihao">
+                    <option value=""></option>
+                    <option value="1">房型</option>
+                    <option value="2">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">总数：</label>
             <div class="layui-input-block">
                 <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
