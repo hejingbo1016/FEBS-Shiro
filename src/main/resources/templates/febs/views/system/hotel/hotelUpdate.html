@@ -168,7 +168,7 @@
                 for (var i in files) {
                     var file = files[i];
                     $('#uploader-list').append(
-                        '<div id="" class="file-iteme">' +
+                        '<div id="" class="file-iteme" data-id="'+file.id+'" >' +
                         '<div class="handle"> <i class="layui-icon" style="color: white ;margin-right: 40%">&#xe640;</i></div>' +
                         '<img style="color: white;width: 100px; height: 100px" onclick="" src="'  + file.url + '" class="layui-upload-img">' +
                         '</div>'
@@ -243,6 +243,11 @@
         });
 
         $(document).on("click", ".file-iteme .handle", function (event) {
+            var parent = $(this).parent()
+            var id = parent.attr('data-id')
+            febs.get(ctx + 'file/delete/' + id, null, function () {
+                febs.alert.warn('删除成功！');
+            });
             $(this).parent().remove();
         })
 
