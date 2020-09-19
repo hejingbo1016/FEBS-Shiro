@@ -149,6 +149,9 @@ public class Meeting {
     @TableField("description")
     private String description;
 
+    /**
+     * 会议照片集
+     */
     @TableField(exist = false)
     private List<File> meetingFiles;
 }
