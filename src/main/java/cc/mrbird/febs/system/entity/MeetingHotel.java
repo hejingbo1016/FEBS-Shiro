@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
@@ -23,12 +25,14 @@ public class MeetingHotel {
     /**
      * 主键id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
      * 会议id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableField("meeting_id")
     private Long meetingId;
 
