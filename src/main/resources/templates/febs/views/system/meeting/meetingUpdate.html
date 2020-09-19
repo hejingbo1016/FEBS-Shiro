@@ -14,7 +14,7 @@
 
 </style>
 <div class="layui-fluid" id="meeting-update">
-    <form class="layui-form" action="" lay-filter="meeting-update-form">
+    <form class="layui-form" action="" lay-filter="meeting-update-form" enctype="multipart/form-data" method="post">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">id：</label>
             <div class="layui-input-block">
@@ -272,11 +272,6 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-            /*        febs.post(ctx + 'meeting/update', data.field, function () {
-                        layer.closeAll();
-                        febs.alert.success('任务修改成功');
-                        $('#febs-meeting').find('#query').click();
-                    });*/
             $(data.form).attr('action', ctx + 'meeting/update');
             return true;
         });
