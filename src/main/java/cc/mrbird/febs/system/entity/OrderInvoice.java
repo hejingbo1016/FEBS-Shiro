@@ -3,6 +3,8 @@ package cc.mrbird.febs.system.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,6 +22,7 @@ public class OrderInvoice {
     /**
      * 主键id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableId(value = "id")
     private Long id;
 
@@ -32,6 +35,7 @@ public class OrderInvoice {
     /**
      * 微信用户id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableField("user_id")
     private Long userId;
 
