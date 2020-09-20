@@ -143,7 +143,7 @@
       p.end_time,p.fee_type,p.hotel_id,h.hotel_name
       from t_payment_details p
       left join t_hotel h on h.id =p.hotel_id
-      where  p.deleted = 0 and p.payment_Code =#{paymentCode}
+      where  p.deleted = 0  and h.deleted = 0 and p.payment_Code =#{paymentCode}
 
 
     </select>
