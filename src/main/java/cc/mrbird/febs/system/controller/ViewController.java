@@ -39,6 +39,7 @@ public class ViewController extends BaseController {
     private final IPaymentService paymentService;
     private final IPaymentDetailsService paymentDetailsService;
     private final IMeetingHotelService meetingHotelService;
+    private final IOrderInvoiceService orderInvoiceService;
 
 
     @GetMapping("login")
@@ -287,6 +288,16 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/payment/paymentUpdate");
     }
 
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment/orderInvoice/{paymentCode}")
+    @RequiresPermissions("payment:invoice")
+    public String getInvoiceByCode(@NotBlank(message = "{required}") @PathVariable String paymentCode, Model model) {
+
+        OrderInvoice orderInvoice = orderInvoiceService.getOrderInvoice(paymentCode);
+        model.addAttribute("orderInvoice", orderInvoice);
+        model.addAttribute("paymentCode", paymentCode);
+        return FebsUtil.view("system/payment/orderInvoice");
+    }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/paymentDetails/list")
     @RequiresPermissions("payment:details")

@@ -201,6 +201,19 @@
                 });
             }
 
+            if (layEvent === 'invoice') {
+                febs.modal.open('发票信息', 'system/payment/orderInvoice/' + data.paymentCode, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#orderInvoice-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
             if (layEvent === 'paymentDetails') {
                 sessionStorage.setItem('paymentCode', data.paymentCode);
                 febs.modal.open('订单详情', 'system/paymentDetails/list/', {

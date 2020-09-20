@@ -1,0 +1,137 @@
+<style>
+    #orderInvoice-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #orderInvoice-update .layui-form-label {
+        width: 88px;
+    }
+
+    #orderInvoice-update .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="orderInvoice-update">
+    <form class="layui-form" action="" lay-filter="orderInvoice-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">订单编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymentCode" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">发票抬头：</label>
+            <div class="layui-input-block">
+                <input type="text" name="invoiceTitle" maxlength="200" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">税号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="identificationCode" maxlength="200" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">单位地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" maxlength="200" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" maxlength="20" l
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱：</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" lay-verify="email" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">发票类型：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="invoiceType" value="1" title="专票">
+                <input type="radio" name="invoiceType" value="2" title="普票">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">开户银行：</label>
+            <div class="layui-input-block">
+                <input type="text" name="bankOfDeposit" maxlength="200" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">银行账号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="bankAccount" maxlength="200" lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="orderInvoice-update-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            orderInvoice = [[${orderInvoice}]],
+            paymentCodes = [[${paymentCode}]],
+            $view = $('#orderInvoice-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initorderInvoiceValue();
+
+        function initorderInvoiceValue() {
+            if (orderInvoice != null) {
+                form.val("orderInvoice-update-form", {
+                    "id": orderInvoice.id,
+                    "paymentCode": paymentCodes,
+                    "invoiceTitle": orderInvoice.invoiceTitle,
+                    "identificationCode": orderInvoice.identificationCode,
+                    "address": orderInvoice.address,
+                    "phone": orderInvoice.phone,
+                    "invoiceType": orderInvoice.invoiceType,
+                    "bankOfDeposit": orderInvoice.bankOfDeposit,
+                    "email": orderInvoice.email,
+                    "bankAccount": orderInvoice.bankAccount
+                });
+            }
+        }
+
+        form.on('submit(orderInvoice-update-form-submit)', function (data) {
+            data.field.paymentCode = paymentCodes;
+            febs.post(ctx + 'orderInvoice/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('订单发票成功');
+                $('#febs-payment').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

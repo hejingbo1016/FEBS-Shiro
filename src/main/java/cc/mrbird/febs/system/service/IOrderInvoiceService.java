@@ -54,4 +54,5 @@ public interface IOrderInvoiceService extends IService<OrderInvoice> {
     void deleteOrderInvoice(OrderInvoice orderInvoice);
 
     OrderInvoice getOrderInvoice(String paymentCode);
+
 }

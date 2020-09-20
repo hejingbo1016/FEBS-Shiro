@@ -61,7 +61,7 @@ public class OrderInvoice {
      * 联系方式
      */
     @TableField("phone")
-    private Integer phone;
+    private String phone;
 
     /**
      * 开户行
@@ -74,6 +74,19 @@ public class OrderInvoice {
      */
     @TableField("bank_account")
     private String bankAccount;
+
+    /**
+     * 发票类型 ( 1专票，2普票)
+     */
+    @TableField("invoiceType")
+    private Integer invoiceType;
+
+
+    /**
+     * 邮箱
+     */
+    @TableField("email")
+    private String email;
 
     /**
      * 创建时间
