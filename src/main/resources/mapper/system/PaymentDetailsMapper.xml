@@ -11,9 +11,14 @@
 
     <select id="countPaymentDetails" resultType="java.lang.Long">
 
-        select count(1) from t_payment_details where payment_Code = #{paymentDetails.paymentCode} and deleted =0
+        select count(1)
+        from t_payment_details p
+        left join t_hotel h on h.id =p.hotel_id
+        where p.deleted = 0 and p.payment_Code = #{paymentDetails.paymentCode}
         <if test="paymentDetails.feeName != null and paymentDetails.feeName != ''">
-            AND fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            AND  (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            or h.hotel_name like CONCAT('%',#{paymentDetails.feeName},'%'
+            )
         </if>
 
 
@@ -21,9 +26,16 @@
 
 
     <select id="findPaymentDetailsPage" resultType="cc.mrbird.febs.system.entity.PaymentDetails">
-        select * from t_payment_details where payment_Code = #{paymentDetails.paymentCode} and deleted =0
+
+        select p.id,p.payment_Code,p.fee_name,p.number,p.interval_price,p.subtotal,start_time,
+        p.end_time,p.fee_type,p.hotel_id,h.hotel_name
+        from t_payment_details p
+        left join t_hotel h on h.id =p.hotel_id
+        where p.deleted = 0 and p.payment_Code = #{paymentDetails.paymentCode}
         <if test="paymentDetails.feeName != null and paymentDetails.feeName != ''">
-            AND fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            AND  (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            or h.hotel_name like CONCAT('%',#{paymentDetails.feeName},'%'
+            )
         </if>
     </select>
 
@@ -143,7 +155,7 @@
       p.end_time,p.fee_type,p.hotel_id,h.hotel_name
       from t_payment_details p
       left join t_hotel h on h.id =p.hotel_id
-      where  p.deleted = 0  and h.deleted = 0 and p.payment_Code =#{paymentCode}
+      where  p.deleted = 0  and p.payment_Code =#{paymentCode}
 
 
     </select>
