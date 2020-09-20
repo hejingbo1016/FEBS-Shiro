@@ -170,9 +170,21 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public Meeting getWeChatMettingById(Long id) {
         Meeting meeting = meetingMapper.selectById(id);
+        List<File> files = new ArrayList<>();
         List<File> fileList = fileMapper.selectFileByHotelId(id);
-        meeting.setMeetingFiles(fileList);
+        files = getFileList(files, fileList, imageShowUrl, imgUrl);
+        meeting.setMeetingFiles(files);
         return meeting;
+    }
+
+    static List<File> getFileList(List<File> files, List<File> fileList, String imageShowUrl, String imgUrl) {
+        if (!Objects.isNull(fileList) && fileList.size() > 0) {
+            files = fileList.stream().map(f -> {
+                FileHepler.getFileVo(f, imageShowUrl, imgUrl);
+                return f;
+            }).collect(Collectors.toList());
+        }
+        return files;
     }
 
 

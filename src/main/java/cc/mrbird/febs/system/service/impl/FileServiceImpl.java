@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service实现
@@ -67,12 +66,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         queryWrapper.eq(File::getForeignId, file.getForeignId());
         List<File> files = baseMapper.selectList(queryWrapper);
         List<File> fileList = new ArrayList<>();
-        if (!Objects.isNull(files) && files.size() > 0) {
-            fileList = files.stream().map(f -> {
-                FileHepler.getFileVo(f, imageShowUrl, imgUrl);
-                return f;
-            }).collect(Collectors.toList());
-        }
+        fileList = MeetingServiceImpl.getFileList(fileList, files, imageShowUrl, imgUrl);
         return fileList;
     }
 
