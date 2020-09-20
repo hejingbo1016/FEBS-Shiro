@@ -24,6 +24,7 @@
         <if test="payment.payType != null and payment.payType != ''">
             AND t.payType = #{payment.payType}
         </if>
+        order by t.create_time desc
 
 
     </select>
@@ -48,6 +49,7 @@
         <if test="payment.payType != null and payment.payType != ''">
             AND t.payType = #{payment.payType}
         </if>
+        order by t.create_time desc
 
 
     </select>
@@ -154,7 +156,7 @@
                 #{description,jdbcType=VARCHAR},
             </if>
             <if test="contactPhone != null">
-                #{contactPhone,jdbcType=INTEGER},
+                #{contactPhone,jdbcType=VARCHAR},
             </if>
             <if test="occupants != null">
                 #{occupants,jdbcType=VARCHAR},
