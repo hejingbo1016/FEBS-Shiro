@@ -134,8 +134,15 @@ public class WechatApiController extends BaseController {
 
     @ControllerEndpoint(operation = "新增发票信息", exceptionMessage = "新增发票信息失败")
     @PostMapping("saveOrUpdateInvoice")
-    public FebsResponse addOrderInvoice(OrderInvoice orderInvoice) {
+    public FebsResponse saveOrUpdateInvoice(OrderInvoice orderInvoice) {
         this.invoiceService.createOrderInvoice(orderInvoice);
         return new FebsResponse().success();
+    }
+
+    @ControllerEndpoint(operation = "通过订单编号查发票信息", exceptionMessage = "通过订单编号查发票信息失败")
+    @GetMapping("getOrderInvoice")
+    public FebsResponse getOrderInvoice(String paymentCode) {
+        OrderInvoice orderInvoice =  invoiceService.getOrderInvoice(paymentCode);
+        return new FebsResponse().success().data(orderInvoice);
     }
 }

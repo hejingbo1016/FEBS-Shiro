@@ -82,4 +82,17 @@ public class OrderInvoiceServiceImpl extends ServiceImpl<OrderInvoiceMapper, Ord
         // TODO 设置删除条件
         this.remove(wrapper);
     }
+
+    @Override
+    public OrderInvoice getOrderInvoice(String paymentCode) {
+        if (!StringUtils.isEmpty(paymentCode)) {
+            LambdaQueryWrapper<OrderInvoice> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(OrderInvoice::getPaymentCode, paymentCode);
+            wrapper.eq(OrderInvoice::getDeleted, AdminConstants.DATA_N_DELETED);
+            //根据订单编号获取发票信息
+            return orderInvoiceMapper.selectOne(wrapper);
+        } else {
+            throw new BusinessRuntimeException("订单编号不能为空!");
+        }
+    }
 }
