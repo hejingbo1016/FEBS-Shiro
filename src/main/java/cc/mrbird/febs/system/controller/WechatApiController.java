@@ -133,7 +133,7 @@ public class WechatApiController extends BaseController {
 
 
     @ControllerEndpoint(operation = "新增发票信息", exceptionMessage = "新增发票信息失败")
-    @PostMapping("orderInvoice")
+    @PostMapping("saveOrUpdateInvoice")
     public FebsResponse addOrderInvoice(OrderInvoice orderInvoice) {
         this.invoiceService.createOrderInvoice(orderInvoice);
         return new FebsResponse().success();
