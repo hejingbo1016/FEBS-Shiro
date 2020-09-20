@@ -95,6 +95,8 @@
 <script type="text/html" id="payment-option">
     <a lay-event="paymentDetails" shiro:hasPermission="payment:details"><i
             class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
+    <a lay-event="invoice" shiro:hasPermission="payment:invoice"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe672;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -247,6 +249,8 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'paymentCode', title: '订单编号', maxWidth: 120},
+                    {field: 'occupants', title: '入住人', maxWidth: 80},
+                    {field: 'contactPhone', title: '联系方式', maxWidth: 80},
                     {field: 'meetingName', title: '会议名称', maxWidth: 120},
                     {field: 'hotelName', title: '酒店名称', maxWidth: 120},
                     {field: 'paymentAmount', title: '支付金额', maxWidth: 60, sort: true},

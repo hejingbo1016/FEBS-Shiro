@@ -6,10 +6,7 @@ import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.*;
-import cc.mrbird.febs.system.service.IFileService;
-import cc.mrbird.febs.system.service.IHotelService;
-import cc.mrbird.febs.system.service.IMeetingService;
-import cc.mrbird.febs.system.service.IPaymentService;
+import cc.mrbird.febs.system.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +34,7 @@ public class WechatApiController extends BaseController {
     private final IPaymentService paymentService;
     private final IHotelService hotelService;
     private final IFileService fileService;
+    private final IOrderInvoiceService invoiceService;
 
     @ControllerEndpoint(operation = "微信端获取会议列表", exceptionMessage = "微信获取会议列表失败")
     @GetMapping("weChatMettingList")
@@ -130,6 +128,14 @@ public class WechatApiController extends BaseController {
         if (id != null) {
             fileService.uploadFile(file, id);
         }
+        return new FebsResponse().success();
+    }
+
+
+    @ControllerEndpoint(operation = "新增发票信息", exceptionMessage = "新增发票信息失败")
+    @PostMapping("orderInvoice")
+    public FebsResponse addOrderInvoice(OrderInvoice orderInvoice) {
+        this.invoiceService.createOrderInvoice(orderInvoice);
         return new FebsResponse().success();
     }
 }
