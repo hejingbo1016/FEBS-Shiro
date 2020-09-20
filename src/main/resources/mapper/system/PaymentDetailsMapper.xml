@@ -16,7 +16,7 @@
         left join t_hotel h on h.id =p.hotel_id
         where p.deleted = 0 and p.payment_Code = #{paymentDetails.paymentCode}
         <if test="paymentDetails.feeName != null and paymentDetails.feeName != ''">
-            AND  (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            AND (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
             or h.hotel_name like CONCAT('%',#{paymentDetails.feeName},'%'
             )
         </if>
@@ -33,7 +33,7 @@
         left join t_hotel h on h.id =p.hotel_id
         where p.deleted = 0 and p.payment_Code = #{paymentDetails.paymentCode}
         <if test="paymentDetails.feeName != null and paymentDetails.feeName != ''">
-            AND  (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
+            AND (p.fee_name like CONCAT('%',#{paymentDetails.feeName},'%')
             or h.hotel_name like CONCAT('%',#{paymentDetails.feeName},'%'
             )
         </if>
@@ -87,6 +87,9 @@
             <if test="subtotal != null">
                 subtotal,
             </if>
+            <if test="hotelId != null">
+                hotel_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -130,6 +133,9 @@
             </if>
             <if test="subtotal != null">
                 #{subtotal,jdbcType=DOUBLE},
+            </if>
+            <if test="hotelId != null">
+                #{hotelId,jdbcType=INTEGER},
             </if>
 
         </trim>
