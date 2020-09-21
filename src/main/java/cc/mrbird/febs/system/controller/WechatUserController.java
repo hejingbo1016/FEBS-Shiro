@@ -1,19 +1,17 @@
 package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
-import cc.mrbird.febs.common.utils.FebsUtil;
-import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.WechatUser;
 import cc.mrbird.febs.system.service.IWechatUserService;
 import com.wuwenze.poi.ExcelKit;
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,7 +68,8 @@ public class WechatUserController extends BaseController {
     @ResponseBody
     @RequiresPermissions("weChatUser:delete")
     public FebsResponse deleteWeChatUsers(@NotBlank(message = "{required}") @PathVariable String weChatUserIds) {
-        this.wechatUserService.deleteWeChatUsers(weChatUserIds);
+
+        this.wechatUserService.deleteWeChatUsersByIds(weChatUserIds);
         return new FebsResponse().success();
     }
 

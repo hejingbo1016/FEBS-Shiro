@@ -16,4 +16,5 @@ public interface WechatUserMapper extends BaseMapper<WechatUser> {
 
     int inserts(WechatUser wechatUser);
 
+    void deleteWeChatUsersByIds(@Param("ids") String weChatUserIds);
 }

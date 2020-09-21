@@ -3,8 +3,10 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.WechatUser;
 import cc.mrbird.febs.system.mapper.WechatUserMapper;
 import cc.mrbird.febs.system.service.IWechatUserService;
@@ -77,6 +79,7 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
             queryWrapper.like(WechatUser::getProvince, wechatUser.getProvince());
 
         }
+        queryWrapper.eq(WechatUser::getDeleted, AdminConstants.DATA_N_DELETED);
 
     }
 
@@ -171,6 +174,16 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
     public void getTest(String openid) {
         Map map = new HashMap();
         insertUserByOpenid(openid, map);
+
+    }
+
+    @Override
+    public void deleteWeChatUsersByIds(String weChatUserIds) {
+        if (!StringUtils.isEmpty(weChatUserIds)) {
+            wechatUserMapper.deleteWeChatUsersByIds(weChatUserIds);
+        } else {
+            throw new BusinessRuntimeException("传递的参数为空");
+        }
 
     }
 }

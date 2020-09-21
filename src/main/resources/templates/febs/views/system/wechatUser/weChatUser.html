@@ -183,7 +183,7 @@
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
-                febs.modal.confirm('删除任务', '确定删除该记录？', function () {
+                febs.modal.confirm('删除微信', '慎重删除，删除数据之后将无法恢复？', function () {
                     deleteJobs(data.id);
                 });
             }
@@ -228,10 +228,12 @@
                     {title: '性别', templet: '#weChatUser-sex'},
                     {field: 'phone', title: '联系方式', maxWidth: 80},
                     {title: '订阅', templet: '#weChatUser-subscribe'},
-                    {field: 'subscribeTime', title: '关注时间',
+                    {
+                        field: 'subscribeTime', title: '关注时间',
                         templet: function (data) {
                             return layui.util.toDateString(data.subscribeTime, "yyyy-MM-dd HH:mm:ss");
-                        },maxWidth: 80, sort: true},
+                        }, maxWidth: 80, sort: true
+                    },
                     {title: '操作', toolbar: '#weChatUser-option', minWidth: 80}
                 ]]
             });
