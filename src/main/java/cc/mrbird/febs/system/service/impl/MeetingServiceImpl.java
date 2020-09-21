@@ -86,18 +86,6 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (StringUtils.isNotBlank(meeting.getMeetingName())) {
             queryWrapper.like(Meeting::getMeetingName, meeting.getMeetingName());
         }
-        if (StringUtils.isNotBlank(meeting.getSponsor())) {
-            queryWrapper.like(Meeting::getSponsor, meeting.getSponsor());
-        }
-        if (StringUtils.isNotBlank(meeting.getOrganizer())) {
-            queryWrapper.like(Meeting::getOrganizer, meeting.getOrganizer());
-        }
-        if (StringUtils.isNotBlank(meeting.getMeetingAddress())) {
-            queryWrapper.like(Meeting::getMeetingAddress, meeting.getMeetingAddress());
-        }
-        if (StringUtils.isNotBlank(meeting.getMeetingPrincipal())) {
-            queryWrapper.like(Meeting::getMeetingPrincipal, meeting.getMeetingPrincipal());
-        }
         if (meeting.getStatus() != null) {
             queryWrapper.eq(Meeting::getStatus, meeting.getStatus());
         }

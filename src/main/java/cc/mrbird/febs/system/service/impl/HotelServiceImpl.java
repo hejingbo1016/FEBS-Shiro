@@ -55,18 +55,6 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
         if (StringUtils.isNotBlank(hotel.getHotelName())) {
             queryWrapper.like(Hotel::getHotelName, hotel.getHotelName());
         }
-        if (StringUtils.isNotBlank(hotel.getHotelPrincipal())) {
-            queryWrapper.like(Hotel::getHotelPrincipal, hotel.getHotelPrincipal());
-        }
-        if (StringUtils.isNotBlank(hotel.getContactPhone())) {
-            queryWrapper.like(Hotel::getContactPhone, hotel.getContactPhone());
-        }
-        if (StringUtils.isNotBlank(hotel.getReceptionService())) {
-            queryWrapper.like(Hotel::getReceptionService, hotel.getReceptionService());
-        }
-        if (StringUtils.isNotBlank(hotel.getHotelAddress())) {
-            queryWrapper.like(Hotel::getHotelAddress, hotel.getHotelAddress());
-        }
         queryWrapper.eq(Hotel::getDeleted, AdminConstants.DATA_N_DELETED);
 
 

@@ -75,7 +75,9 @@
     {{#
     var roomType = {
     1: {title: '房型', color: 'green'},
-    2: {title: '其他', color: 'blue'}
+    2: {title: '餐费', color: 'volcano'},
+    3: {title: '门票', color: 'blue'},
+    4: {title: '其他', color: 'red'}
     }[d.roomType];
     }}
     <span class="layui-badge febs-bg-{{roomType.color}}">{{ roomType.title }}</span>
@@ -86,7 +88,7 @@
     {{#
     var roomType = {
     1: {value: '1',title: '房型', color: 'green'},
-    2: {value: '2',title: '其他', color: 'blue'}
+    2: {value: '2',title: '餐费', color: 'blue'}
     };
     }}
     <select lay-filter="selectGxmc" name='roomType' lay-search=''>
@@ -244,7 +246,6 @@
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
-                        alert("我寄来了")
                         // $query.click();
                         $('#febs-hotelRoom').find('#query').click();
                     } else {

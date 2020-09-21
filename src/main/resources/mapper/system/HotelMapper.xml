@@ -13,19 +13,6 @@
         <if test="hotel.hotelName != null and hotel.hotelName != ''">
             AND t.hotel_name like CONCAT('%',#{hotel.hotelName},'%')
         </if>
-        <if test="hotel.hotelPrincipal != null and hotel.hotelPrincipal != ''">
-            AND t.hotel_principal like CONCAT('%',#{hotel.hotelPrincipal},'%')
-        </if>
-        <if test="hotel.contactPhone != null and hotel.contactPhone != ''">
-            AND t.contact_phone like CONCAT('%',#{hotel.contactPhone},'%')
-        </if>
-        <if test="hotel.receptionService != null and hotel.receptionService != ''">
-            AND t.reception_service like CONCAT('%',#{hotel.receptionService},'%')
-        </if>
-        <if test="hotel.hotelAddress != null and hotel.hotelAddress != ''">
-            AND t.hotel_address like CONCAT('%',#{hotel.hotelAddress},'%')
-        </if>
-
 
     </select>
 

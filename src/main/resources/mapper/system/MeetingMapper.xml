@@ -13,20 +13,8 @@
         <if test="meeting.meetingName != null and meeting.meetingName != ''">
             AND t.meeting_name like CONCAT('%',#{meeting.meetingName},'%')
         </if>
-        <if test="meeting.sponsor != null and meeting.sponsor != ''">
-            AND t.sponsor like CONCAT('%',#{meeting.sponsor},'%')
-        </if>
-        <if test="meeting.organizer != null and meeting.organizer != ''">
-            AND t.organizer like CONCAT('%',#{meeting.organizer},'%')
-        </if>
         <if test="meeting.status != null and meeting.status != ''">
             AND t.status = #{meeting.status}
-        </if>
-        <if test="meeting.meetingPrincipal != null and meeting.meetingPrincipal != ''">
-            AND t.meeting_principal like CONCAT('%',#{meeting.meetingPrincipal},'%')
-        </if>
-        <if test="meeting.meetingAddress != null and meeting.meetingAddress != ''">
-            AND t.meeting_address like CONCAT('%',#{meeting.meetingAddress},'%')
         </if>
 
 
