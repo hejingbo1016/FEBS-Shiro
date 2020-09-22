@@ -25,11 +25,12 @@
                 <input type="text" name="paymentCode" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">发票抬头：</label>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">发票信息：</label>
             <div class="layui-input-block">
-                <input type="text" name="invoiceTitle" maxlength="200" lay-verify="range|required"
-                       autocomplete="off" class="layui-input">
+                <textarea name="invoiceTitle" maxlength="2000" class="layui-textarea">
+                </textarea>
             </div>
         </div>
         <div class="layui-form-item">
