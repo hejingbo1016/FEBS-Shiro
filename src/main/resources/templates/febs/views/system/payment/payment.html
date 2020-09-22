@@ -81,6 +81,16 @@
     }}
     <span class="layui-badge febs-bg-{{payType.color}}">{{ payType.title }}</span>
 </script>
+<script type="text/html" id="payment-sex">
+    {{#
+    var sex = {
+    2: {title: '女'},
+    1: {title: '男'},
+    0: {title: '保密'}
+    }[d.sex];
+    }}
+    <span>{{ sex.title }}</span>
+</script>
 
 
 <!--<span shiro:lacksPermission="payment:update,payment:delete">
@@ -166,14 +176,6 @@
                 }
             },
             options: [{
-                name: 'add',
-                title: '新增订单',
-                perms: 'payment:add'
-            }, {
-                name: 'delete',
-                title: '删除订单',
-                perms: 'payment:delete'
-            }, {
                 name: 'export',
                 title: '导出Excel',
                 perms: 'payment:export'
@@ -263,6 +265,7 @@
                     {type: 'checkbox'},
                     {field: 'paymentCode', title: '订单编号', maxWidth: 120},
                     {field: 'occupants', title: '入住人', maxWidth: 80},
+                    {title: '性别', templet: '#payment-sex'},
                     {field: 'contactPhone', title: '联系方式', maxWidth: 80},
                     {field: 'meetingName', title: '会议名称', maxWidth: 120},
                     {field: 'hotelName', title: '酒店名称', maxWidth: 120},

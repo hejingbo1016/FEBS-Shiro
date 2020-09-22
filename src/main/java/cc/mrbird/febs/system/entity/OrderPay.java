@@ -14,4 +14,8 @@ public class OrderPay {
     private Double paymentAmount;
 
     private Long userId;
+
+    private String sex;
+
+    private String description;
 }

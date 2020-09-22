@@ -130,5 +130,11 @@ public class Payment {
     @TableField("occupants")
     private String occupants;
 
+    /**
+     * 性别 0未知，1男 2女
+     */
+    @TableField("sex")
+    private String sex;
+
 
 }

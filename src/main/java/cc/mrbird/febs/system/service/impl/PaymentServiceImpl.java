@@ -144,6 +144,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             payment.setId(snowflake.nextId());
             payment.setPaymentCode(String.valueOf(paymentCode));
             payment.setUserId(orderPay.getUserId());
+            payment.setDescription(orderPay.getDescription());
+            payment.setSex(orderPay.getSex());
             totalFee = details.getPaymentAmount();
             int count = paymentMapper.insertPayment(payment);
             if (count > 0) {
