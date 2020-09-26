@@ -83,7 +83,6 @@
 </script>
 
 
-
 <!--<span shiro:lacksPermission="payment:update,payment:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
@@ -172,6 +171,10 @@
                 name: 'export',
                 title: '导出Excel',
                 perms: 'payment:export'
+            }, {
+                name: 'delete',
+                title: '删除订单',
+                perms: 'payment:delete'
             }]
         });
 

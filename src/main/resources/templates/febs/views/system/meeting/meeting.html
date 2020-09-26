@@ -43,7 +43,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="meeting:add,meeting:update,meeting:delete,meeting:export">
+                                     shiro:hasAnyPermissions="meeting:add,meeting:update,meeting:delete">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
 
@@ -78,6 +78,24 @@
     <a lay-event="edit" shiro:hasPermission="meeting:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
     <a lay-event="audit" shiro:hasPermission="meeting:audit"><i
+            class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
+    <a lay-event="meetHotel"><i
+            class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
+    <a lay-event="del" shiro:hasPermission="meeting:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+
+
+</script>
+
+
+
+<script type="text/html" id="meeting-report">
+
+    <a lay-event="meetExport"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe641;</i></a>
+    <a lay-event="paymentExport"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
+    <a lay-event="orderInvoiceExport" ><i
             class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
     <a lay-event="meetHotel"><i
             class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
@@ -150,7 +168,7 @@
                     }
                 }
 
-                if (name === 'export') {
+                if (name === 'meetExport') {
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
@@ -165,10 +183,6 @@
                 name: 'delete',
                 title: '删除会议',
                 perms: 'meeting:delete'
-            }, {
-                name: 'export',
-                title: '导出Excel',
-                perms: 'meeting:export'
             }]
         });
 
@@ -265,6 +279,7 @@
                     {field: 'startTime', title: '开始时间', minWidth: 60, sort: true},
                     {field: 'endTime', title: '结束时间', maxWidth: 60},
                     {title: '状态', templet: '#meeting-status', maxWidth: 50},
+                    {title: '报表', toolbar: '#meeting-report', minWidth: 150},
                     {title: '操作', toolbar: '#meeting-option', minWidth: 150}
                 ]]
             });

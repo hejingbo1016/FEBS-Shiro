@@ -98,7 +98,6 @@ public class MeetingController extends BaseController {
     @ControllerEndpoint(operation = "导出Excel", exceptionMessage = "导出Excel失败")
     @PostMapping("excel")
     @ResponseBody
-    @RequiresPermissions("meeting:export")
     public void export(QueryRequest queryRequest, Meeting meeting, HttpServletResponse response) {
         List<Meeting> meetings = this.meetingService.findMeetings(queryRequest, meeting).getRecords();
         ExcelKit.$Export(Meeting.class, response).downXlsx(meetings, false);
