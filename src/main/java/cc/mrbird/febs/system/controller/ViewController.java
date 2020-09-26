@@ -329,6 +329,16 @@ public class ViewController extends BaseController {
     }
 
 
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/payment/audit/{id}")
+    @RequiresPermissions("payment:audit")
+    public String paymentAudit(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        Payment payment = paymentService.selectByPaymentId(id);
+        model.addAttribute("payment", payment);
+        return FebsUtil.view("system/payment/paymentAudit");
+    }
+
+
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");

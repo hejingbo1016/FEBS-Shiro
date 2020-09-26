@@ -198,6 +198,12 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         }
     }
 
+    @Override
+    public void paymentAudit(Payment payment) {
+
+        this.paymentMapper.paymentAudit(payment);
+    }
+
     /**
      * 调用微信支付统一下单接口
      *

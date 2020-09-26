@@ -1,18 +1,18 @@
 <style>
-    #meeting-audit {
+    #payment-audit {
         padding: 20px 25px 25px 0;
     }
 
-    #meeting-audit .layui-form-label {
+    #payment-audit .layui-form-label {
         width: 88px;
     }
 
-    #meeting-audit .layui-input-block {
+    #payment-audit .layui-input-block {
         margin-left: 120px;
     }
 </style>
-<div class="layui-fluid" id="meeting-audit">
-    <form class="layui-form" action="" lay-filter="meeting-audit-form">
+<div class="layui-fluid" id="payment-audit">
+    <form class="layui-form" action="" lay-filter="payment-audit-form">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">id：</label>
             <div class="layui-input-block">
@@ -22,16 +22,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">审核：</label>
             <div class="layui-input-block">
-                <input type="radio" name="status" value="0" title="待审核">
-                <input type="radio" name="status" value="1" title="通过审核">
-                <input type="radio" name="status" value="2" title="审核不通过">
-                <input type="radio" name="status" value="3" title="审核已过期">
+                <input type="radio" name="payType" value="1" title="待支付">
+                <input type="radio" name="payType" value="2" title="已支付">
+                <input type="radio" name="payType" value="3" title="申请退款">
+                <input type="radio" name="payType" value="4" title="已退款">
             </div>
         </div>
 
 
         <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="meeting-audit-form-submit" id="submit"></button>
+            <button class="layui-btn" lay-submit="" lay-filter="payment-audit-form-submit" id="submit"></button>
             <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
@@ -42,8 +42,8 @@
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
-            meeting = [[${meeting}]],
-            $view = $('#meeting-audit'),
+            payment = [[${payment}]],
+            $view = $('#payment-audit'),
             validate = layui.validate;
         var laydate = layui.laydate;
 
@@ -51,22 +51,22 @@
         form.verify(validate);
         form.render();
 
-        initmeetingValue();
+        initpaymentValue();
 
 
-        function initmeetingValue() {
-            form.val("meeting-audit-form", {
-                "id": meeting.id,
-                "status": meeting.status
+        function initpaymentValue() {
+            form.val("payment-audit-form", {
+                "id": payment.id,
+                "payType": payment.payType
 
             });
         }
 
-        form.on('submit(meeting-audit-form-submit)', function (data) {
-            febs.post(ctx + 'meeting/audit', data.field, function () {
+        form.on('submit(payment-audit-form-submit)', function (data) {
+            febs.post(ctx + 'payment/audit', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('审核成功');
-                $('#febs-meeting').find('#query').click();
+                $('#febs-payment').find('#query').click();
             });
             return false;
         });

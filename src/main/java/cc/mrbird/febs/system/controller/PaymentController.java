@@ -91,4 +91,15 @@ public class PaymentController extends BaseController {
         List<Payment> payments = this.paymentService.findPayments(queryRequest, payment).getRecords();
         ExcelKit.$Export(Payment.class, response).downXlsx(payments, false);
     }
+
+
+
+    @ControllerEndpoint(operation = "审核Payment", exceptionMessage = "审核Payment失败")
+    @PostMapping("audit")
+    @ResponseBody
+    @RequiresPermissions("payment:audit")
+    public FebsResponse paymentAudit(Payment payment) {
+        this.paymentService.paymentAudit(payment);
+        return new FebsResponse().success();
+    }
 }

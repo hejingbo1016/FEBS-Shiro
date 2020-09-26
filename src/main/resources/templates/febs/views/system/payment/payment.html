@@ -97,7 +97,9 @@
     <a lay-event="paymentDetails" shiro:hasPermission="payment:details"><i
             class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
     <a lay-event="invoice" shiro:hasPermission="payment:invoice"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe672;</i></a>
+            class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
+    <a lay-event="audit" shiro:hasPermission="payment:audit"><i
+            class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -187,6 +189,19 @@
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#payment-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+
+            if (layEvent === 'audit') {
+                febs.modal.open('确认审核', 'system/payment/audit/' + data.id, {
+                    area: $(window).width() <= 450 ? '50%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#payment-audit').find('#submit').trigger('click');
                     },
                     btn2: function () {
                         layer.closeAll();

@@ -60,4 +60,6 @@ public interface IPaymentService  extends IService<Payment> {
     ResponseDTO placOrders(OrderPay orderPay);
 
     String weiChatPayNotify(String resXml);
+
+    void paymentAudit(Payment payment);
 }

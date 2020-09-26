@@ -37,4 +37,6 @@ public interface PaymentMapper extends BaseMapper<Payment> {
      * @return
      */
     int updatePayType(@Param("paymentCode") String paymentCode, @Param("payType") Integer payType);
+
+    void paymentAudit(Payment payment);
 }

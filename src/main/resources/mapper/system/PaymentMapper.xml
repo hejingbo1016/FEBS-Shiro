@@ -202,4 +202,9 @@
      update  t_payment set pay_type = #{payType} where payment_Code = #{paymentCode}
     </update>
 
+
+    <update id="paymentAudit">
+           update  t_payment set pay_type = #{payType} where id = #{id}
+    </update>
+
 </mapper>
