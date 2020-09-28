@@ -90,14 +90,11 @@
 
 <script type="text/html" id="meeting-report">
 
-    <a lay-event="meetExport"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe641;</i></a>
+
     <a lay-event="paymentExport"><i
-            class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
+            class="layui-icon febs-edit-area febs-blue">&#xe63c;</i></a>
     <a lay-event="orderInvoiceExport"><i
-            class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
-    <!--    <a lay-event="meetHotel"><i
-                class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>-->
+            class="layui-icon febs-edit-area febs-green">&#xe656;</i></a>
 
 
 </script>
@@ -243,19 +240,19 @@
                 });
             }
 
-            if (name === 'meetExport') {
+            if (layEvent === 'meetExport') {
                 var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                 params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                 params.pageNum = $view.find(".layui-laypage-em").next().html();
                 febs.download(ctx + 'meeting/excel', params, '会议表.xlsx');
             }
 
-            if (name === 'paymentExport') {
-                var params = $searchForm.serializeJson();
-                params.meetingId = data.meetingId;
-                febs.download(ctx + 'meeting/paymentExport', params, '会议订单明细表.xlsx');
+            if (layEvent === 'paymentExport') {
+                var meetingId = data.meetingId;
+                var params = {"meetingId": meetingId};
+                febs.download(ctx + 'paymentDetails/paymentExport', params, '会议订单明细表.xlsx');
             }
-            if (name === 'orderInvoiceExport') {
+            if (layEvent === 'orderInvoiceExport') {
                 var params = $searchForm.serializeJson();
                 params.meetingId = data.meetingId;
                 febs.download(ctx + 'paymentDetails/orderInvoiceExport', params, '会议发票表.xlsx');
