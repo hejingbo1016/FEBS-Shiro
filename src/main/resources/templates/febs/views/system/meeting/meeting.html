@@ -253,7 +253,12 @@
             if (name === 'paymentExport') {
                 var params = $searchForm.serializeJson();
                 params.meetingId = data.meetingId;
-                febs.download(ctx + 'meeting/paymentExport', params, '订单明细表.xlsx');
+                febs.download(ctx + 'meeting/paymentExport', params, '会议订单明细表.xlsx');
+            }
+            if (name === 'orderInvoiceExport') {
+                var params = $searchForm.serializeJson();
+                params.meetingId = data.meetingId;
+                febs.download(ctx + 'meeting/orderInvoiceExport', params, '会议发票表.xlsx');
             }
         });
 
