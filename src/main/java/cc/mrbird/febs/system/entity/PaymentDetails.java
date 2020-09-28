@@ -147,7 +147,7 @@ public class PaymentDetails {
     /**
      * 会议id
      */
-    @TableField(exist = false)
+    @TableField("meeting_id")
     private Long meetingId;
 
     /**

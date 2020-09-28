@@ -88,18 +88,16 @@
 </script>
 
 
-
 <script type="text/html" id="meeting-report">
 
     <a lay-event="meetExport"><i
             class="layui-icon febs-edit-area febs-blue">&#xe641;</i></a>
     <a lay-event="paymentExport"><i
             class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
-    <a lay-event="orderInvoiceExport" ><i
+    <a lay-event="orderInvoiceExport"><i
             class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
-<!--    <a lay-event="meetHotel"><i
-            class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>-->
-
+    <!--    <a lay-event="meetHotel"><i
+                class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>-->
 
 
 </script>
@@ -189,16 +187,16 @@
                 });
             }
             if (layEvent === 'generate') {
-                if (data.status != 1){
+                if (data.status != 1) {
                     febs.alert.warn('该会议未审核通过，不能分享');
                     return
                 }
-                febs.get(ctx + 'meeting/generateQrcode/' + data.id,null, function (res) {
+                febs.get(ctx + 'meeting/generateQrcode/' + data.id, null, function (res) {
                     console.log("-----------------------res")
                     console.log(res.data)
                     layer.open({
                         title: '分享二维码'
-                        ,content: '<img border="0" src="'+res.data+'" alt="Pulpit rock" width="350" height="350">'
+                        , content: '<img border="0" src="' + res.data + '" alt="Pulpit rock" width="350" height="350">'
                     });
                 });
             }
@@ -253,8 +251,9 @@
             }
 
             if (name === 'paymentExport') {
-                var params =
-                febs.download(ctx + 'meeting/excel', params, '订单明细表.xlsx');
+                var params = $searchForm.serializeJson();
+                params.meetingId = data.meetingId;
+                febs.download(ctx + 'meeting/paymentExport', params, '订单明细表.xlsx');
             }
         });
 
