@@ -186,4 +186,9 @@ public class WechatUserServiceImpl extends ServiceImpl<WechatUserMapper, WechatU
         }
 
     }
+
+    @Override
+    public void getTestByCode(String code) {
+        User user = WechatUtil.getWebAccessToken(code);
+    }
 }

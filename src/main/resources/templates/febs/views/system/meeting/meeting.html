@@ -97,10 +97,9 @@
             class="layui-icon febs-edit-area febs-blue">&#xe642;</i></a>
     <a lay-event="orderInvoiceExport" ><i
             class="layui-icon febs-edit-area febs-green">&#xe672;</i></a>
-    <a lay-event="meetHotel"><i
-            class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>
-    <a lay-event="del" shiro:hasPermission="meeting:delete"><i
-            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+<!--    <a lay-event="meetHotel"><i
+            class="layui-icon febs-edit-area febs-green">&#xe653;</i></a>-->
+
 
 
 </script>
@@ -168,12 +167,7 @@
                     }
                 }
 
-                if (name === 'meetExport') {
-                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
-                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
-                    params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'meeting/excel', params, '会议表.xlsx');
-                }
+
             },
             options: [{
                 name: 'add',
@@ -249,6 +243,18 @@
                         layer.closeAll();
                     }
                 });
+            }
+
+            if (name === 'meetExport') {
+                var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                params.pageNum = $view.find(".layui-laypage-em").next().html();
+                febs.download(ctx + 'meeting/excel', params, '会议表.xlsx');
+            }
+
+            if (name === 'paymentExport') {
+                var params =
+                febs.download(ctx + 'meeting/excel', params, '订单明细表.xlsx');
             }
         });
 

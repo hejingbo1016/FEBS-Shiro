@@ -61,6 +61,14 @@ public class WechatController extends BaseController {
         wechatUserService.getTest(openid);
     }
 
+
+
+    @ControllerEndpoint(operation = "根据code，把未存入数据库中的用户存进去", exceptionMessage = "* 根据openid，把未存入数据库中的用户存进去失败")
+    @RequestMapping(value = "/getUserByOpenid")
+    public void getTestByCode(String code) {
+        wechatUserService.getTestByCode(code);
+    }
+
 }
 
 

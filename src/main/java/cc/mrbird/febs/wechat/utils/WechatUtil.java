@@ -5,6 +5,9 @@ import cc.mrbird.febs.common.utils.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import weixin.popular.api.TokenAPI;
@@ -19,11 +22,14 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class WechatUtil {
 
     private static final String WEIXIN_TOKEN_KEY = "wechatToken";
     private static final String APP_ID = ConfigUtil.getProperty("wechat.appid");
     private static final String APP_SECRET = ConfigUtil.getProperty("wechat.appSecret");
+    private static final String WEB_ACCESS_TOKEN = ConfigUtil.getProperty("wechat.webAccessToken");
+    private static final String WEB_SHOUQUAN_URL = ConfigUtil.getProperty("wechat.shouquanUrl");
     private static final String AB = "abcdefghijklmnopqrstuvwxyz0123456789";
     private static Random rnd = new Random();
 
@@ -47,6 +53,7 @@ public class WechatUtil {
 
     /**
      * 获取所有用户信息
+     *
      * @param nextOpenid
      * @param userList
      */
@@ -173,5 +180,23 @@ public class WechatUtil {
         for (int i = 0; i < len; i++)
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         return sb.toString();
+    }
+
+    /**
+     * 获取网页授权信息
+     *
+     * @param code
+     * @return
+     */
+    public static User getWebAccessToken(String code) {
+
+        String url = WEB_SHOUQUAN_URL + WEB_ACCESS_TOKEN + "&appid=" + APP_ID + "&secret=" + APP_SECRET + "&code=" + code;
+        String json = HttpUtil.get(url);
+        User vo = JSON.parseObject(json, User.class);
+
+        if (StringUtils.isEmpty(vo.getErrcode())) {
+            return null;
+        }
+        return vo;
     }
 }
