@@ -26,4 +26,7 @@ public interface PaymentDetailsMapper extends BaseMapper<PaymentDetails> {
     void deletePaymentDetailsByIds(String ids);
 
     List<PaymentDetails> getPaymentDetailsByCode(@Param("paymentCode") String paymentCode);
+
+    List<PaymentDetails> selectPaymentExport(PaymentDetails paymentDetails);
+
 }

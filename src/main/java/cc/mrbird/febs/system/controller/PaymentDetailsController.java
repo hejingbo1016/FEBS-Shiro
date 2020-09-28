@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.entity.PaymentDetails;
 import cc.mrbird.febs.system.service.IPaymentDetailsService;
 import com.wuwenze.poi.ExcelKit;
@@ -99,5 +100,14 @@ public class PaymentDetailsController extends BaseController {
     public void export(QueryRequest queryRequest, PaymentDetails paymentDetails, HttpServletResponse response, String paymentCode) {
         List<PaymentDetails> paymentDetailss = this.paymentDetailsService.findPaymentDetailss(queryRequest, paymentDetails).getRecords();
         ExcelKit.$Export(PaymentDetails.class, response).downXlsx(paymentDetailss, false);
+    }
+
+
+    @ControllerEndpoint(operation = "导出Excel", exceptionMessage = "导出Excel失败")
+    @PostMapping("paymentExport")
+    @ResponseBody
+    public void paymentExport(PaymentDetails paymentDetails, HttpServletResponse response) {
+        List<PaymentDetails> paymentDetailsList = paymentDetailsService.selectPaymentExport(paymentDetails);
+        ExcelKit.$Export(PaymentDetails.class, response).downXlsx(paymentDetailsList, false);
     }
 }

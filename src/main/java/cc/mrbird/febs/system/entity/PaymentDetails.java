@@ -34,36 +34,32 @@ public class PaymentDetails {
     /**
      * 订单编号
      */
+    @ExcelField(value = "订单编号")
     @TableField("payment_Code")
     private Long paymentCode;
+
+
+    @ExcelField(value = "姓名")
+    private String occupants;
+
+    /**
+     * 联系方式
+     */
+    @ExcelField(value = "电话")
+    private String contactPhone;
+
 
     /**
      * 费用名称
      */
+    @ExcelField(value = "费用名称")
     @TableField("fee_name")
     private String feeName;
 
     /**
-     * 数量
-     */
-    @TableField("number")
-    private Integer number;
-
-    /**
-     * 单价
-     */
-    @TableField("interval_price")
-    private Double intervalPrice;
-
-    /**
-     * 小计
-     */
-    @TableField("subtotal")
-    private Double subtotal;
-
-    /**
      * 入住日期
      */
+    @ExcelField(value = "入住时间")
     @TableField("start_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
@@ -71,9 +67,47 @@ public class PaymentDetails {
     /**
      * 截止日期
      */
+    @ExcelField(value = "离店时间")
     @TableField("end_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
+
+
+    /**
+     * 单价
+     */
+    @ExcelField(value = "单价")
+    @TableField("interval_price")
+    private Double intervalPrice;
+
+    /**
+     * 数量
+     */
+    @ExcelField(value = "数量")
+    @TableField("number")
+    private Integer number;
+
+
+    /**
+     * 小计
+     */
+    @ExcelField(value = "小计")
+    @TableField("subtotal")
+    private Double subtotal;
+
+
+    /**
+     * 支付状态（1未支付,2已支付,3申请退款,4已退款）
+     */
+    @ExcelField(value = "状态")
+    private String payTypeValue;
+
+
+    /**
+     * 备注
+     */
+    @ExcelField(value = "备注")
+    private String description;
 
     /**
      * 创建时间
@@ -120,7 +154,6 @@ public class PaymentDetails {
     /**
      * 酒店名称
      */
-    @ExcelField(value = "酒店名称")
     @TableField(exist = false)
     private String hotelName;
 
@@ -130,19 +163,6 @@ public class PaymentDetails {
     @TableField(exist = false)
     private Double paymentAmount;
 
-
-    /**
-     * 联系方式
-     */
-    @TableField(exist = false)
-    private String contactPhone;
-
-
-    /**
-     * 入住人
-     */
-    @TableField(exist = false)
-    private String occupants;
 
     /**
      * 会议id

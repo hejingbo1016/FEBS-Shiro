@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.PaymentDetails;
 import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
+import cc.mrbird.febs.system.enums.paymentTypeEnums;
 import cc.mrbird.febs.system.service.IPaymentDetailsService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -84,5 +85,30 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
     public void deletePaymentDetailsByIds(String ids) {
         paymentDetailsMapper.deletePaymentDetailsByIds(ids);
 
+    }
+
+    @Override
+    public List<PaymentDetails> selectPaymentExport(PaymentDetails paymentDetails) {
+
+        List<PaymentDetails> detailsList = paymentDetailsMapper.selectPaymentExport(paymentDetails);
+        detailsList.stream().forEach(d -> {
+            setPaymentTypeValue(d);
+        });
+        return detailsList;
+    }
+
+    private void setPaymentTypeValue(PaymentDetails d) {
+        if (paymentTypeEnums.UNPAID.key.equals(d.getPayType())) {
+            d.setPayTypeValue(paymentTypeEnums.UNPAID.value);
+        }
+        if (paymentTypeEnums.PAID.key.equals(d.getPayType())) {
+            d.setPayTypeValue(paymentTypeEnums.PAID.value);
+        }
+        if (paymentTypeEnums.REFUND.key.equals(d.getPayType())) {
+            d.setPayTypeValue(paymentTypeEnums.REFUND.value);
+        }
+        if (paymentTypeEnums.REFUNDED.key.equals(d.getPayType())) {
+            d.setPayTypeValue(paymentTypeEnums.REFUNDED.value);
+        }
     }
 }

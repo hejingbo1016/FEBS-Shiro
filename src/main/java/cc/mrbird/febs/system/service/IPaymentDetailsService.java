@@ -58,4 +58,6 @@ public interface IPaymentDetailsService extends IService<PaymentDetails> {
     void addPaymentDetails(PaymentDetails paymentDetails);
 
     void deletePaymentDetailsByIds(String ids);
+
+    List<PaymentDetails> selectPaymentExport(PaymentDetails paymentDetails);
 }
