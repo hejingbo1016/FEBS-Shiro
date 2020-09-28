@@ -97,6 +97,12 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
         return detailsList;
     }
 
+
+    /**
+     * 支付状态
+     *
+     * @param d
+     */
     private void setPaymentTypeValue(PaymentDetails d) {
         if (paymentTypeEnums.UNPAID.key.equals(d.getPayType())) {
             d.setPayTypeValue(paymentTypeEnums.UNPAID.value);

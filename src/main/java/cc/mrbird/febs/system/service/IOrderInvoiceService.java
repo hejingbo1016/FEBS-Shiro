@@ -3,6 +3,7 @@ package cc.mrbird.febs.system.service;
 import cc.mrbird.febs.system.entity.OrderInvoice;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.system.entity.PaymentDetails;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -55,4 +56,5 @@ public interface IOrderInvoiceService extends IService<OrderInvoice> {
 
     OrderInvoice getOrderInvoice(String paymentCode);
 
+    List<OrderInvoice> orderInvoiceExport(PaymentDetails paymentDetails);
 }

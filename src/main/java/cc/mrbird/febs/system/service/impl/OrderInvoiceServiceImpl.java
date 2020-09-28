@@ -5,6 +5,8 @@ import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.OrderInvoice;
+import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.enums.paymentTypeEnums;
 import cc.mrbird.febs.system.mapper.OrderInvoiceMapper;
 import cc.mrbird.febs.system.service.IOrderInvoiceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -93,6 +95,44 @@ public class OrderInvoiceServiceImpl extends ServiceImpl<OrderInvoiceMapper, Ord
             return orderInvoiceMapper.selectOne(wrapper);
         } else {
             throw new BusinessRuntimeException("订单编号不能为空!");
+        }
+    }
+
+    @Override
+    public List<OrderInvoice> orderInvoiceExport(PaymentDetails paymentDetails) {
+
+
+        List<OrderInvoice> orderInvoiceList = orderInvoiceMapper.orderInvoiceExport(paymentDetails);
+
+        orderInvoiceList.stream().forEach(t -> {
+            setPayTypeValue(t);
+        });
+        return orderInvoiceList;
+    }
+
+    /**
+     * 设置支付状态
+     *
+     * @param t
+     */
+    private void setPayTypeValue(OrderInvoice t) {
+        if (paymentTypeEnums.PAID.key.equals(t.getPayType())) {
+            t.setPayTypeValue(paymentTypeEnums.PAID.value);
+        }
+        if (paymentTypeEnums.UNPAID.key.equals(t.getPayType())) {
+            t.setPayTypeValue(paymentTypeEnums.UNPAID.value);
+        }
+        if (paymentTypeEnums.REFUNDED.key.equals(t.getPayType())) {
+            t.setPayTypeValue(paymentTypeEnums.REFUNDED.value);
+        }
+        if (paymentTypeEnums.REFUND.key.equals(t.getPayType())) {
+            t.setPayTypeValue(paymentTypeEnums.REFUND.value);
+        }
+        if (paymentTypeEnums.SPECIAL_TICKET.key.equals(t.getInvoiceType())) {
+            t.setInvoiceTypeValue(paymentTypeEnums.SPECIAL_TICKET.value);
+        }
+        if (paymentTypeEnums.GENERAL_VOTE.key.equals(t.getInvoiceType())) {
+            t.setInvoiceTypeValue(paymentTypeEnums.GENERAL_VOTE.value);
         }
     }
 }

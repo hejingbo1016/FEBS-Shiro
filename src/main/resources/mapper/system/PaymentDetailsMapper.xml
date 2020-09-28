@@ -176,10 +176,11 @@
     <select id="selectPaymentExport" resultType="cc.mrbird.febs.system.entity.PaymentDetails">
         select  d.payment_Code,p.occupants,p.contact_phone,d.fee_name,
         d.start_time,d.end_time,d.interval_price,d.number,d.subtotal,
-        d.payType,d.description
+        p.pay_type,p.description
          from  t_payment_details d
         left join t_payment p on p.payment_Code = d.payment_Code
         where  p.meeting_id = d.meeting_id  and d.meeting_id = #{meetingId}
+        and d.deleted = 0 and p.deleted = 0
 
     </select>
 

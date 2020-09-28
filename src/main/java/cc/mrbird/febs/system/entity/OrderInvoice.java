@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.wuwenze.poi.annotation.Excel;
+import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.Date;
  */
 @Data
 @TableName("t_order_invoice")
+@Excel("会议订单发票表")
 public class OrderInvoice {
 
     /**
@@ -29,6 +32,7 @@ public class OrderInvoice {
     /**
      * 订单编号
      */
+    @ExcelField(value = "订单编号")
     @TableField("payment_Code")
     private String paymentCode;
 
@@ -42,8 +46,59 @@ public class OrderInvoice {
     /**
      * 发票抬头
      */
+    @ExcelField(value = "发票信息")
     @TableField("invoice_title")
     private String invoiceTitle;
+
+    /**
+     * 支付金额
+     */
+    @ExcelField(value = "金额")
+    private Double paymentAmount;
+
+
+    /**
+     * 发票类型 ( 1专票，2普票)
+     */
+    @TableField("invoiceType")
+    private Integer invoiceType;
+
+
+    /**
+     * 发票类型 ( 1专票，2普票)
+     */
+    @ExcelField(value = "发票类型")
+    private String invoiceTypeValue;
+
+
+    /**
+     * 邮箱
+     */
+    @ExcelField(value = "接收邮箱")
+    @TableField("email")
+    private String email;
+
+
+    /**
+     * 联系方式
+     */
+    @ExcelField(value = "接收电话")
+    @TableField("phone")
+    private String phone;
+
+
+    /**
+     * 支付状态（1未支付,2已支付,3申请退款,4已退款）
+     */
+    private Integer payType;
+
+
+    /**
+     * 支付状态（1未支付,2已支付,3申请退款,4已退款）
+     */
+    @ExcelField(value = "状态")
+    private String payTypeValue;
+
 
     /**
      * 纳税人识别号
@@ -57,11 +112,6 @@ public class OrderInvoice {
     @TableField("address")
     private String address;
 
-    /**
-     * 联系方式
-     */
-    @TableField("phone")
-    private String phone;
 
     /**
      * 开户行
@@ -75,18 +125,6 @@ public class OrderInvoice {
     @TableField("bank_account")
     private String bankAccount;
 
-    /**
-     * 发票类型 ( 1专票，2普票)
-     */
-    @TableField("invoiceType")
-    private Integer invoiceType;
-
-
-    /**
-     * 邮箱
-     */
-    @TableField("email")
-    private String email;
 
     /**
      * 创建时间

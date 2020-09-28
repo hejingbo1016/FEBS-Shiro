@@ -6,7 +6,9 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.OrderInvoice;
 import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.service.IOrderInvoiceService;
 import cc.mrbird.febs.system.service.IPaymentDetailsService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ import java.util.Objects;
 public class PaymentDetailsController extends BaseController {
 
     private final IPaymentDetailsService paymentDetailsService;
+    private final IOrderInvoiceService orderInvoiceService;
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "paymentDetails")
     public String paymentDetailsIndex() {
@@ -103,7 +106,7 @@ public class PaymentDetailsController extends BaseController {
 
 
     @ControllerEndpoint(operation = "导出会议订单表Excel", exceptionMessage = "导出会议订单表Excel失败")
-    @PostMapping("paymentExport")
+    @GetMapping("paymentExport")
     @ResponseBody
     public void paymentExport(PaymentDetails paymentDetails, HttpServletResponse response) {
         List<PaymentDetails> paymentDetailsList = paymentDetailsService.selectPaymentExport(paymentDetails);
@@ -111,12 +114,11 @@ public class PaymentDetailsController extends BaseController {
     }
 
 
-
     @ControllerEndpoint(operation = "导出发票表", exceptionMessage = "导出发票表失败")
-    @PostMapping("orderInvoiceExport")
+    @GetMapping("orderInvoiceExport")
     @ResponseBody
     public void orderInvoiceExport(PaymentDetails paymentDetails, HttpServletResponse response) {
-        List<PaymentDetails> paymentDetailsList = paymentDetailsService.selectPaymentExport(paymentDetails);
-        ExcelKit.$Export(PaymentDetails.class, response).downXlsx(paymentDetailsList, false);
+        List<OrderInvoice> orderInvoiceList = orderInvoiceService.orderInvoiceExport(paymentDetails);
+        ExcelKit.$Export(OrderInvoice.class, response).downXlsx(orderInvoiceList, false);
     }
 }

@@ -2,4 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.OrderInvoiceMapper">
 
+
+
+
+
+    <select id="orderInvoiceExport" resultType="cc.mrbird.febs.system.entity.OrderInvoice">
+
+
+         select  t.payment_Code,t.invoice_title,t.invoiceType,t.email,
+         t.phone,p.payType,p.payment_Amount
+         from   t_order_invoice t
+         left join t_payment p on t.payment_Code = p.payment_Code
+         where t.meeting_id = #{meetingId} and t.deleted = 0 and p.deleted = 0
+    </select>
 </mapper>

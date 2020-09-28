@@ -248,13 +248,13 @@
             }
 
             if (layEvent === 'paymentExport') {
-                var meetingId = data.meetingId;
-                var params = {"meetingId": meetingId};
+                var meetingId = data.id;
+                var params = {"meetingId": meetingId}
                 febs.download(ctx + 'paymentDetails/paymentExport', params, '会议订单明细表.xlsx');
             }
             if (layEvent === 'orderInvoiceExport') {
-                var params = $searchForm.serializeJson();
-                params.meetingId = data.meetingId;
+                var meetingId = data.id;
+                var params = {"meetingId": meetingId}
                 febs.download(ctx + 'paymentDetails/orderInvoiceExport', params, '会议发票表.xlsx');
             }
         });

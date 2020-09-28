@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ import java.util.Date;
 @Data
 @TableName("t_payment_details")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Excel("会议订单明细表")
 public class PaymentDetails {
 
     /**
