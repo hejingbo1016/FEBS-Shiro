@@ -61,19 +61,31 @@ public class PaymentDetails {
     /**
      * 入住日期
      */
-    @ExcelField(value = "入住时间")
     @TableField("start_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
+
+    /**
+     * 入住日期
+     */
+    @ExcelField(value = "入住时间")
+    private String startTimeValue;
+
+
     /**
      * 截止日期
      */
-    @ExcelField(value = "离店时间")
     @TableField("end_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
+
+    /**
+     * 离店时间
+     */
+    @ExcelField(value = "离店时间")
+    private String endTimeValue;
 
     /**
      * 单价
@@ -110,6 +122,13 @@ public class PaymentDetails {
      */
     @ExcelField(value = "备注")
     private String description;
+
+    /**
+     * 支付时间
+     */
+    @ExcelField(value = "支付时间")
+    private String paymentTime;
+
 
     /**
      * 创建时间

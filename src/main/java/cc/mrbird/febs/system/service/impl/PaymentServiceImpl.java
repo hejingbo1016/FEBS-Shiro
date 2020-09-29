@@ -3,6 +3,8 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.DateUtil;
+import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.OrderPay;
@@ -180,13 +182,15 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 }
 
                 // 业务
-                if (!"SUCCESS".equals(notifyMap.get("result_code"))){
+                if (!"SUCCESS".equals(notifyMap.get("result_code"))) {
                     return String.format(xmlBack, "FAIL", "");
                 }
                 UpdateWrapper<Payment> wrapper = new UpdateWrapper<>();
-                wrapper.eq("payment_Code",out_trade_no)
-                        .set("pay_type",2);
-                paymentMapper.update(null,wrapper);
+                String stringDate = DateUtils.getStringDate();
+                wrapper.eq("payment_Code", out_trade_no)
+                        .set("pay_type", 2)
+                        .set("payment_time", stringDate);
+                paymentMapper.update(null, wrapper);
                 return String.format(xmlBack, "SUCCESS", "OK");
             } else {
                 log.error("微信支付回调通知签名错误");

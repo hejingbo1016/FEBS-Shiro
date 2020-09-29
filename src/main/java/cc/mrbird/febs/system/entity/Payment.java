@@ -137,4 +137,11 @@ public class Payment {
     private String sex;
 
 
+    /**
+     * 支付时间
+     */
+    @TableField("payment_time")
+    private String paymentTime;
+
+
 }

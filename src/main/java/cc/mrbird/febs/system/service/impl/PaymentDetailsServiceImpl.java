@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.PaymentDetails;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -93,6 +95,7 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
         List<PaymentDetails> detailsList = paymentDetailsMapper.selectPaymentExport(paymentDetails);
         detailsList.stream().forEach(d -> {
             setPaymentTypeValue(d);
+
         });
         return detailsList;
     }
@@ -116,5 +119,8 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
         if (paymentTypeEnums.REFUNDED.key.equals(d.getPayType())) {
             d.setPayTypeValue(paymentTypeEnums.REFUNDED.value);
         }
+        d.setStartTimeValue(DateUtils.getStringDates(d.getStartTime()));
+        d.setEndTimeValue(DateUtils.getStringDates(d.getEndTime()));
+
     }
 }
