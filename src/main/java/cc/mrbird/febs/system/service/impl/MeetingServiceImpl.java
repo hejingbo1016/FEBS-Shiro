@@ -102,8 +102,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMeeting(Meeting meeting) {
-        meeting.setId(snowflake.nextId());
-        this.saveOrUpdate(meeting);
+        this.save(meeting);
     }
 
     @Override
