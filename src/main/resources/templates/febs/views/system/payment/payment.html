@@ -272,20 +272,20 @@
                 url: ctx + 'payment/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'paymentCode', title: '订单编号', maxWidth: 120},
+                    {field: 'paymentCode', title: '订单编号', maxWidth: 100},
                     {field: 'occupants', title: '入住人', maxWidth: 80},
-                    {field: 'sex', title: '性别', maxWidth: 50},
+                    {field: 'sex', title: '性别', maxWidth: 40},
                     {field: 'contactPhone', title: '联系方式', maxWidth: 80},
                     {field: 'meetingName', title: '会议名称', maxWidth: 120},
                     {field: 'hotelName', title: '酒店名称', maxWidth: 120},
-                    {field: 'paymentAmount', title: '支付金额', maxWidth: 60, sort: true},
+                    {field: 'paymentAmount', title: '支付金额', maxWidth: 50, sort: true},
                     {title: '状态', templet: '#payment-payType'},
                     {
                         field: 'createTime', title: '创建时间', templet: function (data) {
                             return layui.util.toDateString(data.createTime, "yyyy-MM-dd HH:mm:ss");
                         }, minWidth: 80, sort: true
                     },
-                    {title: '操作', toolbar: '#payment-option', minWidth: 50}
+                    {title: '操作', toolbar: '#payment-option', minWidth: 120}
                 ]]
             });
         }
