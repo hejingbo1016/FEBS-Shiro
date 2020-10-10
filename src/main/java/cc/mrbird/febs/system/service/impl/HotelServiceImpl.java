@@ -45,7 +45,7 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
         page.setSearchCount(false);
         page.setTotal(baseMapper.countHotel(hotel));
         setselectHotel(queryWrapper, hotel);
-        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_DESC, true);
 
 
         return this.page(page, queryWrapper);
