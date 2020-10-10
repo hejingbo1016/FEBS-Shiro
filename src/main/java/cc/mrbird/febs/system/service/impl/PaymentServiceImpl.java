@@ -3,6 +3,7 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
@@ -112,8 +113,14 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
 
     @Override
     public void deletePayments(String paymentIds) {
-        paymentMapper.deletePayments(paymentIds);
 
+
+        if (!StringUtils.isEmpty(paymentIds)) {
+            String[] split = paymentIds.split(",");
+            paymentMapper.deletePayments(split);
+        } else {
+            throw new BusinessRuntimeException("所传id为空，检查是否传值有误");
+        }
     }
 
     @Override

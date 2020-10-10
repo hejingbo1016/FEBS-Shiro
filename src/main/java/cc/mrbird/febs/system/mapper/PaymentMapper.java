@@ -20,7 +20,7 @@ public interface PaymentMapper extends BaseMapper<Payment> {
 
     <T> IPage<Payment> findPaymentPage(Page<T> page, @Param("payment") Payment payment);
 
-    int deletePayments(@Param("ids") String paymentIds);
+    int deletePayments(@Param("ids") String[] ids);
 
     int insertPayment(Payment payment);
 

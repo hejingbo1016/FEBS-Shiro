@@ -56,11 +56,9 @@
 
 
     <delete id="deletePayments">
-
-        update t_payment set deleted =1
-        where id in
-        <foreach close=")" collection="ids.split(',+')" item="id" open="(">
-            ${id}
+        update t_payment set deleted =1 where
+        <foreach close=")" collection="ids" item="id" open="id in (" separator=",">
+            #{id}
         </foreach>
 
 

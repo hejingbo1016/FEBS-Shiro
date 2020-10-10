@@ -94,7 +94,7 @@ public class HotelServiceImpl extends ServiceImpl<HotelMapper, Hotel> implements
             String[] split = deleteIds.split(",");
             int count = hotelMapper.deleteByIds(split);
             //删除酒店对应的附件
-            if (count>0){
+            if (count > 0) {
                 fileMapper.deletesByFids(split);
             }
 
