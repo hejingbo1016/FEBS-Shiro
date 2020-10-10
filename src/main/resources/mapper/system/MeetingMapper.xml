@@ -48,6 +48,7 @@
                 AND t.deleted = 0
             GROUP BY
                 h.id
+            ORDER BY h.create_time desc
     </select>
 
 
