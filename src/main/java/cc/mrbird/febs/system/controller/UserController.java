@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.Md5Util;
+import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -131,5 +132,15 @@ public class UserController extends BaseController {
     public void export(QueryRequest queryRequest, User user, HttpServletResponse response) {
         List<User> users = this.userService.findUserDetailList(user, queryRequest).getRecords();
         ExcelKit.$Export(User.class, response).downXlsx(users, false);
+    }
+
+
+    @ControllerEndpoint(operation = "授权用户display", exceptionMessage = "授权用户display失败")
+    @PostMapping("audit")
+    @ResponseBody
+    @RequiresPermissions("user:audit")
+    public FebsResponse auditPhones(User user) {
+        this.userService.auditUser(user);
+        return new FebsResponse().success();
     }
 }

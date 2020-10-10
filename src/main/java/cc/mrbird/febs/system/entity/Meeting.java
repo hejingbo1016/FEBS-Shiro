@@ -154,4 +154,8 @@ public class Meeting {
      */
     @TableField(exist = false)
     private List<File> meetingFiles;
+
+
+    @TableField(exist = false)
+    private String display;
 }

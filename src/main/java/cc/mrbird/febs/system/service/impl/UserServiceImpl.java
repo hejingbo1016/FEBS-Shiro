@@ -208,6 +208,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
     }
 
+
+
     private void setUserRoles(User user, String[] roles) {
         List<UserRole> userRoles = new ArrayList<>();
         Arrays.stream(roles).forEach(roleId -> {
@@ -233,5 +235,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private boolean isCurrentUser(Long id) {
         User currentUser = FebsUtil.getCurrentUser();
         return currentUser.getUserId().equals(id);
+    }
+
+    @Override
+    public void auditUser(User user) {
+          this.baseMapper.auditUser(user);
+
     }
 }

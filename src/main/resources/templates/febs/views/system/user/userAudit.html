@@ -1,0 +1,73 @@
+<style>
+    #user-audit {
+        padding: 20px 25px 25px 0;
+    }
+
+    #user-audit .layui-form-label {
+        width: 88px;
+    }
+
+    #user-audit .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="user-audit">
+    <form class="layui-form" action="" lay-filter="user-audit-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">userId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="userId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">授权：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="display" value="1" title="显示">
+                <input type="radio" name="display" value="0" title="不显示">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="user-audit-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            user = [[${user}]],
+            $view = $('#user-audit'),
+            validate = layui.validate;
+        var laydate = layui.laydate;
+
+
+        form.verify(validate);
+        form.render();
+
+        inituserValue();
+
+
+        function inituserValue() {
+            form.val("user-audit-form", {
+                "userId": user.userId,
+                "display": user.display
+
+            });
+        }
+
+        form.on('submit(user-audit-form-submit)', function (data) {
+            febs.post(ctx + 'user/audit', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('授权成功');
+                $('#febs-user').find('#query').click();
+            });
+            return false;
+        });
+
+    });
+</script>

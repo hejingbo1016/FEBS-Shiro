@@ -206,6 +206,13 @@ public class User implements Serializable {
     @TableField(exist = false)
     private String deptIds;
 
+
+    /**
+     * 性别 0男 1女 2 保密
+     */
+    @TableField("DISPLAY")
+    private String display;
+
     public Long getId() {
         return userId;
     }

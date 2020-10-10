@@ -38,4 +38,5 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<User> findUserDetail(@Param("user") User user);
 
+    void auditUser(User user);
 }

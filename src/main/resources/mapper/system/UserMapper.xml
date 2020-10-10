@@ -46,7 +46,8 @@
         u.avatar,
         d.dept_name deptName,
         GROUP_CONCAT(r.role_id) roleId,
-        GROUP_CONCAT(r.ROLE_NAME) roleName
+        GROUP_CONCAT(r.ROLE_NAME) roleName,
+        u.display
         FROM
         t_user u
         LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
@@ -86,8 +87,10 @@
         u.last_login_time,
         u.modify_time,
         u.description,
-        u.avatar
+        u.avatar,
+        u.display
     </sql>
+
 
     <select id="countUserDetail" parameterType="user" resultType="long">
         <include refid="countUserDetailSql"/>
@@ -120,7 +123,8 @@
         u.is_tab isTab,
         d.dept_name deptName,
         GROUP_CONCAT(r.role_id) roleId,
-        GROUP_CONCAT(r.ROLE_NAME) roleName
+        GROUP_CONCAT(r.ROLE_NAME) roleName,
+        u.display
         FROM
         t_user u
         LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
@@ -142,11 +146,17 @@
             u.description,
             u.avatar,
             u.theme,
-            u.is_tab
+            u.is_tab,
+            u.display
     </select>
 
     <select id="findUserDataPermissions" parameterType="long" resultType="userDataPermission">
         select user_id userId, dept_id deptId from t_user_data_permission
         where user_id = #{userId}
     </select>
+
+
+    <update id="auditUser">
+     update  t_user set display = #{display} where user_id = #{id}
+    </update>
 </mapper>

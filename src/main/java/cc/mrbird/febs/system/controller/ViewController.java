@@ -114,6 +114,15 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/user/userAdd");
     }
 
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/user/audit/{id}")
+    @RequiresPermissions("user:audit")
+    public String userAudit(@NotBlank(message = "{required}") @PathVariable Long id, Model model) {
+        User user = userService.getById(id);
+        model.addAttribute("user", user);
+        return FebsUtil.view("system/user/userAudit");
+    }
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/user/detail/{username}")
     @RequiresPermissions("user:view")
     public String systemUserDetail(@PathVariable String username, Model model) {

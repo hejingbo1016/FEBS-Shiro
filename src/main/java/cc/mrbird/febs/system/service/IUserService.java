@@ -110,4 +110,6 @@ public interface IUserService extends IService<User> {
      * @param user 个人信息
      */
     void updateProfile(User user);
+
+    void auditUser(User user);
 }

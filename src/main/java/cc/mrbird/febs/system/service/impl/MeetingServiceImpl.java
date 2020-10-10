@@ -14,6 +14,7 @@ import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.mapper.FileMapper;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.MeetingMapper;
+import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -41,6 +42,8 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cc.mrbird.febs.common.utils.FebsUtil.getCurrentUser;
+
 /**
  * Service实现
  *
@@ -54,6 +57,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     private final MeetingMapper meetingMapper;
     private final FileMapper fileMapper;
+    private final UserMapper userMapper;
     private final MeetingHotelMapper meetingHotelMapper;
     @Value("${minio.imageUrl}")
     private String imgUrl = ""; //读取图片保存路径
@@ -66,13 +70,16 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public IPage<Meeting> findMeetings(QueryRequest request, Meeting meeting) {
         LambdaQueryWrapper<Meeting> queryWrapper = new LambdaQueryWrapper<>();
+        User currentUser = getCurrentUser();
+        //根据用户名查对应的信息
+        User user = userMapper.findByName(currentUser.getUsername());
         // TODO 设置查询条件
         Page<Meeting> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
-        page.setTotal(baseMapper.countMeeting(meeting));
-        setselectMeeting(queryWrapper, meeting);
+        page.setTotal(baseMapper.countMeeting(meeting, user));
         SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
-        return this.page(page, queryWrapper);
+        IPage<Meeting> meetingIPage = meetingMapper.findMeetings(page, meeting, user);
+        return meetingIPage;
     }
 
     /**
@@ -102,12 +109,17 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMeeting(Meeting meeting) {
+        User user = getCurrentUser();
+        meeting.setCreater(user.getUsername());
+        meeting.setModifier(user.getUsername());
         this.save(meeting);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMeeting(Meeting meeting) {
+        User user = getCurrentUser();
+        meeting.setModifier(user.getUsername());
         this.saveOrUpdate(meeting);
     }
 
@@ -123,7 +135,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     public void deleteMeetings(String meetingIds) {
 
         if (!StringUtils.isEmpty(meetingIds)) {
-            String[] split = meetingIds.split(",");
+            String[] split = meetingIds.split(StringPool.COMMA);
             int count = meetingMapper.deleteMeetingByIds(split);
             //删除酒店对应的附件
             if (count > 0) {
@@ -133,12 +145,10 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         } else {
             throw new BusinessRuntimeException("所传id为空，检查是否传值有误");
         }
-
-
         List<String> list = Arrays.asList(meetingIds.split(StringPool.COMMA));
         this.baseMapper.delete(new QueryWrapper<Meeting>().lambda().in(Meeting::getId, list));
         //删除会议对应的附件
-        String[] ids = meetingIds.split(",");
+        String[] ids = meetingIds.split(StringPool.COMMA);
         fileMapper.deletesByFids(ids);
     }
 
