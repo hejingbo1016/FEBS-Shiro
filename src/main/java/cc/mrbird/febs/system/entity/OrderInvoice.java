@@ -54,6 +54,7 @@ public class OrderInvoice {
      * 支付金额
      */
     @ExcelField(value = "金额")
+    @TableField(exist = false)
     private Double paymentAmount;
 
 
@@ -68,6 +69,7 @@ public class OrderInvoice {
      * 发票类型 ( 1专票，2普票)
      */
     @ExcelField(value = "发票类型")
+    @TableField(exist = false)
     private String invoiceTypeValue;
 
 
@@ -90,6 +92,7 @@ public class OrderInvoice {
     /**
      * 支付状态（1未支付,2已支付,3申请退款,4已退款）
      */
+    @TableField(exist = false)
     private Integer payType;
 
 
@@ -97,6 +100,7 @@ public class OrderInvoice {
      * 支付状态（1未支付,2已支付,3申请退款,4已退款）
      */
     @ExcelField(value = "状态")
+    @TableField(exist = false)
     private String payTypeValue;
 
 
