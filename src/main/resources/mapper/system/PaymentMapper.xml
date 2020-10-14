@@ -22,7 +22,7 @@
             AND h.hotel_name like CONCAT('%',#{payment.hotelName},'%')
         </if>
         <if test="payment.payType != null and payment.payType != ''">
-            AND t.payType = #{payment.payType}
+            AND t.pay_type = #{payment.payType}
         </if>
         order by t.create_time desc
 
@@ -47,7 +47,7 @@
             AND h.hotel_name like CONCAT('%',#{payment.hotelName},'%')
         </if>
         <if test="payment.payType != null and payment.payType != ''">
-            AND t.payType = #{payment.payType}
+            AND t.pay_type = #{payment.payType}
         </if>
         order by t.create_time desc
 
