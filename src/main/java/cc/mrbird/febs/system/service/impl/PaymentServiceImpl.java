@@ -4,13 +4,13 @@ import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.BusinessRuntimeException;
-import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.OrderPay;
 import cc.mrbird.febs.system.entity.Payment;
 import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
 import cc.mrbird.febs.system.mapper.PaymentMapper;
 import cc.mrbird.febs.system.service.IPaymentService;
@@ -50,6 +50,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     private final PaymentDetailsMapper detailsMapper;
 
     private final WeiChatRequestUtils weiChatRequestUtils;
+
+    private final MeetingHotelMapper hotelMapper;
 
 
     @Override
@@ -145,6 +147,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         Double totalFee = new Double(0);
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
+
             //生成订单主表
             PaymentDetails details = paymentDetails.get(0);
             Long paymentCode = snowflake.nextId();
@@ -160,6 +163,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             if (count > 0) {
                 //生成订单明细表
                 paymentDetails.forEach(p -> {
+                    //判断库存 根据费用id查t_meeting_hotel 表
+
                     p.setId(snowflake.nextId());
                     p.setPaymentCode(paymentCode);
                     detailsMapper.addPaymentDetails(p);

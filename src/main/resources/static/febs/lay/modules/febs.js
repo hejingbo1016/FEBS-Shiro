@@ -551,7 +551,7 @@ layui.extend({
                     "data": res.data.rows
                 }
             },
-            done: function(res, curr, count){
+            done: function (res, curr, count) {
                 var noneDiv = $(".layui-table-body").find(".layui-none").first();
                 if (noneDiv.length === 1) {
                     var table = $(".layui-table").first();
@@ -586,8 +586,12 @@ layui.extend({
 
     // 文件下载
     self.download = function (url, params, fileName) {
+
+
+        console.log(params);
         self.view.loadBar.start();
         url += '?' + parseParams(params);
+        console.log(url);
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = "blob";

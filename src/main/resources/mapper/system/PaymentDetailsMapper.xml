@@ -93,6 +93,9 @@
             <if test="meetingId != null">
                 meeting_id,
             </if>
+            <if test="feeId != null">
+                fee_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -138,10 +141,13 @@
                 #{subtotal,jdbcType=DOUBLE},
             </if>
             <if test="hotelId != null">
-                #{hotelId,jdbcType=INTEGER},
+                #{hotelId,jdbcType=BIGINT},
             </if>
             <if test="meetingId != null">
-                #{meetingId,jdbcType=INTEGER},
+                #{meetingId,jdbcType=BIGINT},
+            </if>
+            <if test="feeId != null">
+                #{feeId,jdbcType=BIGINT},
             </if>
 
         </trim>

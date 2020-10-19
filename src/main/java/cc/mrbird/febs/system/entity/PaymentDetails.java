@@ -166,6 +166,13 @@ public class PaymentDetails {
     @TableField("fee_type")
     private Integer feeType;
 
+
+    /**
+     * 费用id
+     */
+    @TableField("fee_id")
+    private Long feeId;
+
     /**
      * 酒店id
      */
