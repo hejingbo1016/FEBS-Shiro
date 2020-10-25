@@ -244,8 +244,8 @@
                 }
                 $.post(ctx + 'room/add', param, function (r) {
                     if (r.code === 200) {
-                        // $query.click();
-                        $('#febs-hotelRoom').find('#query').click();
+                        form.render();
+                        initTable();
                     } else {
                         layer.msg(r.message);
                     }

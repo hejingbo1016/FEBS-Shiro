@@ -168,7 +168,6 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 //生成订单明细表
                 paymentDetails.forEach(p -> {
                     //判断库存 根据费用id查t_meeting_hotel 表
-
                     p.setId(snowflake.nextId());
                     p.setPaymentCode(paymentCode);
                     detailsMapper.addPaymentDetails(p);
