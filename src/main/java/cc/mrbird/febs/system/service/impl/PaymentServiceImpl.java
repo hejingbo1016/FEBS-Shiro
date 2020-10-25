@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.DateUtils;
+import cc.mrbird.febs.common.utils.DistributedRedisLock;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.OrderPay;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,9 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     private final WeiChatRequestUtils weiChatRequestUtils;
 
     private final MeetingHotelMapper hotelMapper;
+
+    @Autowired
+    private static DistributedRedisLock distributedRedisLock;
 
 
     @Override
@@ -147,7 +152,6 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         Double totalFee = new Double(0);
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
-
             //生成订单主表
             PaymentDetails details = paymentDetails.get(0);
             Long paymentCode = snowflake.nextId();

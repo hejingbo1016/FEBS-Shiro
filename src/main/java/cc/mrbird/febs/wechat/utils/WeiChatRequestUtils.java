@@ -58,6 +58,8 @@ public class WeiChatRequestUtils {
 
     private String GET_ACCESS_TOKEN_URL= "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
+    private String GET_JS_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi";
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -82,6 +84,27 @@ public class WeiChatRequestUtils {
         Map map = responseEntity.getBody();
         log.info(map.toString());
         return (String) map.get("openid");
+    }
+    public synchronized String getJsTicket(){
+        String jsTicket = null;
+        if (redisUtils.isKeyExists("JS_TICKET")){
+            jsTicket = (String) redisUtils.get("JS_TICKET");
+            return jsTicket;
+        }
+        String getJsTicketUrl = String.format(GET_JS_TICKET_URL,getAccessToken());
+        ResponseEntity<Map> responseEntity = restTemplate.getForEntity(getJsTicketUrl, Map.class);
+        if (responseEntity.getStatusCode().value() != 200){
+            log.info("获取jsTicket失败："+responseEntity.getStatusCode().toString());
+            return jsTicket;
+        }
+        Map map = responseEntity.getBody();
+        log.info(map.toString());
+        jsTicket = (String) map.get("ticket");
+        Integer expires = (Integer) map.get("expires_in");
+        log.info("JS_TICKET: "+ jsTicket);
+        log.info("expires: "+ expires);
+        redisUtils.set("JS_TICKET",jsTicket,expires.longValue(), TimeUnit.SECONDS);
+        return jsTicket;
     }
 
     public Map<String, String> wxPay(String orderName, String orderNo, Double totalFee, String openid) throws Exception {
