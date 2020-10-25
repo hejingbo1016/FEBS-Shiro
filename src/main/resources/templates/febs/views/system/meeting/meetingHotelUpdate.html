@@ -21,6 +21,12 @@
             </div>
         </div>
         <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">hotelId：</label>
             <div class="layui-input-block">
                 <input type="text" name="hotelId" class="layui-input">
@@ -192,7 +198,8 @@
                             "feePrice": item.univalence,
                             "availableNumber": item.roomCount,
                             "feeType": item.roomType,
-                            "meetingId": meetingId
+                            "meetingId": meetingId,
+                            "feeId": item.id
                         });
                     })
                     elem.val(NEWJSON.join(","))
@@ -223,6 +230,7 @@
         function initphoneValue() {
             form.val("meetingHotel-update-form", {
                 "id": meetingHotel.id,
+                "feeId": meetingHotel.feeId,
                 "feeName": meetingHotel.feeName,
                 "surplusNumber": meetingHotel.surplusNumber,
                 "feePrice": meetingHotel.feePrice,

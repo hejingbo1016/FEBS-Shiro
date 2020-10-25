@@ -20,6 +20,12 @@
             </div>
         </div>
         <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">hotelId：</label>
             <div class="layui-input-block">
                 <input type="text" name="hotelId" class="layui-input">
@@ -37,6 +43,7 @@
                 <input type="text" name="meetingId" class="layui-input">
             </div>
         </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
@@ -175,7 +182,8 @@
                             "feePrice": item.univalence,
                             "availableNumber": item.roomCount,
                             "feeType": item.roomType,
-                            "meetingId": meetingId
+                            "meetingId": meetingId,
+                            'feeId': item.id
                         });
                     })
                     elem.val(NEWJSON.join(","))

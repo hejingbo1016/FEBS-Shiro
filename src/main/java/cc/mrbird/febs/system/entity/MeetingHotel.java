@@ -139,4 +139,12 @@ public class MeetingHotel {
     @TableField(exist = false)
     private String meetingName;
 
+
+    /**
+     * 费用id
+     */
+    @TableField("fee_id")
+    private Long feeId;
+
+
 }
