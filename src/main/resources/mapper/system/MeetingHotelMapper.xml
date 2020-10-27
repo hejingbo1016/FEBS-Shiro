@@ -62,4 +62,17 @@
 
 
     </select>
+
+
+    <select id="isExistMeetingHotel" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+
+
+         SELECT
+          *
+         FROM t_meeting_hotel
+         where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId} and date_time =#{dateTime}
+
+
+
+    </select>
 </mapper>

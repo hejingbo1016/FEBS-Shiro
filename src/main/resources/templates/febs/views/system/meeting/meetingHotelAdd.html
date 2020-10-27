@@ -44,6 +44,13 @@
             </div>
         </div>
 
+        <div class="layui-inline">
+            <label class="layui-form-label">日期范围</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="dateRange" placeholder=" - ">
+            </div>
+        </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
@@ -107,6 +114,13 @@
             validate = layui.validate;
         var laydate = layui.laydate;
         var tableSelect = layui.tableSelect;
+
+
+        //日期范围
+        laydate.render({
+            elem: '#dateRange'
+            , range: true
+        });
 
         tableSelect.render({
             elem: '#hotelName',
@@ -212,6 +226,7 @@
         form.render();
 
         form.on('submit(meetingHotel-add-form-submit)', function (data) {
+
             febs.post(ctx + 'meetingHotel/add', data.field, function () {
                 febs.alert.success('新增任务成功');
                 $('#febs-meetingHotel').find('#query').click();

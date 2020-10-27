@@ -54,8 +54,22 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMeetingHotel(MeetingHotel meetingHotel) {
+        //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
+
+        isExistMeetingHotel(meetingHotel);
+
+
+
         meetingHotel.setId(snowflake.nextId());
         this.save(meetingHotel);
+    }
+
+    private MeetingHotel isExistMeetingHotel(MeetingHotel meetingHotel) {
+
+        //  根据会议id、酒店id、费用id、日期时间 去查费用项是否存在，存在则更新，不存在则新增
+        MeetingHotel feeHotel = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
+        return feeHotel;
+
     }
 
     @Override
