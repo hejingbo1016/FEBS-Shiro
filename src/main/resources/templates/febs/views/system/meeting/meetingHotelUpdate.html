@@ -39,6 +39,16 @@
                 <input type="text" name="meetingId" class="layui-input">
             </div>
         </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="dateTime" id="febs-form-meetingHotel-start"
+                       placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
             <div class="layui-input-block">
@@ -85,27 +95,6 @@
             </div>
         </div>
 
-        <!--   <div class="layui-inline">
-               <label class="layui-form-label">日期</label>
-               <div class="layui-input-inline">
-                   <input type="text" name="dateTime" id="febs-form-meetingHotel-dateTime" lay-verify="datetime"
-                          placeholder="日期" autocomplete="off" class="layui-input">
-               </div>
-           </div>-->
-        <!--<div class="layui-inline">-->
-        <!--<label class="layui-form-label">开始时间</label>-->
-        <!--<div class="layui-input-inline">-->
-        <!--<input type="text" name="startTime" id="febs-form-meetingHotel-start" lay-verify="datetime"-->
-        <!--placeholder="开始时间" autocomplete="off" class="layui-input">-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="layui-inline">-->
-        <!--<label class="layui-form-label">结束时间</label>-->
-        <!--<div class="layui-input-inline">-->
-        <!--<input type="text" name="endTime" id="febs-form-meetingHotel-end" lay-verify="datetime"-->
-        <!--placeholder="结束时间" autocomplete="off" class="layui-input">-->
-        <!--</div>-->
-        <!--</div>-->
 
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="meetingHotel-update-form-submit" id="submit"></button>
@@ -121,9 +110,16 @@
             form = layui.form,
             meetingHotel = [[${meetingHotel}]],
             $view = $('#meetingHotel-update'),
-            validate = layui.validate;
-        var laydate = layui.laydate;
-        var tableSelect = layui.tableSelect;
+            validate = layui.validate,
+            laydate = layui.laydate,
+            tableSelect = layui.tableSelect;
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-start'
+            , format: 'yyyy-MM-dd'
+        });
+
         tableSelect.render({
             elem: '#hotelName',
             checkedKey: 'id',
@@ -207,20 +203,6 @@
             })
         }
 
-        laydate.render({
-            elem: '#febs-form-meetingHotel-start'
-            , type: 'datetime'
-        });
-
-
-        laydate.render({
-            elem: '#febs-form-meetingHotel-end'
-            , type: 'datetime'
-        });
-        laydate.render({
-            elem: '#febs-form-meetingHotel-dateTime'
-            , type: 'datetime'
-        });
 
         form.verify(validate);
         form.render();
@@ -238,7 +220,8 @@
                 "availableNumber": meetingHotel.availableNumber,
                 "startTime": meetingHotel.startTime,
                 "endTime": meetingHotel.endTime,
-                "hotelName": meetingHotel.hotelName
+                "hotelName": meetingHotel.hotelName,
+                "dateTime": meetingHotel.dateTime
             });
 
             getHotelRooms(meetingHotel.hotelId)

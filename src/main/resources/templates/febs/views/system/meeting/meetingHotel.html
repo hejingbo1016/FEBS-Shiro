@@ -210,6 +210,7 @@
                 url: ctx + 'meetingHotel/list/' + meetingId,
                 cols: [[
                     {type: 'checkbox'},
+                    {field: 'dateTime', title: '日期', maxWidth: 100},
                     {field: 'hotelName', title: '酒店名称', maxWidth: 100},
                     {field: 'feeName', title: '费用名称', maxWidth: 100},
                     {title: '类型', templet: '#meetingHotel-feeType'},
