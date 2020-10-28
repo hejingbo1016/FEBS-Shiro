@@ -118,11 +118,10 @@ public class MeetingHotel {
     private Date endTime;
 
     /**
-     * 日期
+     * 日期字符串
      */
     @TableField("date_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date dateTime;
+    private String dateTime;
 
 
     /**
@@ -145,7 +144,6 @@ public class MeetingHotel {
      */
     @TableField("fee_id")
     private Long feeId;
-
 
     @TableField(exist = false)
     private String dateRange;

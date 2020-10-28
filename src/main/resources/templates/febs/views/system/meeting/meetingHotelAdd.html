@@ -45,9 +45,10 @@
         </div>
 
         <div class="layui-inline">
-            <label class="layui-form-label">日期范围</label>
+            <label class="layui-form-label febs-form-item-require">日期范围</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" id="dateRange" placeholder=" - ">
+                <input type="text" class="layui-input" lay-verify="required" name="dateRange" id="dateRange"
+                       placeholder=" - ">
             </div>
         </div>
 
@@ -226,6 +227,7 @@
         form.render();
 
         form.on('submit(meetingHotel-add-form-submit)', function (data) {
+
 
             febs.post(ctx + 'meetingHotel/add', data.field, function () {
                 febs.alert.success('新增任务成功');

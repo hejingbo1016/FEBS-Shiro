@@ -2,10 +2,14 @@ package cc.mrbird.febs.common.utils;
 
 import org.springframework.util.StringUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class DateUtils {
 
@@ -76,10 +80,10 @@ public class DateUtils {
      * @return 返回短时间字符串格式yyyy-MM-dd
      */
     public static String getStringDates(Date date) {
-        if (!StringUtils.isEmpty(date)){
+        if (!StringUtils.isEmpty(date)) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             return formatter.format(date);
-        }else {
+        } else {
             return null;
         }
 
@@ -118,6 +122,41 @@ public class DateUtils {
             return null;
         }
 
+    }
+
+
+    /**
+     * 根据时间范围获取该范围内的所有日期集
+     *
+     * @param dBegin
+     * @param dEnd
+     * @return
+     * @throws ParseException
+     * @throws java.text.ParseException
+     */
+    public static List<String> findDates(String dBegin, String dEnd) throws ParseException, java.text.ParseException {
+        //日期工具类准备
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(format.parse(dBegin));
+
+        //设置结束时间
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(format.parse(dEnd));
+
+        //装返回的日期集合容器
+        List<String> Datelist = new ArrayList<String>();
+        //将第一个月添加里面去
+        Datelist.add(format.format(calBegin.getTime()));
+        // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
+        while (format.parse(dEnd).after(calBegin.getTime())) {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            calBegin.add(Calendar.DAY_OF_MONTH, 1);
+            Datelist.add(format.format(calBegin.getTime()));
+        }
+        return Datelist;
     }
 
 

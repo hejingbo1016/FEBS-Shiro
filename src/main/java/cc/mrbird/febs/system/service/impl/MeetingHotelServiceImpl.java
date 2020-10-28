@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.MeetingHotel;
@@ -17,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,21 +58,41 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMeetingHotel(MeetingHotel meetingHotel) {
-        //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
+        String dateRange = meetingHotel.getDateRange();
+        if (!StringUtils.isEmpty(dateRange)) {
+            //新增集
+            List<MeetingHotel> adds = new ArrayList<>();
+            //修改集
+            List<MeetingHotel> updates = new ArrayList<>();
+            //截取-把该范围内的所有时间整成时间集合
+            String[] split = dateRange.split("-");
+            try {
+                //该范围内的所有日期
+                List<String> dates = DateUtils.findDates(split[0], split[1]);
+                //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
+                isExistMeetingHotel(meetingHotel, dates, updates, adds);
 
-        isExistMeetingHotel(meetingHotel);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
 
-
+        }
         meetingHotel.setId(snowflake.nextId());
         this.save(meetingHotel);
     }
 
-    private MeetingHotel isExistMeetingHotel(MeetingHotel meetingHotel) {
+    private void isExistMeetingHotel(MeetingHotel meetingHotel, List<String> dates, List<MeetingHotel> updates, List<MeetingHotel> adds) {
 
-        //  根据会议id、酒店id、费用id、日期时间 去查费用项是否存在，存在则更新，不存在则新增
-        MeetingHotel feeHotel = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
-        return feeHotel;
+
+        dates.stream().forEach(d -> {
+
+            //  根据会议id、酒店id、费用id、日期时间 去查费用项是否存在，存在则更新，不存在则新增
+            MeetingHotel feeHotel = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
+
+
+        });
 
     }
 
