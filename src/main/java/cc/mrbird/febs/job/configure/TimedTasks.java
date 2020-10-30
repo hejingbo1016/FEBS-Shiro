@@ -25,7 +25,7 @@ public class TimedTasks {
     /**
      * 每5分钟进行更新库存
      */
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
     public void UpdateInventory() {
 
         //未支付状态、未入库原数据、数据创建时间大于等于5分钟的数据  
