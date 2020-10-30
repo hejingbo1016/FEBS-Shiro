@@ -170,7 +170,7 @@
     <select id="getPaymentDetailsByCode" resultType="cc.mrbird.febs.system.entity.PaymentDetails">
 
       select  p.id,p.payment_Code,p.fee_name,p.number,p.interval_price,p.subtotal,start_time,
-      p.end_time,p.fee_type,p.hotel_id,h.hotel_name
+      p.end_time,p.fee_type,p.hotel_id,h.hotel_name,p.fee_id,p.meeting_id,p.date_time
       from t_payment_details p
       left join t_hotel h on h.id =p.hotel_id
       where  p.deleted = 0  and p.payment_Code =#{paymentCode}
@@ -189,5 +189,11 @@
         and d.deleted = 0 and p.deleted = 0
 
     </select>
+
+
+
+
+
+
 
 </mapper>

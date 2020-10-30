@@ -19,7 +19,7 @@ public interface PaymentDetailsMapper extends BaseMapper<PaymentDetails> {
 
     Long countPaymentDetails(@Param("paymentDetails") PaymentDetails paymentDetails);
 
-    <T>IPage<PaymentDetails> findPaymentDetailsPage(Page<T> page, @Param("paymentDetails") PaymentDetails paymentDetails);
+    <T> IPage<PaymentDetails> findPaymentDetailsPage(Page<T> page, @Param("paymentDetails") PaymentDetails paymentDetails);
 
     void addPaymentDetails(PaymentDetails paymentDetails);
 

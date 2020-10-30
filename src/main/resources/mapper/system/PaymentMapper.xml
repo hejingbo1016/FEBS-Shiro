@@ -205,4 +205,11 @@
            update  t_payment set pay_type = #{payType} where id = #{id}
     </update>
 
+
+    <select id="slectPaymentByTask" resultType="cc.mrbird.febs.system.entity.Payment">
+      select  * from t_payment where  data_status =0 and pay_type = 1
+      and create_time &lt;= DATE_SUB(NOW(), INTERVAL 5 MINUTE) and deleted =0
+
+    </select>
+
 </mapper>

@@ -99,8 +99,27 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMeetingHotel(MeetingHotel meetingHotel) {
+
+        //根据会议id、酒店id、费用id、日期时间 去查费用项是否存在,存在当价格不变则 只更新当前记录。
+        MeetingHotel fee = new MeetingHotel();
+        BeanUtils.copyProperties(meetingHotel, fee);
+        MeetingHotel existMeetingHotel = meetingHotelMapper.isExistMeetingHotel(fee);
+        if (!Objects.isNull(existMeetingHotel)) {
+            if (!meetingHotel.getFeePrice().equals(existMeetingHotel.getFeePrice())) {
+                //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
+                meetingHotelMapper.updateFeePrice(meetingHotel);
+            }
+            meetingHotel.setId(existMeetingHotel.getId());
+        } else {
+            MeetingHotel selectById = meetingHotelMapper.selectById(meetingHotel.getId());
+            if (!selectById.getFeePrice().equals(meetingHotel.getFeePrice())) {
+                //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
+                meetingHotelMapper.updateFeePrice(meetingHotel);
+            }
+        }
         this.saveOrUpdate(meetingHotel);
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -143,5 +143,11 @@ public class Payment {
     @TableField("payment_time")
     private String paymentTime;
 
+    /**
+     * 是否入库原数据（1已还原，0未还原）
+     */
+    @TableField("data_status")
+    private Integer dataStatus;
+
 
 }

@@ -1,6 +1,8 @@
 package cc.mrbird.febs.system.mapper;
 
 import cc.mrbird.febs.system.entity.MeetingHotel;
+import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.PaymentDetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -25,4 +27,8 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
     List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId")Long hotelId);
 
     MeetingHotel isExistMeetingHotel(MeetingHotel meetingHotel);
+
+    int updateFeePrice(MeetingHotel meetingHotel);
+
+    int updateInvetory(PaymentDetails t);
 }

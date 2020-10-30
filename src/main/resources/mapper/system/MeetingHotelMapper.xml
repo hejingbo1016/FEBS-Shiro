@@ -44,7 +44,7 @@
 
     <select id="selectMeetingHotelById" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
 
-        SELECT m.id, m.meeting_id, m.fee_type, m.fee_name, m.surplus_number, m.fee_price, m.available_number,
+        SELECT m.id, m.meeting_id, m.fee_type, m.fee_name, m.surplus_number, m.fee_price, m.available_number,m.fee_id,
          m.hotel_id, m.create_time, m.modify_time, m.modifier, m.creater, m.deleted, m.date_time,h.hotel_name
          FROM t_meeting_hotel m
          left join t_hotel h on h.id = m.hotel_id
@@ -65,14 +65,23 @@
 
 
     <select id="isExistMeetingHotel" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
-
-
          SELECT
           *
          FROM t_meeting_hotel
-         where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId} and date_time =#{dateTime}
-
-
-
+         where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+         and fee_id = #{feeId} and date_time =#{dateTime}
     </select>
+
+    <update id="updateFeePrice">
+     update t_meeting_hotel set fee_price =#{feePrice} where meeting_id =#{meetingId}
+     and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId}
+    </update>
+
+
+    <update id="updateInvetory">
+
+     update t_meeting_hotel set surplus_number =surplus_number + #{number} where meeting_id =#{meetingId}
+     and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId}
+
+    </update>
 </mapper>

@@ -204,4 +204,10 @@ public class PaymentDetails {
     @TableField(exist = false)
     private Integer payType;
 
+    /**
+     * 日期字符串
+     */
+    @TableField("date_time")
+    private String dateTime;
+
 }
