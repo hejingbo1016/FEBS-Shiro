@@ -193,6 +193,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (!Objects.isNull(list) && list.size() > 0) {
             vos = list.stream().map(t -> {
                 List<MeetingHotel> rooms = new ArrayList<>();
+                List<MeetingHotel> roomLists = new ArrayList<>();
                 List<MeetingHotel> others = new ArrayList<>();
                 t.setMeetingId(id);
                 //通过酒店id查图片
@@ -202,7 +203,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                     return f;
                 }).collect(Collectors.toList());
                 //通过会议id和酒店id查费用项
-                List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId());
+                List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId(),null);
                 //封装所有类型为1的房间的费用项，其他则是其他费用项
                 roomList.forEach(r -> {
                     if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
@@ -211,7 +212,15 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                         others.add(r);
                     }
                 });
-                t.setRoomList(rooms);
+                if (rooms.size() > 0) {
+                    //分组
+                    Map<Long, List<MeetingHotel>> listMap = rooms.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                    listMap.keySet().forEach(m -> {
+                        Optional<MeetingHotel> minMeetHotel = listMap.get(m).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+                        roomLists.add(minMeetHotel.get());
+                    });
+                }
+                t.setRoomList(roomLists);
                 t.setOtherList(others);
                 t.setFileList(fileList);
                 return t;

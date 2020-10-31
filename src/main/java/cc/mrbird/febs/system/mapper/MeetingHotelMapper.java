@@ -1,7 +1,6 @@
 package cc.mrbird.febs.system.mapper;
 
 import cc.mrbird.febs.system.entity.MeetingHotel;
-import cc.mrbird.febs.system.entity.Payment;
 import cc.mrbird.febs.system.entity.PaymentDetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -11,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- *  Mapper
+ * Mapper
  *
  * @author Hejingbo
  * @date 2020-08-05 23:39:59
@@ -20,15 +19,17 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
 
     Long countMeetHotels(@Param("meetingHotel") MeetingHotel meetingHotel);
 
-    <T>IPage<MeetingHotel> findMeetingHotelsPage(Page<T> page, @Param("meetingHotel") MeetingHotel meetingHotel);
+    <T> IPage<MeetingHotel> findMeetingHotelsPage(Page<T> page, @Param("meetingHotel") MeetingHotel meetingHotel);
 
     MeetingHotel selectMeetingHotelById(@Param("id") Long id);
 
-    List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId")Long hotelId);
+    List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId") Long hotelId, @Param("feeId") Long feeId);
 
     MeetingHotel isExistMeetingHotel(MeetingHotel meetingHotel);
 
     int updateFeePrice(MeetingHotel meetingHotel);
 
     int updateInvetory(PaymentDetails t);
+
+    int reduceInvetory(PaymentDetails t);
 }

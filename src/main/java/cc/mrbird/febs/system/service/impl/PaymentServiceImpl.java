@@ -8,6 +8,8 @@ import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.DistributedRedisLock;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.system.constants.AdminConstants;
+import cc.mrbird.febs.system.entity.MeetingHotel;
 import cc.mrbird.febs.system.entity.OrderPay;
 import cc.mrbird.febs.system.entity.Payment;
 import cc.mrbird.febs.system.entity.PaymentDetails;
@@ -31,9 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service实现
@@ -151,6 +153,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     public ResponseDTO placOrders(OrderPay orderPay) {
         Double totalFee = new Double(0);
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
+        List<PaymentDetails> addPaymentDetails = new ArrayList<>();
+        StringBuffer sb = new StringBuffer();
+        List<String> dates = new ArrayList<>();
+        Boolean flag = false;
+        sb.append("以下房型库存不足:");
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
             //生成订单主表
             PaymentDetails details = paymentDetails.get(0);
@@ -161,20 +168,49 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             payment.setPaymentCode(String.valueOf(paymentCode));
             payment.setUserId(orderPay.getUserId());
             payment.setDescription(orderPay.getDescription());
+            payment.setDataStatus(AdminConstants.DATA_N_DELETED);
             payment.setSex(orderPay.getSex());
             totalFee = details.getPaymentAmount();
             int count = paymentMapper.insertPayment(payment);
+            //算出区间内所有日期
+            String endTime = DateUtils.getCalculateDay(details.getEndTime(), -1);
+            String startTime = DateUtils.getStringDates(details.getStartTime());
+            try {
+                dates = DateUtils.findDates(startTime, endTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (count > 0) {
                 //生成订单明细表
-                paymentDetails.forEach(p -> {
-                    //判断库存 根据费用id查t_meeting_hotel 表
-
-                    p.setId(snowflake.nextId());
-                    p.setPaymentCode(paymentCode);
-                    detailsMapper.addPaymentDetails(p);
-                });
+                for (PaymentDetails p : paymentDetails) {
+                    //通过会议id、酒店id和费用项id 查费用项库存
+                    List<MeetingHotel> roomList = hotelMapper.selectFeeLists(p.getMeetingId(), p.getHotelId(), p.getFeeId());
+                    //分组
+                    Map<Long, List<MeetingHotel>> listMap = roomList.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                    Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
+                    if (surplusNumber > p.getNumber()) {
+                        for (String s : dates) {
+                            //库存充足
+                            p.setId(snowflake.nextId());
+                            p.setPaymentCode(paymentCode);
+                            p.setDateTime(s);
+                            addPaymentDetails.add(p);
+                        }
+                    } else {
+                        flag = true;
+                        sb.append(p.getFeeName()).append(";");
+                    }
+                }
+                if (flag) {
+                    return ResponseDTO.failture(sb.toString());
+                }
+                for (PaymentDetails addPaymentDetail : addPaymentDetails) {
+                    //插入订单详情
+                    detailsMapper.addPaymentDetails(addPaymentDetail);
+                    //更新库存(减库存)
+                    hotelMapper.reduceInvetory(addPaymentDetail);
+                }
             }
-
             return onlinePay("下单", String.valueOf(paymentCode), totalFee, orderPay.getOpenid());
         }
         return ResponseDTO.failture();
@@ -196,7 +232,6 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                     log.info("微信支付回调失败订单号: {}", notifyMap);
                     return String.format(xmlBack, "FAIL", "订单号为空");
                 }
-
                 // 业务
                 if (!"SUCCESS".equals(notifyMap.get("result_code"))) {
                     return String.format(xmlBack, "FAIL", "");

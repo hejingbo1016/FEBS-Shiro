@@ -55,10 +55,13 @@
 
     <select id="selectFeeLists" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
 
-         SELECT
-         *
-         FROM t_meeting_hotel
-         WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+        SELECT
+        *
+        FROM t_meeting_hotel
+        WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+        <if test="feeId != null and feeId != ''">
+            AND fee_id =#{feeId}
+        </if>
 
 
     </select>
@@ -82,6 +85,15 @@
 
      update t_meeting_hotel set surplus_number =surplus_number + #{number} where meeting_id =#{meetingId}
      and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId}
+     and date_time =#{dateTime}
+
+    </update>
+
+
+    <update id="reduceInvetory">
+
+     update t_meeting_hotel set surplus_number =surplus_number - #{number} where meeting_id =#{meetingId}
+     and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId} and date_time =#{dateTime}
 
     </update>
 </mapper>

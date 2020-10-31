@@ -2,9 +2,11 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.DateUtils;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.MeetingHotel;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.service.IMeetingHotelService;
@@ -62,18 +64,24 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     public void createMeetingHotel(MeetingHotel meetingHotel) {
         String dateRange = meetingHotel.getDateRange();
         if (!StringUtils.isEmpty(dateRange)) {
-            //需要新增/修改的集
-            List<MeetingHotel> saveOrUpdates = new ArrayList<>();
-            //截取-把该范围内的所有时间整成时间集合
-            String[] split = dateRange.split("~");
-            try {
-                //该范围内的所有日期
-                List<String> dates = DateUtils.findDates(split[0], split[1]);
-                //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
-                isExistMeetingHotel(meetingHotel, dates, saveOrUpdates);
-                this.saveOrUpdateBatch(saveOrUpdates);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            //当类型是其他
+            if (AdminConstants.FEETYPE_TWO.equals(meetingHotel.getFeeType())) {
+                meetingHotel.setDateTime(null);
+                this.save(meetingHotel);
+            } else {
+                //需要新增/修改的集
+                List<MeetingHotel> saveOrUpdates = new ArrayList<>();
+                //截取-把该范围内的所有时间整成时间集合
+                String[] split = dateRange.split("~");
+                try {
+                    //该范围内的所有日期
+                    List<String> dates = DateUtils.findDates(split[0], split[1]);
+                    //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
+                    isExistMeetingHotel(meetingHotel, dates, saveOrUpdates);
+                    this.saveOrUpdateBatch(saveOrUpdates);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -100,24 +108,35 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Transactional(rollbackFor = Exception.class)
     public void updateMeetingHotel(MeetingHotel meetingHotel) {
 
-        //根据会议id、酒店id、费用id、日期时间 去查费用项是否存在,存在当价格不变则 只更新当前记录。
-        MeetingHotel fee = new MeetingHotel();
-        BeanUtils.copyProperties(meetingHotel, fee);
-        MeetingHotel existMeetingHotel = meetingHotelMapper.isExistMeetingHotel(fee);
-        if (!Objects.isNull(existMeetingHotel)) {
-            if (!meetingHotel.getFeePrice().equals(existMeetingHotel.getFeePrice())) {
-                //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
-                meetingHotelMapper.updateFeePrice(meetingHotel);
-            }
-            meetingHotel.setId(existMeetingHotel.getId());
+
+        if (AdminConstants.FEETYPE_TWO.equals(meetingHotel.getFeeType())) {
+            meetingHotel.setDateTime(null);
+            this.saveOrUpdate(meetingHotel);
         } else {
-            MeetingHotel selectById = meetingHotelMapper.selectById(meetingHotel.getId());
-            if (!selectById.getFeePrice().equals(meetingHotel.getFeePrice())) {
-                //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
-                meetingHotelMapper.updateFeePrice(meetingHotel);
+
+            if (StringUtils.isEmpty(meetingHotel.getDateTime())) {
+                throw new BusinessRuntimeException("日期不能为空！");
             }
+
+            //根据会议id、酒店id、费用id、日期时间 去查费用项是否存在,存在当价格不变则 只更新当前记录。
+            MeetingHotel fee = new MeetingHotel();
+            BeanUtils.copyProperties(meetingHotel, fee);
+            MeetingHotel existMeetingHotel = meetingHotelMapper.isExistMeetingHotel(fee);
+            if (!Objects.isNull(existMeetingHotel)) {
+                if (!meetingHotel.getFeePrice().equals(existMeetingHotel.getFeePrice())) {
+                    //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
+                    meetingHotelMapper.updateFeePrice(meetingHotel);
+                }
+                meetingHotel.setId(existMeetingHotel.getId());
+            } else {
+                MeetingHotel selectById = meetingHotelMapper.selectById(meetingHotel.getId());
+                if (!selectById.getFeePrice().equals(meetingHotel.getFeePrice())) {
+                    //费用费用改变，更新该会议id和费用项id 下的所有费用保持一致
+                    meetingHotelMapper.updateFeePrice(meetingHotel);
+                }
+            }
+            this.saveOrUpdate(meetingHotel);
         }
-        this.saveOrUpdate(meetingHotel);
     }
 
 

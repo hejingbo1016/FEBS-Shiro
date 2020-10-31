@@ -235,6 +235,10 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+            if (data.field.feeType == 1 && !data.field.dateTime) {
+                febs.alert.warn('请选择日期！');
+                return false;
+            }
             data.field.modifyTime = new Date();
             febs.post(ctx + 'meetingHotel/update', data.field, function () {
                 febs.alert.success('费用项修改成功');

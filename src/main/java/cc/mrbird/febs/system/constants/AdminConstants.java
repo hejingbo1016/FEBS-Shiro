@@ -29,5 +29,9 @@ public interface AdminConstants {
      */
     Integer AUDIT_T_TYPE = 1;
 
+    /**
+     * 费用类型 其他
+     */
+    Integer FEETYPE_TWO = 2;
 
 }
