@@ -237,7 +237,6 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (o != null) {
             return new ResponseDTO(200, "", o);
         }
-
         try {
             Hashtable hints = new Hashtable();
             //指定纠错等级
