@@ -2,12 +2,10 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
+import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.BusinessRuntimeException;
-import cc.mrbird.febs.common.utils.FileHepler;
-import cc.mrbird.febs.common.utils.Snowflake;
-import cc.mrbird.febs.common.utils.SortUtil;
-import cc.mrbird.febs.common.utils.SpringContextUtil;
+import cc.mrbird.febs.common.utils.*;
 import cc.mrbird.febs.system.constants.AdminConstants;
 import cc.mrbird.febs.system.entity.File;
 import cc.mrbird.febs.system.entity.*;
@@ -39,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -203,25 +202,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                     return f;
                 }).collect(Collectors.toList());
                 //通过会议id和酒店id查费用项
-                List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId(),null);
+                List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId(), null, null, null);
                 //封装所有类型为1的房间的费用项，其他则是其他费用项
-                roomList.forEach(r -> {
-                    if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
-                        rooms.add(r);
-                    } else {
-                        others.add(r);
-                    }
-                });
-                if (rooms.size() > 0) {
-                    //分组
-                    Map<Long, List<MeetingHotel>> listMap = rooms.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
-                    listMap.keySet().forEach(m -> {
-                        Optional<MeetingHotel> minMeetHotel = listMap.get(m).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
-                        roomLists.add(minMeetHotel.get());
-                    });
-                }
-                t.setRoomList(roomLists);
-                t.setOtherList(others);
+                getRoomListVo(rooms, roomLists, others, t, roomList, null);
                 t.setFileList(fileList);
                 return t;
             }).collect(Collectors.toList());
@@ -266,6 +249,63 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             e.printStackTrace();
         }
         return ResponseDTO.failture();
+    }
+
+    @Override
+    public List<HotelName> weChatHotelsFeeIds(PaymentDetails details) {
+        List<HotelName> list = new ArrayList<>();
+        List<MeetingHotel> rooms = new ArrayList<>();
+        List<MeetingHotel> roomLists = new ArrayList<>();
+        List<MeetingHotel> others = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
+        if (!Objects.isNull(details)) {
+            //获取区间时间
+            String endTime = DateUtils.getCalculateDay(details.getEndTime(), -1);
+            String startTime = DateUtils.getStringDates(details.getStartTime());
+            try {
+                dates = DateUtils.findDates(startTime, endTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            HotelName t = new HotelName();
+            //通过会议id、酒店id和费用项id 查费用项库存
+            List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), startTime, endTime);
+            getRoomListVo(rooms, roomLists, others, t, roomList, dates);
+            list.add(t);
+        } else {
+            throw new BusinessRuntimeException("所传参数不能为空！");
+        }
+        return list;
+    }
+
+    private void getRoomListVo(List<MeetingHotel> rooms, List<MeetingHotel> roomLists, List<MeetingHotel> others, HotelName t, List<MeetingHotel> roomList, List<String> dates) {
+        roomList.forEach(r -> {
+            if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                rooms.add(r);
+            } else {
+                others.add(r);
+            }
+        });
+        if (rooms.size() > 0) {
+            //分组 key  value形式
+            Map<Long, List<MeetingHotel>> listMap = rooms.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+            if (!Objects.isNull(dates) && dates.size() > 0) {
+                for (Long aLong : listMap.keySet()) {
+                    //当值不相等表示该区间内，费用项缺少某天的数据
+                    if (listMap.get(aLong).size() == dates.size()) {
+                        Optional<MeetingHotel> min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+                        roomLists.add(min.get());
+                    }
+                }
+            } else {
+                for (Long aLong : listMap.keySet()) {
+                    Optional<MeetingHotel> min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+                    roomLists.add(min.get());
+                }
+            }
+        }
+        t.setRoomList(roomLists);
+        t.setOtherList(others);
     }
 
     private String saveFile(InputStream is) {

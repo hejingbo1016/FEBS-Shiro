@@ -156,6 +156,9 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         List<PaymentDetails> addPaymentDetails = new ArrayList<>();
         StringBuffer sb = new StringBuffer();
         List<String> dates = new ArrayList<>();
+        String endTime = "";
+        String startTime = "";
+
         Boolean flag = false;
         sb.append("以下房型库存不足:");
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
@@ -173,8 +176,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             totalFee = details.getPaymentAmount();
             int count = paymentMapper.insertPayment(payment);
             //算出区间内所有日期
-            String endTime = DateUtils.getCalculateDay(details.getEndTime(), -1);
-            String startTime = DateUtils.getStringDates(details.getStartTime());
+            endTime = DateUtils.getCalculateDay(details.getEndTime(), -1);
+            startTime = DateUtils.getStringDates(details.getStartTime());
             try {
                 dates = DateUtils.findDates(startTime, endTime);
             } catch (ParseException e) {
@@ -184,9 +187,15 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 //生成订单明细表
                 for (PaymentDetails p : paymentDetails) {
                     //通过会议id、酒店id和费用项id 查费用项库存
-                    List<MeetingHotel> roomList = hotelMapper.selectFeeLists(p.getMeetingId(), p.getHotelId(), p.getFeeId());
+                    List<MeetingHotel> roomList = hotelMapper.selectFeeLists(p.getMeetingId(), p.getHotelId(), p.getFeeId(), startTime, endTime);
                     //分组
                     Map<Long, List<MeetingHotel>> listMap = roomList.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                    List<MeetingHotel> list = listMap.get(p.getFeeId());
+                    if (list.size() != dates.size()) {
+                        //表示该区间时间内，存在费用项无记录的情况
+                        flag = true;
+                        sb.append(p.getFeeName()).append(";");
+                    }
                     Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
                     if (surplusNumber > p.getNumber()) {
                         for (String s : dates) {

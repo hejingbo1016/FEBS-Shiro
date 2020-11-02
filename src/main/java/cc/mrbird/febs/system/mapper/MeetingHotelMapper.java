@@ -23,7 +23,7 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
 
     MeetingHotel selectMeetingHotelById(@Param("id") Long id);
 
-    List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId") Long hotelId, @Param("feeId") Long feeId);
+    List<MeetingHotel> selectFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId") Long hotelId, @Param("feeId") Long feeId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
     MeetingHotel isExistMeetingHotel(MeetingHotel meetingHotel);
 

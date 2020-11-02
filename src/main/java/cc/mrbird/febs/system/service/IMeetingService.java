@@ -1,10 +1,9 @@
 package cc.mrbird.febs.system.service;
 
 import cc.mrbird.febs.common.dto.ResponseDTO;
+import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.system.entity.GenerateQRCodeDTO;
-import cc.mrbird.febs.system.entity.HotelName;
-import cc.mrbird.febs.system.entity.Meeting;
+import cc.mrbird.febs.system.entity.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -66,4 +65,6 @@ public interface IMeetingService extends IService<Meeting> {
     List<HotelName> weChatHotelsByMeetingId(Long id);
 
     ResponseDTO generateQRCode(GenerateQRCodeDTO generateQRCodeDTO);
+
+    List<HotelName>  weChatHotelsFeeIds(PaymentDetails details);
 }

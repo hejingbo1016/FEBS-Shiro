@@ -63,7 +63,6 @@ public class WechatApiController extends BaseController {
         return new FebsResponse().success().data(hotelNameList);
     }
 
-
     @ControllerEndpoint(operation = "根据用户id查自己的订单列表", exceptionMessage = "根据用户id查自己的订单列表失败")
     @GetMapping("getPaymentListByUserId")
     @ResponseBody
@@ -86,6 +85,17 @@ public class WechatApiController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO placOrders(@RequestBody OrderPay orderPay) {
         return paymentService.placOrders(orderPay);
+    }
+
+
+
+    @ControllerEndpoint(operation = "微信端通过会议id、酒店id和区间时间查费用项列表", exceptionMessage = "微信端通过会议id、酒店id和区间时间查费用项列表")
+    @PostMapping("weChatHotelsFeeIds")
+    public FebsResponse weChatHotelsFeeIds(@RequestBody PaymentDetails details) {
+        List<HotelName> hotelNameList = meetingService.weChatHotelsFeeIds(details);
+        return new FebsResponse().success().data(hotelNameList);
+
+
     }
 
     /**
