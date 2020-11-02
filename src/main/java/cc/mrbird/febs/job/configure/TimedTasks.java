@@ -7,7 +7,7 @@ import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
 import cc.mrbird.febs.system.mapper.PaymentMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +16,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-@EnableScheduling
 public class TimedTasks {
+    @Autowired
     private PaymentDetailsMapper detailsMapper;
+    @Autowired
     private PaymentMapper paymentMapper;
+    @Autowired
     private MeetingHotelMapper hotelMapper;
+
+
 
     /**
      * 每分钟进行更新库存
@@ -60,5 +64,7 @@ public class TimedTasks {
             paymentMapper.update(payment, new LambdaQueryWrapper<Payment>().in(Payment::getPaymentCode, updatePaymentList));
         }
     }
+
+
 
 }

@@ -195,19 +195,20 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                         //表示该区间时间内，存在费用项无记录的情况
                         flag = true;
                         sb.append(p.getFeeName()).append(";");
-                    }
-                    Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
-                    if (surplusNumber > p.getNumber()) {
-                        for (String s : dates) {
-                            //库存充足
-                            p.setId(snowflake.nextId());
-                            p.setPaymentCode(paymentCode);
-                            p.setDateTime(s);
-                            addPaymentDetails.add(p);
-                        }
                     } else {
-                        flag = true;
-                        sb.append(p.getFeeName()).append(";");
+                        Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
+                        if (surplusNumber > p.getNumber()) {
+                            for (String s : dates) {
+                                //库存充足
+                                p.setId(snowflake.nextId());
+                                p.setPaymentCode(paymentCode);
+                                p.setDateTime(s);
+                                addPaymentDetails.add(p);
+                            }
+                        } else {
+                            flag = true;
+                            sb.append(p.getFeeName()).append(";");
+                        }
                     }
                 }
                 if (flag) {

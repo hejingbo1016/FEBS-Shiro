@@ -6,6 +6,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import weixin.popular.bean.user.User;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableTransactionManagement
 @MapperScan("cc.mrbird.febs.*.mapper")
+@EnableScheduling
 public class FebsShiroApplication {
 
     public static void main(String[] args) {
