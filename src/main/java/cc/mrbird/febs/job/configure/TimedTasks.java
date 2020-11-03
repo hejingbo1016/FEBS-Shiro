@@ -25,7 +25,6 @@ public class TimedTasks {
     private MeetingHotelMapper hotelMapper;
 
 
-
     /**
      * 每分钟进行更新库存
      */
@@ -64,7 +63,5 @@ public class TimedTasks {
             paymentMapper.update(payment, new LambdaQueryWrapper<Payment>().in(Payment::getPaymentCode, updatePaymentList));
         }
     }
-
-
 
 }

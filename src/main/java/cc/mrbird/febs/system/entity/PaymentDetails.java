@@ -58,6 +58,13 @@ public class PaymentDetails {
     @TableField("fee_name")
     private String feeName;
 
+
+    /**
+     * 日期字符串
+     */
+    @ExcelField(value = "日期")
+    @TableField("date_time")
+    private String dateTime;
     /**
      * 入住日期
      */
@@ -204,10 +211,5 @@ public class PaymentDetails {
     @TableField(exist = false)
     private Integer payType;
 
-    /**
-     * 日期字符串
-     */
-    @TableField("date_time")
-    private String dateTime;
 
 }

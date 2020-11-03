@@ -121,6 +121,5 @@ public class PaymentDetailsServiceImpl extends ServiceImpl<PaymentDetailsMapper,
         }
         d.setStartTimeValue(DateUtils.getStringDates(d.getStartTime()));
         d.setEndTimeValue(DateUtils.getStringDates(d.getEndTime()));
-
     }
 }

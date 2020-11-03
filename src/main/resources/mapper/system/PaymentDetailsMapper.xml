@@ -96,6 +96,9 @@
             <if test="feeId != null">
                 fee_id,
             </if>
+            <if test="dateTime != null">
+                date_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -149,6 +152,9 @@
             <if test="feeId != null">
                 #{feeId,jdbcType=BIGINT},
             </if>
+            <if test="dateTime != null">
+                #{dateTime,jdbcType=VARCHAR},
+            </if>
 
         </trim>
 
@@ -182,18 +188,13 @@
     <select id="selectPaymentExport" resultType="cc.mrbird.febs.system.entity.PaymentDetails">
         select  d.payment_Code,p.occupants,p.contact_phone,d.fee_name,
         d.start_time,d.end_time,d.interval_price,d.number,d.subtotal,
-        p.pay_type,p.description,p.payment_time
+        p.pay_type,p.description,p.payment_time,d.date_time
          from  t_payment_details d
         left join t_payment p on p.payment_Code = d.payment_Code
         where   p.meeting_id = #{meetingId}
         and d.deleted = 0 and p.deleted = 0
 
     </select>
-
-
-
-
-
 
 
 </mapper>

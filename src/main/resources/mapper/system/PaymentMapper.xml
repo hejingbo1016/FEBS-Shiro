@@ -116,6 +116,9 @@
             <if test="sex != null">
                 sex,
             </if>
+            <if test="dataStatus != null">
+                data_status,
+            </if>
 
 
         </trim>
@@ -167,6 +170,9 @@
             </if>
             <if test="sex != null">
                 #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null">
+                #{dataStatus,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
