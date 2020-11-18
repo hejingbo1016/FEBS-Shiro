@@ -59,32 +59,6 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         return this.baseMapper.selectList(queryWrapper);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void createMeetingHotel(MeetingHotel meetingHotel) {
-        String dateRange = meetingHotel.getDateRange();
-        if (!StringUtils.isEmpty(dateRange)) {
-            //当类型是其他
-            if (AdminConstants.FEETYPE_TWO.equals(meetingHotel.getFeeType())) {
-                meetingHotel.setDateTime(null);
-                this.save(meetingHotel);
-            } else {
-                //需要新增/修改的集
-                List<MeetingHotel> saveOrUpdates = new ArrayList<>();
-                //截取-把该范围内的所有时间整成时间集合
-                String[] split = dateRange.split("~");
-                try {
-                    //该范围内的所有日期
-                    List<String> dates = DateUtils.findDates(split[0], split[1]);
-                    //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
-                    isExistMeetingHotel(meetingHotel, dates, saveOrUpdates);
-                    this.saveOrUpdateBatch(saveOrUpdates);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     private void isExistMeetingHotel(MeetingHotel meetingHotel, List<String> dates, List<MeetingHotel> saveOrUpdates) {
 
@@ -158,5 +132,61 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     @Override
     public MeetingHotel selectMeetingHotelById(Long id) {
         return baseMapper.selectMeetingHotelById(id);
+    }
+
+    @Override
+    public void addMeetingHotelDate(MeetingHotel meetingHotel) {
+        String dateRange = meetingHotel.getDateRange();
+        if (!StringUtils.isEmpty(dateRange)) {
+            //当类型是其他
+            if (AdminConstants.FEETYPE_TWO.equals(meetingHotel.getFeeType())) {
+                meetingHotel.setDateTime(null);
+                this.save(meetingHotel);
+            } else {
+                //需要新增/修改的集
+                List<MeetingHotel> saveOrUpdates = new ArrayList<>();
+                //截取-把该范围内的所有时间整成时间集合
+                String[] split = dateRange.split("~");
+                try {
+                    //该范围内的所有日期
+                    List<String> dates = DateUtils.findDates(split[0], split[1]);
+                    //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
+                    isExistMeetingHotel(meetingHotel, dates, saveOrUpdates);
+                    this.saveOrUpdateBatch(saveOrUpdates);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void addMeetingHotelNotDate(MeetingHotel meetingHotel) {
+
+        //根据当id为空时新增，否则编辑
+        if (StringUtils.isEmpty(meetingHotel.getId())) {
+            //新增
+            MeetingHotel existMeetingHotel = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
+            if (!Objects.isNull(existMeetingHotel)) {
+                meetingHotel.setId(existMeetingHotel.getId());
+            }
+            this.saveOrUpdate(meetingHotel);
+        } else {
+            //编辑
+            MeetingHotel oldMeetingHotel = meetingHotelMapper.selectById(meetingHotel.getId());
+            if (!Objects.isNull(oldMeetingHotel)){
+
+
+
+            }else {
+
+
+            }
+
+
+        }
+
+
     }
 }

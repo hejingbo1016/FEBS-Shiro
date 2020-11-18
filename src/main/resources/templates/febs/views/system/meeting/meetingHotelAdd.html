@@ -44,13 +44,13 @@
             </div>
         </div>
 
-        <div class="layui-inline">
-            <label class="layui-form-label febs-form-item-require">日期范围</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" lay-verify="required" name="dateRange" id="dateRange"
-                       placeholder=" ~ ">
-            </div>
-        </div>
+        <!-- <div class="layui-inline">
+             <label class="layui-form-label febs-form-item-require">日期范围</label>
+             <div class="layui-input-inline">
+                 <input type="text" class="layui-input" lay-verify="required" name="dateRange" id="dateRange"
+                        placeholder=" ~ ">
+             </div>
+         </div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
@@ -76,27 +76,27 @@
                 </select>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">总数：</label>
-            <div class="layui-input-block">
-                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">剩余数量：</label>
-            <div class="layui-input-block">
-                <input type="text" name="surplusNumber" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">费用价格：</label>
-            <div class="layui-input-block">
-                <input type="text" name="feePrice" maxlength="50" lay-verify="range"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
+        <!--     <div class="layui-form-item">
+                 <label class="layui-form-label">总数：</label>
+                 <div class="layui-input-block">
+                     <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
+                            autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+             <div class="layui-form-item">
+                 <label class="layui-form-label">剩余数量：</label>
+                 <div class="layui-input-block">
+                     <input type="text" name="surplusNumber" maxlength="50" lay-verify="range"
+                            autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+             <div class="layui-form-item">
+                 <label class="layui-form-label">费用价格：</label>
+                 <div class="layui-input-block">
+                     <input type="text" name="feePrice" maxlength="50" lay-verify="range"
+                            autocomplete="off" class="layui-input">
+                 </div>
+             </div>-->
 
 
         <div class="layui-form-item febs-hide">
@@ -121,7 +121,7 @@
         laydate.render({
             elem: '#dateRange'
             , range: '~'
-            ,format: 'yyyy-MM-dd'
+            , format: 'yyyy-MM-dd'
         });
 
         tableSelect.render({

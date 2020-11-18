@@ -32,12 +32,7 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
      */
     List<MeetingHotel> findMeetingHotels(MeetingHotel meetingHotel);
 
-    /**
-     * 新增
-     *
-     * @param meetingHotel meetingHotel
-     */
-    void createMeetingHotel(MeetingHotel meetingHotel);
+
 
     /**
      * 修改
@@ -56,4 +51,8 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
     void deleteMeetingHotels(String ids);
 
     MeetingHotel selectMeetingHotelById(Long id);
+
+    void addMeetingHotelDate(MeetingHotel meetingHotel);
+
+    void addMeetingHotelNotDate(MeetingHotel meetingHotel);
 }

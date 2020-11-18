@@ -55,14 +55,27 @@ public class MeetingHotelController extends BaseController {
         return new FebsResponse().success().data(dataTable);
     }
 
-    @ControllerEndpoint(operation = "新增MeetingHotel", exceptionMessage = "新增MeetingHotel失败")
+    @ControllerEndpoint(operation = "新增MeetingHotel明细", exceptionMessage = "新增MeetingHotel失败")
     @PostMapping("add")
     @ResponseBody
     @RequiresPermissions("meetingHotel:add")
-    public FebsResponse addMeetingHotel(@Valid MeetingHotel meetingHotel) {
-        this.meetingHotelService.createMeetingHotel(meetingHotel);
+    public FebsResponse addMeetingHotelNotDate(@Valid MeetingHotel meetingHotel) {
+        this.meetingHotelService.addMeetingHotelNotDate(meetingHotel);
         return new FebsResponse().success();
     }
+
+
+
+    @ControllerEndpoint(operation = "新增MeetingHotel", exceptionMessage = "新增MeetingHotel失败")
+    @PostMapping("addMeetingHotel")
+    @ResponseBody
+    @RequiresPermissions("meetingHotel:add")
+    public FebsResponse addMeetingHotelDate(@Valid MeetingHotel meetingHotel) {
+        this.meetingHotelService.addMeetingHotelDate(meetingHotel);
+        return new FebsResponse().success();
+    }
+
+
 
     @ControllerEndpoint(operation = "删除MeetingHotel", exceptionMessage = "删除MeetingHotel失败")
     @GetMapping("delete/{ids}")

@@ -78,7 +78,11 @@
           *
          FROM t_meeting_hotel
          where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0
-         and fee_id = #{feeId} and date_time =#{dateTime}
+         and fee_id = #{feeId}
+        <if test="dateTime !=null and dateTime !=''">
+            and date_time =#{dateTime}
+        </if>
+
     </select>
 
     <update id="updateFeePrice">
