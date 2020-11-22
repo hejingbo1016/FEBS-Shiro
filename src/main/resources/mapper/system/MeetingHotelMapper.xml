@@ -74,11 +74,11 @@
 
 
     <select id="isExistMeetingHotel" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
-         SELECT
-          *
-         FROM t_meeting_hotel
-         where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0
-         and fee_id = #{feeId}
+        SELECT
+        *
+        FROM t_meeting_hotel
+        where meeting_id =#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+        and fee_id = #{feeId}
         <if test="dateTime !=null and dateTime !=''">
             and date_time =#{dateTime}
         </if>
@@ -105,5 +105,10 @@
      update t_meeting_hotel set surplus_number =surplus_number - #{number} where meeting_id =#{meetingId}
      and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId} and date_time =#{dateTime}
 
+    </update>
+
+
+    <update id="updateMeetingHotelById">
+       update t_meeting_hotel set deleted = 1 where id = #{id}
     </update>
 </mapper>

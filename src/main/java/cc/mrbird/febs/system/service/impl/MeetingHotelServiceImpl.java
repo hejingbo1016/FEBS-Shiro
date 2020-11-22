@@ -175,13 +175,33 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         } else {
             //编辑
             MeetingHotel oldMeetingHotel = meetingHotelMapper.selectById(meetingHotel.getId());
-            if (!Objects.isNull(oldMeetingHotel)){
+            if (!Objects.isNull(oldMeetingHotel)) {
+                //会议id、酒店id和费用id 是否一致
+                if (oldMeetingHotel.getFeeId().equals(meetingHotel.getFeeId()) && oldMeetingHotel.getMeetingId().equals(meetingHotel.getMeetingId())
+                        && oldMeetingHotel.getHotelId().equals(meetingHotel.getHotelId())) {
+
+                } else {
+                    //如果存在了，则拿到该id，进行编辑
+                    MeetingHotel meetingHotels = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
+                    if (!Objects.isNull(meetingHotels)) {
+                        meetingHotel.setId(meetingHotels.getId());
+                        //删除旧数据
+                        int count = meetingHotelMapper.updateMeetingHotelById(meetingHotel.getId());
+                        if (count >0){
+//                            meetingHotelMapper.
+
+                        }
 
 
+                    } else {
 
-            }else {
+                    }
 
 
+                }
+
+            } else {
+                throw new BusinessRuntimeException("所编辑的数据已被删除");
             }
 
 
