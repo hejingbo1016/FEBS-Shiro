@@ -163,7 +163,7 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
 
     @Override
     public void addMeetingHotelNotDate(MeetingHotel meetingHotel) {
-
+        int count = 0;
         //根据当id为空时新增，否则编辑
         if (StringUtils.isEmpty(meetingHotel.getId())) {
             //新增
@@ -179,34 +179,45 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
                 //会议id、酒店id和费用id 是否一致
                 if (oldMeetingHotel.getFeeId().equals(meetingHotel.getFeeId()) && oldMeetingHotel.getMeetingId().equals(meetingHotel.getMeetingId())
                         && oldMeetingHotel.getHotelId().equals(meetingHotel.getHotelId())) {
-
                 } else {
                     //如果存在了，则拿到该id，进行编辑
                     MeetingHotel meetingHotels = meetingHotelMapper.isExistMeetingHotel(meetingHotel);
                     if (!Objects.isNull(meetingHotels)) {
-                        meetingHotel.setId(meetingHotels.getId());
-                        //删除旧数据
-                        int count = meetingHotelMapper.updateMeetingHotelById(meetingHotel.getId());
-                        if (count >0){
-//                            meetingHotelMapper.
-
+                        //删除旧 上级数据
+                        count = meetingHotelMapper.updateMeetingHotelById(meetingHotels.getId());
+                        //删除  下级数据
+                        count = meetingHotelMapper.updateChildrenMeetingHotel(meetingHotels);
+                        if (count > 0) {
+                            //修改 上级
+                            count = getCountUpdate(meetingHotel);
                         }
-
-
                     } else {
-
+                        meetingHotel.setId(oldMeetingHotel.getId());
+                        //修改 上级
+                        count = getCountUpdate(meetingHotel);
                     }
-
-
+                    //修改下级
+                    if (count > 0) {
+                        meetingHotelMapper.updateMeetingHotel(meetingHotel);
+                    }
                 }
-
             } else {
                 throw new BusinessRuntimeException("所编辑的数据已被删除");
             }
-
-
         }
+    }
 
+    @Override
+    public List<MeetingHotel> meetingHotelEdits(Long id) {
+        return meetingHotelMapper.meetingHotelEdits(id);
+    }
 
+    private int getCountUpdate(MeetingHotel meetingHotel) {
+        int count;
+        MeetingHotel whereMeetings = new MeetingHotel();
+        whereMeetings.setId(meetingHotel.getId());
+        whereMeetings.setDeleted(AdminConstants.DATA_N_DELETED);
+        count = meetingHotelMapper.update(meetingHotel, new LambdaQueryWrapper<>(whereMeetings));
+        return count;
     }
 }

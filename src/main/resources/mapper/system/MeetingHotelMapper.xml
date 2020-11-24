@@ -84,6 +84,9 @@
         </if>
 
     </select>
+    <select id="meetingHotelEdits" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+        select  * from  t_meeting_hotel where  parent_feeid = #{id} and  deleted = 0
+    </select>
 
     <update id="updateFeePrice">
      update t_meeting_hotel set fee_price =#{feePrice} where meeting_id =#{meetingId}
@@ -110,5 +113,28 @@
 
     <update id="updateMeetingHotelById">
        update t_meeting_hotel set deleted = 1 where id = #{id}
+    </update>
+
+
+    <update id="updateMeetingHotel">
+
+        update t_meeting_hotel
+        <set>
+            <if test="meetingHotel != null ">
+                meeting_id =#{meetingId},
+            </if>
+            <if test="hotelId != null ">
+                hotel_id =#{hotelId},
+            </if>
+            <if test="feeId != null ">
+                fee_id =#{feeId},
+            </if>
+        </set>
+        where parent_feeid = #{id} and deleted = 0
+
+    </update>
+
+    <update id="updateChildrenMeetingHotel">
+       update t_meeting_hotel set set deleted = 1 where parent_feeid = #{id}
     </update>
 </mapper>

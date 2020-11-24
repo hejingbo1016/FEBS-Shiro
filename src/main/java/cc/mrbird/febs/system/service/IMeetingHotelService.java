@@ -55,4 +55,6 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
     void addMeetingHotelDate(MeetingHotel meetingHotel);
 
     void addMeetingHotelNotDate(MeetingHotel meetingHotel);
+
+    List<MeetingHotel> meetingHotelEdits(Long id);
 }

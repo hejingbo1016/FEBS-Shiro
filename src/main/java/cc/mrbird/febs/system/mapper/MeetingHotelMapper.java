@@ -34,4 +34,10 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
     int reduceInvetory(PaymentDetails t);
 
     int updateMeetingHotelById(Long id);
+
+    int updateMeetingHotel(MeetingHotel meetingHotel);
+
+    int updateChildrenMeetingHotel(MeetingHotel meetingHotel);
+
+    List<MeetingHotel> meetingHotelEdits(@Param("id") Long id);
 }

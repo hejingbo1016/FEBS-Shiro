@@ -1,5 +1,5 @@
 <style>
-    #febs-meetingHotel .layui-form-label {
+    #meet-meetingHotelEdits .layui-form-label {
         width: 65px;
     }
 
@@ -7,7 +7,7 @@
         z-index: 59891016 !important;
     }
 </style>
-<div class="layui-fluid layui-anim febs-anim" id="febs-meetingHotel" lay-title="会议费用项">
+<div class="layui-fluid layui-anim febs-anim" id="meet-meetingHotelEdits" lay-title="会议费用项">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -17,53 +17,39 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">酒店名称</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="hotelName" autocomplete="off"
-                                                   class="layui-input">
-                                        </div>
+                                        <span class="layui-icon layui-icon-user"></span> 酒店名称：
+                                        {{meetingHotel.hotelName}}
                                     </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">费用名称</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="feeName" class="layui-input">
-                                        </div>
+                                        <span class="layui-icon layui-icon-user"></span> 费用名称：
+                                        {{meetingHotel.feeName}}
                                     </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">费用类型</label>
-                                        <div class="layui-input-inline">
-                                            <select name="feeType">
-                                                <option value=""></option>
-                                                <option value="1">房间类</option>
-                                                <option value="2">其他</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
-                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
-                                     id="query">
-                                    <i class="layui-icon">&#xe848;</i>
-                                </div>
-                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
-                                     id="reset">
-                                    <i class="layui-icon">&#xe79b;</i>
-                                </div>
-                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more "
-                                     shiro:hasAnyPermissions="meetingHotel:add,meetingHotel:update,meetingHotel:delete,meetingHotel:export">
-                                    <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                    <table lay-filter="meetingHotelTable" lay-data="{id: 'meetingHotelTable'}"></table>
+                        <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                            <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
+                                 id="query">
+                                <i class="layui-icon">&#xe848;</i>
+                            </div>
+                            <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
+                                 id="reset">
+                                <i class="layui-icon">&#xe79b;</i>
+                            </div>
+                            <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more "
+                                 shiro:hasAnyPermissions="meetingHotel:add,meetingHotel:update,meetingHotel:delete,meetingHotel:export">
+                                <i class="layui-icon">&#xe875;</i>
+                            </div>
+                        </div>
                 </div>
+                </form>
+                <table lay-filter="meetingHotelTable" lay-data="{id: 'meetingHotelTable'}"></table>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script type="text/html" id="meetingHotel-feeType">
     {{#
@@ -93,7 +79,7 @@
             form = layui.form,
             table = layui.table,
             dropdown = layui.dropdown,
-            $view = $('#febs-meetingHotel'),
+            $view = $('#meet-meetingHotelEdits'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -188,22 +174,10 @@
                         layer.close(index);
                     },
                     btn2: function () {
-                        layer.closeAll();
                     }
                 });
             }
-            if (layEvent === 'edits') {
-                febs.modal.open('费用项明细', 'system/meetingHotel/edits/' + data.id, {
-                    area: $(window).width() <= 750 ? '70%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#meet-meetingHotelEdits').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
-                });
-            }
+
         });
 
         table.on('sort(meetingHotelTable)', function (obj) {
@@ -225,13 +199,13 @@
                 url: ctx + 'meetingHotel/list/' + meetingId,
                 cols: [[
                     {type: 'checkbox'},
-                    // {field: 'dateTime', title: '日期', maxWidth: 100},
-                    {field: 'hotelName', title: '酒店名称', maxWidth: 100},
-                    {field: 'feeName', title: '费用名称', maxWidth: 100},
-                    {title: '类型', templet: '#meetingHotel-feeType'},
-                    // {field: 'feePrice', title: '价格', maxWidth: 80},
-                    // {field: 'availableNumber', title: '总数', maxWidth: 80},
-                    // {field: 'surplusNumber', title: '剩余数量', maxWidth: 80, sort: true},
+                    {field: 'dateTime', title: '日期', maxWidth: 100},
+                    // {field: 'hotelName', title: '酒店名称', maxWidth: 100},
+                    // {field: 'feeName', title: '费用名称', maxWidth: 100},
+                    // {title: '类型', templet: '#meetingHotel-feeType'},
+                    {field: 'feePrice', title: '价格', maxWidth: 80},
+                    {field: 'availableNumber', title: '总数', maxWidth: 80},
+                    {field: 'surplusNumber', title: '剩余数量', maxWidth: 80, sort: true},
                     {title: '操作', toolbar: '#meetingHotel-option', minWidth: 80}
                 ]]
             });
