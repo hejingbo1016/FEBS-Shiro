@@ -12,40 +12,67 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="job-table-form">
+                    <form class="layui-form layui-table-form" lay-filter="meetingHotelEdits-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <span class="layui-icon layui-icon-user"></span> 酒店名称：
-                                        {{meetingHotel.hotelName}}
+                                        <label class="layui-form-label">酒店名称:</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="hotelName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <span class="layui-icon layui-icon-user"></span> 费用名称：
-                                        {{meetingHotel.feeName}}
+                                        <label class="layui-form-label">费用名称:</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="feeName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
                                     </div>
+
+                                </div>
+
+                                <div class="layui-form-item febs-hide">
+                                    <label class="layui-form-label febs-form-item-require">meetingId：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingId" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item febs-hide">
+                                    <label class="layui-form-label febs-form-item-require">parentFeeId：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="parentFeeId" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item febs-hide">
+                                    <label class="layui-form-label febs-form-item-require">feeId：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="feeId" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more "
+                                     shiro:hasAnyPermissions="meetingHotel:add,meetingHotel:update,meetingHotel:delete,meetingHotel:export">
+                                    <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
-                            <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action"
-                                 id="query">
-                                <i class="layui-icon">&#xe848;</i>
-                            </div>
-                            <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action"
-                                 id="reset">
-                                <i class="layui-icon">&#xe79b;</i>
-                            </div>
-                            <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more "
-                                 shiro:hasAnyPermissions="meetingHotel:add,meetingHotel:update,meetingHotel:delete,meetingHotel:export">
-                                <i class="layui-icon">&#xe875;</i>
-                            </div>
-                        </div>
+
+
                 </div>
                 </form>
-                <table lay-filter="meetingHotelTable" lay-data="{id: 'meetingHotelTable'}"></table>
+                <table lay-filter="meetingHotelEditsTable" lay-data="{id: 'meetingHotelEditsTable'}"></table>
             </div>
         </div>
     </div>
@@ -72,12 +99,14 @@
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
+    layui.use(['dropdown', 'jquery','form', 'laydate',  'table', 'febs'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
+            meetingHotel = [[${meetingHotel}]],
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
+            validate = layui.validate,
             dropdown = layui.dropdown,
             $view = $('#meet-meetingHotelEdits'),
             $query = $view.find('#query'),
@@ -86,8 +115,14 @@
             sortObject = {field: 'createTime', type: null},
             tableIns;
 
+        form.verify(validate);
         form.render();
+
+
+        initmeetingValue();
         initTable();
+
+
 
 
         $query.on('click', function () {
@@ -104,7 +139,7 @@
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('meetingHotelTable');
+                var checkStatus = table.checkStatus('meetingHotelEditsTable');
                 if (name === 'add') {
                     febs.modal.open('新增费用项', 'system/meetingHotel/add', {
                         btn: ['提交', '重置'],
@@ -119,6 +154,8 @@
                         }
                     });
                 }
+
+
 
 
                 if (name === 'delete') {
@@ -157,7 +194,23 @@
             }]
         });
 
-        table.on('tool(meetingHotelTable)', function (obj) {
+
+        function initmeetingValue() {
+
+            alert(meetingHotel);
+            console.log(meetingHotel);
+            form.val("meetingHotelEdits-table-form", {
+                "meetingId": meetingHotel.meetingId,
+                "feeId": meetingHotel.feeId,
+                "hotelId": meetingHotel.hotelId,
+                "parentFeeId": meetingHotel.feeId,
+                "hotelName":meetingHotel.hotelName,
+                "feeName":meetingHotel.feeName
+
+            });
+        }
+
+        table.on('tool(meetingHotelEditsTable)', function (obj) {
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'del') {
@@ -180,7 +233,7 @@
 
         });
 
-        table.on('sort(meetingHotelTable)', function (obj) {
+        table.on('sort(meetingHotelEditsTable)', function (obj) {
             sortObject = obj;
             tableIns.reload({
                 initSort: obj,
@@ -195,8 +248,8 @@
             var meetingId = sessionStorage.getItem('meetingId');
             tableIns = febs.table.init({
                 elem: $view.find('table'),
-                id: 'meetingHotelTable',
-                url: ctx + 'meetingHotel/list/' + meetingId,
+                id: 'meetingHotelEditsTable',
+                url: ctx + 'meetingHotel/list/' +meetingId,
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'dateTime', title: '日期', maxWidth: 100},

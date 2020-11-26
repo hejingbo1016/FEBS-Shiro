@@ -145,6 +145,12 @@ public class MeetingHotel {
     @TableField("fee_id")
     private Long feeId;
 
+    /**
+     * 父类费用项id
+     */
+    @TableField("parent_feeid")
+    private Long parentFeeId;
+
     @TableField(exist = false)
     private String dateRange;
 

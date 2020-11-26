@@ -181,7 +181,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改费用项', 'system/meetingHotel/update/' + data.id, {
-                    area: $(window).width() <= 750 ? '70%' : '50%',
+                    area: $(window).width() <= 800 ? '80%' : '70%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#meetingHotel-update').find('#submit').trigger('click');
@@ -194,7 +194,7 @@
             }
             if (layEvent === 'edits') {
                 febs.modal.open('费用项明细', 'system/meetingHotel/edits/' + data.id, {
-                    area: $(window).width() <= 750 ? '70%' : '50%',
+                    area: $(window).width() <= 800 ? '80%' : '70%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
                         $('#meet-meetingHotelEdits').find('#submit').trigger('click');
