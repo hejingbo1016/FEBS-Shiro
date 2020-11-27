@@ -19,15 +19,15 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label">酒店名称:</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="hotelName" autocomplete="off"
-                                                   class="layui-input">
+                                            <input type="text" name="hotelName" style="border: none; outline: none;"    autocomplete="off"
+                                                   class="layui-input" readonly>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">费用名称:</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="feeName" autocomplete="off"
-                                                   class="layui-input">
+                                            <input type="text" name="feeName"  style="border: none; outline: none;"    autocomplete="off"
+                                                   class="layui-input" readonly>
                                         </div>
                                     </div>
 
@@ -68,9 +68,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                </div>
                 </form>
                 <table lay-filter="meetingHotelEditsTable" lay-data="{id: 'meetingHotelEditsTable'}"></table>
             </div>
@@ -98,7 +95,8 @@
     <a lay-event="del" shiro:hasPermission="meetingHotel:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
-<script data-th-inline="none" type="text/javascript">
+<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
+<script data-th-inline="javascript">
     layui.use(['dropdown', 'jquery','form', 'laydate',  'table', 'febs'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
@@ -115,12 +113,11 @@
             sortObject = {field: 'createTime', type: null},
             tableIns;
 
-        form.verify(validate);
         form.render();
 
 
         initmeetingValue();
-        initTable();
+        initMeetingEditsTable();
 
 
 
@@ -197,8 +194,6 @@
 
         function initmeetingValue() {
 
-            alert(meetingHotel);
-            console.log(meetingHotel);
             form.val("meetingHotelEdits-table-form", {
                 "meetingId": meetingHotel.meetingId,
                 "feeId": meetingHotel.feeId,
@@ -244,12 +239,11 @@
             });
         });
 
-        function initTable() {
+        function initMeetingEditsTable() {
             var meetingId = sessionStorage.getItem('meetingId');
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'meetingHotelEditsTable',
-                url: ctx + 'meetingHotel/list/' +meetingId,
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'dateTime', title: '日期', maxWidth: 100},
