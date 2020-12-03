@@ -47,7 +47,7 @@ public class MeetingHotelController extends BaseController {
         return new FebsResponse().success().data(meetingHotelService.findMeetingHotels(meetingHotel));
     }
 
-    @GetMapping("list/{meetingId}")
+    @GetMapping("list/{meetingId}/{parentFeeId}")
     @ResponseBody
     @RequiresPermissions("meetingHotel:view")
     public FebsResponse meetingHotelList(QueryRequest request, MeetingHotel meetingHotel) {
