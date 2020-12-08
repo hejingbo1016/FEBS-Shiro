@@ -148,6 +148,7 @@ public class MeetingHotel {
     /**
      * 父类费用项id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableField("parent_feeid")
     private Long parentFeeId;
 

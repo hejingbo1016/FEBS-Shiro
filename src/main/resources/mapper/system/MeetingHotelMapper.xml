@@ -18,6 +18,9 @@
         <if test="meetingHotel.feeType != null and meetingHotel.feeType != ''">
             AND t.fee_type = #{meetingHotel.feeType}
         </if>
+        <if test="meetingHotel.parentFeeId != null and meetingHotel.parentFeeId != '' and meetingHotel.parentFeeId >0">
+            AND t.parent_feeid = #{meetingHotel.parentFeeId}
+        </if>
 
 
     </select>
