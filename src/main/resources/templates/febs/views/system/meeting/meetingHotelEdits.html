@@ -138,7 +138,7 @@
             click: function (name, elem, event) {
                 var checkStatus = table.checkStatus('meetingHotelEditsTable');
                 if (name === 'add') {
-                    febs.modal.open('新增费用项', 'system/meetingHotel/add', {
+                    febs.modal.open('新增费用项', 'system/meetingHotelEdits/add'+ meetingHotel.id, {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '70%' : '50%',
                         yes: function (index, layero) {

@@ -1,0 +1,163 @@
+<style>
+    #meetingHotelUpdateEdits {
+        padding: 20px 25px 25px 0;
+    }
+
+    #meetingHotelUpdateEdits .layui-form-label {
+        width: 88px;
+    }
+
+    #meetingHotelUpdateEdits .layui-input-block {
+        margin-left: 120px;
+    }
+</style>
+<div class="layui-fluid" id="meetingHotelUpdateEdits">
+    <form class="layui-form" action="" lay-filter="meetingHotelUpdateEdits-form">
+
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">hotelId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelId" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">meetingId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="meetingId" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="dateTime" id="febs-form-meetingHotel-start"
+                       placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">酒店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="hotelName" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">费用名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeName" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">feeType：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feeType" class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label">总数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+       -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">剩余数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="surplusNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">费用价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feePrice" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="meetingHotelUpdateEdits-form-submit"
+                    id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
+<script data-th-inline="javascript">
+    layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            meetingHotel = [[${meetingHotel}]],
+            $view = $('#meetingHotelUpdateEdits'),
+            validate = layui.validate,
+            laydate = layui.laydate,
+            tableSelect = layui.tableSelect;
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-start'
+            , format: 'yyyy-MM-dd'
+        });
+
+        form.verify(validate);
+        form.render();
+
+        initphoneValue();
+
+        function initphoneValue() {
+            form.val("meetingHotelUpdateEdits-form", {
+                "id": meetingHotel.id,
+                "feeId": meetingHotel.feeId,
+                "hotelId": meetingHotel.hotelId,
+                "meetingId": meetingHotel.meetingId,
+                "feeName": meetingHotel.feeName,
+                "surplusNumber": meetingHotel.surplusNumber,
+                "feePrice": meetingHotel.feePrice,
+                "feeType": meetingHotel.feeType,
+                "availableNumber": meetingHotel.availableNumber,
+                "startTime": meetingHotel.startTime,
+                "endTime": meetingHotel.endTime,
+                "hotelName": meetingHotel.hotelName,
+                "dateTime": meetingHotel.dateTime
+            });
+
+            getHotelRooms(meetingHotel.hotelId)
+        }
+
+        form.on('submit(meetingHotelUpdateEdits-form-submit)', function (data) {
+
+            if (febs.nativeEqual(data.field, meetingHotel)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            if (data.field.feeType == 1 && !data.field.dateTime) {
+                febs.alert.warn('请选择日期！');
+                return false;
+            }
+            data.field.modifyTime = new Date();
+            febs.post(ctx + 'meetingHotel/update', data.field, function () {
+                febs.alert.success('费用项修改成功');
+                $('#febs-meetingHotel').find('#query').click();
+            });
+            return false;
+        });
+
+
+    });
+</script>
