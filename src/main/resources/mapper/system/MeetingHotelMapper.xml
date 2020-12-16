@@ -88,6 +88,10 @@
         <if test="dateTime !=null and dateTime !=''">
             and date_time =#{dateTime}
         </if>
+        <if test="parentFeeId != null and parentFeeId != '' and parentFeeId >0">
+            AND parent_feeid = #{parentFeeId}
+        </if>
+
 
     </select>
     <select id="meetingHotelEdits" resultType="cc.mrbird.febs.system.entity.MeetingHotel">

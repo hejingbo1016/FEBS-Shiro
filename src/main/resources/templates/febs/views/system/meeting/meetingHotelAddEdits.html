@@ -95,7 +95,6 @@
         </div>
     </form>
 </div>
-<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
 <script data-th-inline="javascript">
     layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
@@ -105,7 +104,6 @@
             $view = $('#meetingHotelAddEdits'),
             validate = layui.validate;
         var laydate = layui.laydate;
-        var tableSelect = layui.tableSelect;
 
 
         //日期范围
@@ -149,9 +147,10 @@
         }
 
         form.on('submit(meetingHotelAddEdits-form-submit)', function (data) {
-            febs.post(ctx + 'meetingHotel/add', data.field, function () {
+            console.log("我进来了")
+            febs.post(ctx + 'meetingHotel/addMeetingHotel', data.field, function () {
                 febs.alert.success('新增任务成功');
-                $('#febs-meetingHotel').find('#query').click();
+                $('#meet-meetingHotelEdits').find('#query').click();
             });
             return false;
         });

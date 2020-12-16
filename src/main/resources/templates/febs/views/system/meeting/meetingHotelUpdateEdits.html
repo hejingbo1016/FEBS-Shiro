@@ -153,7 +153,7 @@
             data.field.modifyTime = new Date();
             febs.post(ctx + 'meetingHotel/update', data.field, function () {
                 febs.alert.success('费用项修改成功');
-                $('#febs-meetingHotel').find('#query').click();
+                $('#meet-meetingHotelEdits').find('#query').click();
             });
             return false;
         });
