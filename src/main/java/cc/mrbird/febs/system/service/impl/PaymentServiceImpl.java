@@ -9,13 +9,11 @@ import cc.mrbird.febs.common.utils.DistributedRedisLock;
 import cc.mrbird.febs.common.utils.Snowflake;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.constants.AdminConstants;
-import cc.mrbird.febs.system.entity.MeetingHotel;
-import cc.mrbird.febs.system.entity.OrderPay;
-import cc.mrbird.febs.system.entity.Payment;
-import cc.mrbird.febs.system.entity.PaymentDetails;
+import cc.mrbird.febs.system.entity.*;
 import cc.mrbird.febs.system.mapper.MeetingHotelMapper;
 import cc.mrbird.febs.system.mapper.PaymentDetailsMapper;
 import cc.mrbird.febs.system.mapper.PaymentMapper;
+import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IPaymentService;
 import cc.mrbird.febs.wechat.utils.WeiChatRequestUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -37,6 +35,8 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cc.mrbird.febs.common.utils.FebsUtil.getCurrentUser;
+
 /**
  * Service实现
  *
@@ -56,6 +56,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     private final WeiChatRequestUtils weiChatRequestUtils;
 
     private final MeetingHotelMapper hotelMapper;
+    private final UserMapper userMapper;
 
     @Autowired
     private static DistributedRedisLock distributedRedisLock;
@@ -68,9 +69,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         Page<Payment> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
         page.setTotal(paymentMapper.countPayment(payment));
-
+        User currentUser = getCurrentUser();
+        //根据用户名查对应的信息
+        User user = userMapper.findByName(currentUser.getUsername());
         SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
-        IPage<Payment> paymentPage = paymentMapper.findPaymentPage(page, payment);
+        IPage<Payment> paymentPage = paymentMapper.findPaymentPage(page, payment,user);
 
         return paymentPage;
     }

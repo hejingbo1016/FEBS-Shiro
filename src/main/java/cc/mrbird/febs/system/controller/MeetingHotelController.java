@@ -65,7 +65,7 @@ public class MeetingHotelController extends BaseController {
         return new FebsResponse().success().data(dataTable);
     }
 
-    @ControllerEndpoint(operation = "新增MeetingHotel明细", exceptionMessage = "新增MeetingHotel失败")
+    @ControllerEndpoint(operation = "新增MeetingHotel", exceptionMessage = "新增MeetingHotel失败")
     @PostMapping("add")
     @ResponseBody
     @RequiresPermissions("meetingHotel:add")
@@ -76,7 +76,7 @@ public class MeetingHotelController extends BaseController {
 
 
 
-    @ControllerEndpoint(operation = "新增MeetingHotel", exceptionMessage = "新增MeetingHotel失败")
+    @ControllerEndpoint(operation = "新增MeetingHotel明细", exceptionMessage = "新增MeetingHotel失败")
     @PostMapping("addMeetingHotel")
     @ResponseBody
     @RequiresPermissions("meetingHotel:add")

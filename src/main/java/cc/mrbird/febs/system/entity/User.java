@@ -207,9 +207,7 @@ public class User implements Serializable {
     private String deptIds;
 
 
-    /**
-     * 性别 0男 1女 2 保密
-     */
+
     @TableField("DISPLAY")
     private String display;
 

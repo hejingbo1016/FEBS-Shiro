@@ -49,6 +49,11 @@
         <if test="payment.payType != null and payment.payType != ''">
             AND t.pay_type = #{payment.payType}
         </if>
+        <if test="user.display == 0">
+            AND t.creater = #{user.username}
+        </if>
+
+
         order by t.create_time desc
 
 

@@ -40,14 +40,14 @@
             </div>
         </div>
 
-     <!--   <div class="layui-inline">
-            <label class="layui-form-label">日期</label>
-            <div class="layui-input-inline">
-                <input type="text" name="dateTime" id="febs-form-meetingHotel-start"
-                       placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-            </div>
-        </div>
--->
+        <!--   <div class="layui-inline">
+               <label class="layui-form-label">日期</label>
+               <div class="layui-input-inline">
+                   <input type="text" name="dateTime" id="febs-form-meetingHotel-start"
+                          placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+               </div>
+           </div>
+   -->
 
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">酒店名称：</label>
@@ -235,12 +235,12 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-       /*     if (data.field.feeType == 1 && !data.field.dateTime) {
-                febs.alert.warn('请选择日期！');
-                return false;
-            }
-            data.field.modifyTime = new Date();*/
-            febs.post(ctx + 'meetingHotel/update', data.field, function () {
+            /*     if (data.field.feeType == 1 && !data.field.dateTime) {
+                     febs.alert.warn('请选择日期！');
+                     return false;
+                 }
+                 data.field.modifyTime = new Date();*/
+            febs.post(ctx + 'meetingHotel/add', data.field, function () {
                 febs.alert.success('费用项修改成功');
                 $('#febs-meetingHotel').find('#query').click();
             });

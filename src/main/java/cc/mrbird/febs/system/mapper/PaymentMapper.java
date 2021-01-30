@@ -1,6 +1,7 @@
 package cc.mrbird.febs.system.mapper;
 
 import cc.mrbird.febs.system.entity.Payment;
+import cc.mrbird.febs.system.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,7 +19,7 @@ public interface PaymentMapper extends BaseMapper<Payment> {
 
     Long countPayment(@Param("payment") Payment payment);
 
-    <T> IPage<Payment> findPaymentPage(Page<T> page, @Param("payment") Payment payment);
+    <T> IPage<Payment> findPaymentPage(Page<T> page, @Param("payment") Payment payment, @Param("user") User user);
 
     int deletePayments(@Param("ids") String[] ids);
 

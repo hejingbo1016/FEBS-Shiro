@@ -179,6 +179,9 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
                 //会议id、酒店id和费用id 是否一致
                 if (oldMeetingHotel.getFeeId().equals(meetingHotel.getFeeId()) && oldMeetingHotel.getMeetingId().equals(meetingHotel.getMeetingId())
                         && oldMeetingHotel.getHotelId().equals(meetingHotel.getHotelId())) {
+                    //预防房型变化这步骤
+                    getCountUpdate(meetingHotel);
+                    meetingHotelMapper.updateMeetingHotel(meetingHotel);
                 } else {
                     //如果存在了，则拿到该id，进行编辑
                     MeetingHotel meetingHotels = meetingHotelMapper.isExistMeetingHotel(meetingHotel);

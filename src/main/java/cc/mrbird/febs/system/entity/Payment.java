@@ -150,4 +150,11 @@ public class Payment {
     private Integer dataStatus;
 
 
+    /**
+     * 用户是否可看
+     */
+    @TableField(exist = false)
+    private String display;
+
+
 }

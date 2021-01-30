@@ -130,7 +130,7 @@
 
         update t_meeting_hotel
         <set>
-            <if test="meetingHotel != null ">
+            <if test="meetingId != null ">
                 meeting_id =#{meetingId},
             </if>
             <if test="hotelId != null ">
@@ -138,6 +138,9 @@
             </if>
             <if test="feeId != null ">
                 fee_id =#{feeId},
+            </if>
+            <if test="feeType != null ">
+                fee_type =#{feeType},
             </if>
         </set>
         where parent_feeid = #{id} and deleted = 0
