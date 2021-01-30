@@ -50,7 +50,7 @@
             AND t.pay_type = #{payment.payType}
         </if>
         <if test="user.display == 0">
-            AND t.creater = #{user.username}
+            AND m.creater = #{user.username}
         </if>
 
 
