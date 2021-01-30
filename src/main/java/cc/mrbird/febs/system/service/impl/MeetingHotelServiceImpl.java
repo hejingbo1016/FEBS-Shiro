@@ -47,6 +47,9 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     public IPage<MeetingHotel> findMeetingHotels(QueryRequest request, MeetingHotel meetingHotel) {
         Page<MeetingHotel> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setTotal(baseMapper.countMeetHotels(meetingHotel));
+        if (StringUtils.isEmpty(meetingHotel.getParentFeeId())) {
+            meetingHotel.setParentFeeId(0L);
+        }
         IPage<MeetingHotel> paymentDetailsIPage = meetingHotelMapper.findMeetingHotelsPage(page, meetingHotel);
         SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
         return paymentDetailsIPage;

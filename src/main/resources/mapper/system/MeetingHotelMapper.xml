@@ -31,6 +31,7 @@
         select t.*,h.hotel_name from t_meeting_hotel t
         left join t_hotel h on t.hotel_id = h.id
         where t.meeting_id = #{meetingHotel.meetingId} and t.deleted =0 and h.deleted = 0
+        AND t.parent_feeid =#{meetingHotel.parentFeeId}
         <if test="meetingHotel.feeName != null and meetingHotel.feeName != ''">
             AND t.fee_name like CONCAT('%',#{meetingHotel.feeName},'%')
         </if>
@@ -40,9 +41,7 @@
         <if test="meetingHotel.feeType != null and meetingHotel.feeType != ''">
             AND t.fee_type = #{meetingHotel.feeType}
         </if>
-        <if test="meetingHotel.parentFeeId != null and meetingHotel.parentFeeId != '' and meetingHotel.parentFeeId >0">
-            AND t.parent_feeid = #{meetingHotel.parentFeeId}
-        </if>
+
         order by t.create_time desc
 
 

@@ -132,12 +132,12 @@
                 "feeType": meetingHotel.feeType,
                 "availableNumber": meetingHotel.availableNumber,
                 "startTime": meetingHotel.startTime,
+                "parentFeeId": meetingHotel.parentFeeId,
                 "endTime": meetingHotel.endTime,
                 "hotelName": meetingHotel.hotelName,
                 "dateTime": meetingHotel.dateTime
             });
 
-            getHotelRooms(meetingHotel.hotelId)
         }
 
         form.on('submit(meetingHotelUpdateEdits-form-submit)', function (data) {

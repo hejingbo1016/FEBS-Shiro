@@ -26,6 +26,12 @@
             </div>
         </div>
         <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">parentFeeId：</label>
+            <div class="layui-input-block">
+                <input type="text" name="parentFeeId" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">hotelId：</label>
             <div class="layui-input-block">
                 <input type="text" name="hotelId" class="layui-input">
@@ -95,7 +101,6 @@
         </div>
     </form>
 </div>
-<script type="text/javascript" src="/layui/lay/modules/tableSelect.js"></script>
 <script data-th-inline="javascript">
     layui.use(['jquery', 'febs', 'form', 'validate', 'laydate'], function () {
         var $ = layui.jquery,
@@ -130,6 +135,9 @@
         });
 
 
+        form.verify(validate);
+        form.render();
+
         initmeetingValue();
 
         function initmeetingValue() {
@@ -142,14 +150,10 @@
                 "hotelName": meetingHotel.hotelName,
                 "feeName": meetingHotel.feeName
             });
-        }
+        };
 
-        form.verify(validate);
-        form.render();
 
         form.on('submit(meetingHotelAddEdits-form-submit)', function (data) {
-            console.log("我进来了")
-            alert("我进来了")
             febs.post(ctx + 'meetingHotel/addMeetingHotel', data.field, function () {
                 febs.alert.success('新增任务成功');
                 $('#meet-meetingHotelEdits').find('#query').click();
