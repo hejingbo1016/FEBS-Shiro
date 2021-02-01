@@ -158,4 +158,12 @@ public class Meeting {
 
     @TableField(exist = false)
     private String display;
+
+    /**
+     * 日期期间
+     */
+    @TableField(exist = false)
+    private String meetingDaterange;
+
+
 }

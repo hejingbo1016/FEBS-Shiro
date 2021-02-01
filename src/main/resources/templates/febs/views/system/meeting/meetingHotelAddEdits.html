@@ -86,13 +86,13 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-        <!--    <div class="layui-form-item">
-                <label class="layui-form-label">总数：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
-                           autocomplete="off" class="layui-input">
-                </div>
-            </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">总数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="availableNumber" maxlength="50" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
 
 
         <div class="layui-form-item febs-hide">
@@ -148,7 +148,8 @@
                 "hotelId": meetingHotel.hotelId,
                 "parentFeeId": meetingHotel.feeId,
                 "hotelName": meetingHotel.hotelName,
-                "feeName": meetingHotel.feeName
+                "feeName": meetingHotel.feeName,
+                "availableNumber": meetingHotel.availableNumber
             });
         };
 
