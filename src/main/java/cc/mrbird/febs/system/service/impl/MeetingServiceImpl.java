@@ -2,7 +2,6 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.FebsConstant;
-import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.BusinessRuntimeException;
 import cc.mrbird.febs.common.utils.*;
@@ -188,6 +187,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public List<HotelName> weChatHotelsByMeetingId(Long id) {
         List<HotelName> vos = new ArrayList<>();
+
         List<HotelName> list = meetingMapper.weChatHotelsByMeetingId(id);
         if (!Objects.isNull(list) && list.size() > 0) {
             vos = list.stream().map(t -> {

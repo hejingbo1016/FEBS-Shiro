@@ -46,6 +46,7 @@
                 h.deleted = 0
                 AND m.deleted = 0
                 AND t.deleted = 0
+                and t.parent_feeid = 0
             GROUP BY
                 h.id
             ORDER BY h.create_time desc
