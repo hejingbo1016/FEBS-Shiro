@@ -63,7 +63,7 @@
         SELECT
         *
         FROM t_meeting_hotel
-        WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+        WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0 and parent_feeid !=0
         <if test="feeId != null and feeId != ''">
             AND fee_id =#{feeId}
         </if>
@@ -72,6 +72,9 @@
         </if>
         <if test="endTime !=null and endTime !=''">
             and date_time &lt;= #{endTime}
+        </if>
+        <if test="feeId != null and feeId != ''">
+            AND parent_feeid = #{feeId}
         </if>
 
 
