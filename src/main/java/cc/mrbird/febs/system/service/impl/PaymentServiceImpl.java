@@ -73,7 +73,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         //根据用户名查对应的信息
         User user = userMapper.findByName(currentUser.getUsername());
         SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, true);
-        IPage<Payment> paymentPage = paymentMapper.findPaymentPage(page, payment,user);
+        IPage<Payment> paymentPage = paymentMapper.findPaymentPage(page, payment, user);
 
         return paymentPage;
     }
@@ -191,28 +191,31 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                 for (PaymentDetails p : paymentDetails) {
                     //通过会议id、酒店id和费用项id 查费用项库存
                     List<MeetingHotel> roomList = hotelMapper.selectFeeLists(p.getMeetingId(), p.getHotelId(), p.getFeeId(), startTime, endTime);
-                    //分组
-                    Map<Long, List<MeetingHotel>> listMap = roomList.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
-                    List<MeetingHotel> list = listMap.get(p.getFeeId());
-                    if (list.size() != dates.size()) {
-                        //表示该区间时间内，存在费用项无记录的情况
-                        flag = true;
-                        sb.append(p.getFeeName()).append(";");
-                    } else {
-                        Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
-                        if (surplusNumber > p.getNumber()) {
-                            for (String s : dates) {
-                                //库存充足
-                                p.setId(snowflake.nextId());
-                                p.setPaymentCode(paymentCode);
-                                p.setDateTime(s);
-                                addPaymentDetails.add(p);
-                            }
-                        } else {
+                    if (roomList.size() > 0) {
+                        //分组
+                        Map<Long, List<MeetingHotel>> listMap = roomList.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                        List<MeetingHotel> list = listMap.get(p.getFeeId());
+                        if (list.size() != dates.size()) {
+                            //表示该区间时间内，存在费用项无记录的情况
                             flag = true;
                             sb.append(p.getFeeName()).append(";");
+                        } else {
+                            Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
+                            if (surplusNumber > p.getNumber()) {
+                                for (String s : dates) {
+                                    //库存充足
+                                    p.setId(snowflake.nextId());
+                                    p.setPaymentCode(paymentCode);
+                                    p.setDateTime(s);
+                                    addPaymentDetails.add(p);
+                                }
+                            } else {
+                                flag = true;
+                                sb.append(p.getFeeName()).append(";");
+                            }
                         }
                     }
+
                 }
                 if (flag) {
                     return ResponseDTO.failture(sb.toString());
