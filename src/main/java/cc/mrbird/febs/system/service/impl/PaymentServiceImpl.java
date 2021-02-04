@@ -227,7 +227,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                     hotelMapper.reduceInvetory(addPaymentDetail);
                 }
             }
-            return onlinePay("下单", String.valueOf(paymentCode), totalFee, orderPay.getOpenid());
+            return onlinePay("长合订房", String.valueOf(paymentCode), totalFee, orderPay.getOpenid());
         }
         return ResponseDTO.failture();
     }
@@ -273,6 +273,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
     public void paymentAudit(Payment payment) {
 
         this.paymentMapper.paymentAudit(payment);
+    }
+
+    @Override
+    public ResponseDTO placOrders2(OrderPay2 orderPay2) {
+        return onlinePay("长合订房", orderPay2.getOrderCode(), orderPay2.getPaymentAmount(), orderPay2.getOpenid());
     }
 
     /**

@@ -3,6 +3,7 @@ package cc.mrbird.febs.system.service;
 import cc.mrbird.febs.common.dto.ResponseDTO;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.OrderPay;
+import cc.mrbird.febs.system.entity.OrderPay2;
 import cc.mrbird.febs.system.entity.Payment;
 import cc.mrbird.febs.system.entity.PaymentDetails;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -62,4 +63,6 @@ public interface IPaymentService  extends IService<Payment> {
     String weiChatPayNotify(String resXml);
 
     void paymentAudit(Payment payment);
+
+    ResponseDTO placOrders2(OrderPay2 orderPay2);
 }

@@ -87,6 +87,13 @@ public class WechatApiController extends BaseController {
         return paymentService.placOrders(orderPay);
     }
 
+    @ControllerEndpoint(operation = "微信端重新支付功能", exceptionMessage = "微信端重新支付功能失败")
+    @PostMapping("placOrders2")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO placOrders2(@RequestBody OrderPay2 orderPay2) {
+        return paymentService.placOrders2(orderPay2);
+    }
+
 
 
     @ControllerEndpoint(operation = "微信端通过会议id、酒店id和区间时间查费用项列表", exceptionMessage = "微信端通过会议id、酒店id和区间时间查费用项列表")
