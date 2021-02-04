@@ -326,7 +326,6 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                         setMeetTingValue(roomLists, aLong, roomAMap, listMap);
                     }
                 }
-
             }
             t.setRoomList(roomLists);
             t.setOtherList(others);

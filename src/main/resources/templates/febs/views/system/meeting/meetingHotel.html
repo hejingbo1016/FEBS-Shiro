@@ -23,10 +23,18 @@
                                                    class="layui-input">
                                         </div>
                                     </div>
+                                    <!--      <div class="layui-inline">
+                                              <label class="layui-form-label">费用名称</label>
+                                              <div class="layui-input-inline">
+                                                  <input type="text" name="feeName" class="layui-input">
+                                              </div>
+                                          </div>-->
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">费用名称</label>
+                                        <label class="layui-form-label febs-form-item-require">日期范围</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="feeName" class="layui-input">
+                                            <input type="text" class="layui-input" lay-verify="required"
+                                                   name="meetingDaterange" id="meetingDaterange"
+                                                   placeholder=" ~ ">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -99,6 +107,29 @@
             $searchForm = $view.find('form'),
             sortObject = {field: 'createTime', type: null},
             tableIns;
+
+
+        //日期范围
+        laydate.render({
+            elem: '#meetingDaterange'
+            , range: '~'
+            , format: 'yyyy-MM-dd'
+        });
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-start'
+            , type: 'datetime'
+        });
+
+
+        laydate.render({
+            elem: '#febs-form-meetingHotel-end'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#febs-form-meetingHotel-dateTime'
+            , type: 'datetime'
+        });
 
         form.render();
         initTable();
