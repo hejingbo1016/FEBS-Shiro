@@ -204,8 +204,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                 //通过会议id和酒店id查费用项
                 List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(id, t.getHotelId(), null, null, null);
                 //封装所有类型为1的房间的费用项，其他则是其他费用项
-                Integer type = 1;
-                getRoomListVo(rooms, roomLists, others, t, roomList, null, type);
+                getRoomListVo(rooms, roomLists, others, t, roomList, null, roomList);
                 t.setFileList(fileList);
                 return t;
             }).collect(Collectors.toList());
@@ -278,13 +277,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             Integer type = 1;
             //通过会议id、酒店id和费用项id 查费用项库存
             List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), startTime, endTime);
-            if (roomList.size() == 0) {
-                //表示该区间时间范围内没有值那将只返回费用项，数量都将设置成0
-                type = 0;
-                roomList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), null, null);
+            //表示该区间时间范围内没有值那将只返回费用项，数量都将设置成0
+            type = 0;
+            List<MeetingHotel> allList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), null, null);
 
-            }
-            getRoomListVo(rooms, roomLists, others, t, roomList, dates, type);
+            getRoomListVo(rooms, roomLists, others, t, roomList, dates, allList);
             list.add(t);
         } else {
             throw new BusinessRuntimeException("所传参数不能为空！");
@@ -292,39 +289,55 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         return list;
     }
 
-    private void getRoomListVo(List<MeetingHotel> rooms, List<MeetingHotel> roomLists, List<MeetingHotel> others, HotelName t, List<MeetingHotel> roomList, List<String> dates, Integer type) {
-        roomList.forEach(r -> {
-            if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
-                rooms.add(r);
-            } else {
-                others.add(r);
-            }
-        });
-        if (rooms.size() > 0) {
-            //分组 key  value形式
-            Map<Long, List<MeetingHotel>> listMap = rooms.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+    private void getRoomListVo(List<MeetingHotel> rooms, List<MeetingHotel> roomLists, List<MeetingHotel> others, HotelName t, List<MeetingHotel> roomList, List<String> dates, List<MeetingHotel> allList) {
 
-            if (!Objects.isNull(dates) && dates.size() > 0) {
+        List<MeetingHotel> roomA = new ArrayList<>();
 
-                for (Long aLong : listMap.keySet()) {
-                    //当值不相等表示该区间内，费用项缺少某天的数据
-                    setMeetTingValue(roomLists, aLong, type, listMap);
+        if (allList.size() > 0) {
+            allList.forEach(r -> {
+                if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                    rooms.add(r);
+                } else {
+                    others.add(r);
                 }
-            } else {
-                for (Long aLong : listMap.keySet()) {
-                    setMeetTingValue(roomLists, aLong, type, listMap);
-                }
+            });
+            //根据时间区间查出的数据
+            if (roomList.size() > 0) {
+                roomList.forEach(r -> {
+                    if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                        roomA.add(r);
+                    }
+                });
             }
+            if (rooms.size() > 0) {
+                //分组 key  value形式
+                Map<Long, List<MeetingHotel>> listMap = rooms.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                Map<Long, List<MeetingHotel>> roomAMap = null;
+                if (roomA.size() > 0) {
+                    roomAMap = roomA.stream().collect(Collectors.groupingBy(MeetingHotel::getFeeId));
+                }
+                if (!Objects.isNull(dates) && dates.size() > 0) {
+                    for (Long aLong : listMap.keySet()) {
+                        //当值不相等表示该区间内，费用项缺少某天的数据
+                        setMeetTingValue(roomLists, aLong, roomAMap, listMap);
+                    }
+                } else {
+                    for (Long aLong : listMap.keySet()) {
+                        setMeetTingValue(roomLists, aLong, roomAMap, listMap);
+                    }
+                }
 
+            }
+            t.setRoomList(roomLists);
+            t.setOtherList(others);
         }
-        t.setRoomList(roomLists);
-        t.setOtherList(others);
+
     }
 
-    private void setMeetTingValue(List<MeetingHotel> roomLists, Long aLong, Integer type, Map<Long, List<MeetingHotel>> listMap) {
+    private void setMeetTingValue(List<MeetingHotel> roomLists, Long aLong, Map<Long, List<MeetingHotel>> roomAMap, Map<Long, List<MeetingHotel>> listMap) {
         Optional<MeetingHotel> min = null;
-        if (type > 0) {
-            min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+        if (!Objects.isNull(roomAMap) && !Objects.isNull(roomAMap.get(aLong))) {
+            min = roomAMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
         } else {
             //区间内无参数则直接设置总数为0
             min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));

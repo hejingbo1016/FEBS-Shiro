@@ -16,6 +16,7 @@ import cc.mrbird.febs.system.mapper.PaymentMapper;
 import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IPaymentService;
 import cc.mrbird.febs.wechat.utils.WeiChatRequestUtils;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -162,9 +163,12 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         String endTime = "";
         String startTime = "";
 
+
         Boolean flag = false;
         sb.append("以下房型库存不足:");
         if (!Objects.isNull(paymentDetails) && paymentDetails.size() > 0) {
+            String json = JSON.toJSONString(paymentDetails);
+            System.out.println("通过会议id、酒店id和费用项id 查费用项库存 集合的json字符串" + json);
             //生成订单主表
             PaymentDetails details = paymentDetails.get(0);
             Long paymentCode = snowflake.nextId();
@@ -189,6 +193,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
             if (count > 0) {
                 //生成订单明细表
                 for (PaymentDetails p : paymentDetails) {
+                    System.out.println("通过会议id、酒店id和费用项id 查费用项库存 参数：feeid" + p.getFeeId());
                     //通过会议id、酒店id和费用项id 查费用项库存
                     List<MeetingHotel> roomList = hotelMapper.selectFeeLists(p.getMeetingId(), p.getHotelId(), p.getFeeId(), startTime, endTime);
                     if (roomList.size() > 0) {

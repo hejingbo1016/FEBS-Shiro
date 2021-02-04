@@ -66,7 +66,8 @@
         <div class="layui-inline">
             <label class="layui-form-label febs-form-item-require">日期范围</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" lay-verify="required" name="dateRange" id="dateRange"
+                <input type="text" class="layui-input" lay-verify="required" name="meetingDaterange"
+                       id="meetingDaterange"
                        placeholder=" ~ ">
             </div>
         </div>
@@ -114,7 +115,7 @@
 
         //日期范围
         laydate.render({
-            elem: '#dateRange'
+            elem: '#meetingDaterange'
             , range: '~'
             , format: 'yyyy-MM-dd'
         });
