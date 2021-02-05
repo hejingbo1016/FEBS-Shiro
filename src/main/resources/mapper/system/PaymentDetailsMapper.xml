@@ -197,4 +197,13 @@
     </select>
 
 
+    <update id="updateCode">
+
+      update  t_payment_details set payment_Code = #{newCode} where payment_Code =#{orderCode}
+
+
+    </update>
+
+
+
 </mapper>

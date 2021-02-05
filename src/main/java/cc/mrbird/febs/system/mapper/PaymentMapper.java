@@ -42,4 +42,6 @@ public interface PaymentMapper extends BaseMapper<Payment> {
     void paymentAudit(Payment payment);
 
     List<Payment> slectPaymentByTask();
+
+    int updateCode(@Param("orderCode") String orderCode, @Param("newCode") String newCode);
 }

@@ -280,8 +280,27 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         this.paymentMapper.paymentAudit(payment);
     }
 
+    /**
+     * 根据旧的订单code查出所有关联的数据，置换成新code值，并把新的code值进行下单
+     *
+     * @param orderPay2
+     * @return
+     */
     @Override
     public ResponseDTO placOrders2(OrderPay2 orderPay2) {
+        //生成的新code值
+        String newCode = String.valueOf(snowflake.nextId());
+        int count = paymentMapper.updateCode(orderPay2.getOrderCode(), newCode);
+        if (count > 0) {
+            int dataCount = detailsMapper.updateCode(orderPay2.getOrderCode(), newCode);
+            if (dataCount > 0) {
+                //通过新的code进行下单
+                orderPay2.setOrderCode(newCode);
+            }
+
+        }
+
+
         return onlinePay("长合订房", orderPay2.getOrderCode(), orderPay2.getPaymentAmount(), orderPay2.getOpenid());
     }
 

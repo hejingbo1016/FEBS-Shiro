@@ -223,4 +223,11 @@
 
     </select>
 
+    <update id="updateCode">
+
+      update  t_payment set payment_Code = #{newCode} where payment_Code = #{orderCode}
+
+    </update>
+
+
 </mapper>

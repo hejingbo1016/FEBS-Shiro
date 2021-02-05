@@ -29,4 +29,5 @@ public interface PaymentDetailsMapper extends BaseMapper<PaymentDetails> {
 
     List<PaymentDetails> selectPaymentExport(PaymentDetails paymentDetails);
 
+    int updateCode(@Param("orderCode") String orderCode, @Param("newCode") String newCode);
 }
