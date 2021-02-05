@@ -206,7 +206,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                             sb.append(p.getFeeName()).append(";");
                         } else {
                             Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
-                            if (surplusNumber > p.getNumber()) {
+                            if (surplusNumber >= p.getNumber()) {
                                 for (String s : dates) {
                                     //库存充足
                                     p.setId(snowflake.nextId());
