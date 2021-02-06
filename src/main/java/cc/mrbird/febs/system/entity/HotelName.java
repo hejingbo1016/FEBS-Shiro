@@ -73,4 +73,7 @@ public class HotelName implements Serializable {
     private List<MeetingHotel> otherList;
 
 
+
+
+
 }

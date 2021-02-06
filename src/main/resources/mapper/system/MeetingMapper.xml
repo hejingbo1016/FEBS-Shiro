@@ -83,4 +83,10 @@
 
     </select>
 
+
+    <update id="meetingDaterange">
+         update t_meeting set meeting_dateRange = #{meetingDaterange} where id =#{id}
+    </update>
+
+
 </mapper>

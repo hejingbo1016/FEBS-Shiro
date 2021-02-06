@@ -28,4 +28,6 @@ public interface MeetingMapper extends BaseMapper<Meeting> {
     int deleteMeetingByIds(@Param("ids") String[] ids);
 
     <T> IPage<Meeting> findMeetings(Page<T> page, @Param("meeting") Meeting meeting, @Param("user") User user);
+
+    int meetingDaterange(Meeting meeting);
 }

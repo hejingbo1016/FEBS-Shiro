@@ -203,4 +203,22 @@ public class DateUtils {
     }
 
 
+    /**
+     * 根据时间字符串转换成Date类型
+     *
+     * @param s
+     * @return
+     */
+    public static Date getDateByString(String s) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = dateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
 }

@@ -218,6 +218,8 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         return meetingHotelMapper.meetingHotelEdits(id);
     }
 
+
+
     private int getCountUpdate(MeetingHotel meetingHotel) {
         int count;
         MeetingHotel whereMeetings = new MeetingHotel();
@@ -226,4 +228,8 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
         count = meetingHotelMapper.update(meetingHotel, new LambdaQueryWrapper<>(whereMeetings));
         return count;
     }
+
+
+
+
 }

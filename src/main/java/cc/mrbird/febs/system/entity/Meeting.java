@@ -162,8 +162,21 @@ public class Meeting {
     /**
      * 日期期间
      */
-    @TableField(exist = false)
+    @TableField("meeting_dateRange")
     private String meetingDaterange;
+
+
+    /**
+     * 酒店开始日期
+     */
+    @TableField(exist = false)
+    private Date startHotelTime;
+
+    /**
+     * 酒店开始日期
+     */
+    @TableField(exist = false)
+    private Date endHotelTime;
 
 
 }

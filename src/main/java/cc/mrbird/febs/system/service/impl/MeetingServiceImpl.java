@@ -166,6 +166,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     @Override
     public Meeting getWeChatMettingById(Long id) {
         Meeting meeting = meetingMapper.selectById(id);
+        //设置可选择酒店的区间日期
+        if (!StringUtils.isEmpty(meeting.getMeetingDaterange())) {
+            String[] split = meeting.getMeetingDaterange().split("~");
+            meeting.setStartHotelTime(DateUtils.getDateByString(split[0]));
+            meeting.setEndHotelTime(DateUtils.getDateByString(split[1]));
+        }
         List<File> files = new ArrayList<>();
         List<File> fileList = fileMapper.selectFileByHotelId(id);
         files = getFileList(files, fileList, imageShowUrl, imgUrl);
@@ -366,5 +372,20 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
 //        return "F:\\w\\"  + id + "\\" +id+".jpg";
         return "http://knightmedia.ltd:9090/" + id + "/" + id + ".jpg";
+    }
+
+
+    @Override
+    public int meetingDaterange(Meeting meeting) {
+        int count = 0;
+
+        if (!org.springframework.util.StringUtils.isEmpty(meeting.getId()) && !org.springframework.util.StringUtils.isEmpty(meeting.getMeetingDaterange())) {
+
+
+            count = meetingMapper.meetingDaterange(meeting);
+
+        }
+
+        return count;
     }
 }

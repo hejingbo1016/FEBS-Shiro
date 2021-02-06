@@ -228,7 +228,6 @@
         form.render();
 
         form.on('submit(meetingHotel-add-form-submit)', function (data) {
-            alert("我进来了");
             febs.post(ctx + 'meetingHotel/add', data.field, function () {
                 febs.alert.success('新增任务成功');
                 $('#febs-meetingHotel').find('#query').click();

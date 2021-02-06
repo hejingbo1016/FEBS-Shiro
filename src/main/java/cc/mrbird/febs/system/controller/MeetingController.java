@@ -10,6 +10,7 @@ import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.GenerateQRCodeDTO;
 import cc.mrbird.febs.system.entity.Meeting;
 import cc.mrbird.febs.system.service.IFileService;
+import cc.mrbird.febs.system.service.IMeetingHotelService;
 import cc.mrbird.febs.system.service.IMeetingService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class MeetingController extends BaseController {
 
     private final IMeetingService meetingService;
     private final IFileService fileService;
+    private final IMeetingHotelService meetingHotelService;
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "meeting")
     public String meetingIndex() {
@@ -124,5 +126,14 @@ public class MeetingController extends BaseController {
 
 
 
+    @ControllerEndpoint(operation = "设置酒店会议的时间区间", exceptionMessage = "设置酒店会议的时间区间成功")
+    @PostMapping("meetingDaterange")
+    @ResponseBody
+    public FebsResponse meetingDaterange(Meeting meeting) {
+
+
+        meetingService.meetingDaterange(meeting);
+        return new FebsResponse().success();
+    }
 
 }

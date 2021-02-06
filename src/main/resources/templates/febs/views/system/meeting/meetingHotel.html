@@ -16,6 +16,7 @@
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label">酒店名称</label>
                                         <div class="layui-input-inline">
@@ -66,8 +67,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="layui-form-item febs-hide">
+                            <button class="layui-btn" lay-submit="" lay-filter="meetingHotel-form-submit"
+                                    id="submit"></button>
+                        </div>
                     </form>
                     <table lay-filter="meetingHotelTable" lay-data="{id: 'meetingHotelTable'}"></table>
+
                 </div>
             </div>
         </div>
@@ -133,6 +140,16 @@
 
         form.render();
         initTable();
+        intValue();
+
+        function intValue() {
+            var meetingDaterange = sessionStorage.getItem('meetingDaterange');
+            alert(meetingDaterange);
+            form.val("febs-meetingHotel", {
+                "meetingDaterange": meetingDaterange
+
+            });
+        }
 
 
         $query.on('click', function () {
@@ -250,6 +267,7 @@
 
         function initTable() {
             var meetingId = sessionStorage.getItem('meetingId');
+
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'meetingHotelTable',
@@ -280,5 +298,18 @@
             params.invalidate_ie_cache = new Date();
             return params;
         }
+
+        form.on('submit(meetingHotel-form-submit)', function (data) {
+            var meetingId = sessionStorage.getItem('meetingId');
+            data.field.id = meetingId;
+            if (data.field.meetingDaterange == null || data.field.meetingDaterange == '' || data.field.meetingDaterange == '~') {
+                febs.alert.warn('请选择日期范围');
+                return;
+            }
+            febs.post(ctx + 'meeting/meetingDaterange/', data.field, function () {
+                febs.alert.success('设置成功');
+            });
+            return false;
+        });
     })
 </script>

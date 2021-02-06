@@ -8,8 +8,6 @@
 
         select  * from t_file where foreign_id = #{foreignId} and deleted = 0
 
-
-
     </select>
 
 

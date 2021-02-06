@@ -1,8 +1,7 @@
 package cc.mrbird.febs.system.service;
 
-import cc.mrbird.febs.system.entity.MeetingHotel;
-
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.system.entity.MeetingHotel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -57,4 +56,5 @@ public interface IMeetingHotelService extends IService<MeetingHotel> {
     void addMeetingHotelNotDate(MeetingHotel meetingHotel);
 
     List<MeetingHotel> meetingHotelEdits(Long id);
+
 }
