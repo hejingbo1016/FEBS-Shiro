@@ -219,7 +219,7 @@
 
     <select id="slectPaymentByTask" resultType="cc.mrbird.febs.system.entity.Payment">
       select  * from t_payment where  data_status =0 and pay_type = 1
-      and create_time &lt;= DATE_SUB(NOW(), INTERVAL 5 MINUTE) and deleted =0
+      and create_time &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE) and deleted =0
 
     </select>
 

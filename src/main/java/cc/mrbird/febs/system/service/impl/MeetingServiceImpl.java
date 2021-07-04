@@ -285,7 +285,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             List<MeetingHotel> roomList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), startTime, endTime);
             //表示该区间时间范围内没有值那将只返回费用项，数量都将设置成0
             type = 0;
-            List<MeetingHotel> allList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), null, null);
+//            List<MeetingHotel> allList = meetingHotelMapper.selectFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), null, null);
+            List<MeetingHotel> allList = meetingHotelMapper.selectWeChatFeeLists(details.getMeetingId(), details.getHotelId(), details.getFeeId(), null, null);
 
             getRoomListVo(rooms, roomLists, others, t, roomList, dates, allList);
             list.add(t);
@@ -301,7 +302,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
         if (allList.size() > 0) {
             allList.forEach(r -> {
-                if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                if (AdminConstants.HOTEL_TYPE.equals(r.getFeeType())) {
                     rooms.add(r);
                 } else {
                     others.add(r);
@@ -310,7 +311,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
             //根据时间区间查出的数据
             if (roomList.size() > 0) {
                 roomList.forEach(r -> {
-                    if (AdminConstants.AUDIT_T_TYPE.equals(r.getFeeType())) {
+                    if (AdminConstants.HOTEL_TYPE.equals(r.getFeeType())) {
                         roomA.add(r);
                     }
                 });
@@ -344,9 +345,18 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         if (!Objects.isNull(roomAMap) && !Objects.isNull(roomAMap.get(aLong))) {
             min = roomAMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
         } else {
+            List<MeetingHotel> meetingHotels = listMap.get(aLong);
             //区间内无参数则直接设置总数为0
-            min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
-            min.get().setSurplusNumber(0);
+            if (!Objects.isNull(meetingHotels) && meetingHotels.size() > 0) {
+                meetingHotels.stream().forEach(t -> {
+                    if (org.springframework.util.StringUtils.isEmpty(t.getSurplusNumber()))
+                        t.setSurplusNumber(0);
+                });
+                min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+                min.get().setSurplusNumber(0);
+            }
+
+
         }
         roomLists.add(min.get());
     }

@@ -40,4 +40,6 @@ public interface MeetingHotelMapper extends BaseMapper<MeetingHotel> {
     int updateChildrenMeetingHotel(MeetingHotel meetingHotel);
 
     List<MeetingHotel> meetingHotelEdits(@Param("id") Long id);
+
+    List<MeetingHotel> selectWeChatFeeLists(@Param("meetingId") Long meetingId, @Param("hotelId") Long hotelId, @Param("feeId") Long feeId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 }

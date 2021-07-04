@@ -100,6 +100,7 @@
         select  * from  t_meeting_hotel where  parent_feeid = #{id} and  deleted = 0
     </select>
 
+
     <update id="updateFeePrice">
      update t_meeting_hotel set fee_price =#{feePrice} where meeting_id =#{meetingId}
      and hotel_id =#{hotelId} and deleted = 0 and fee_id = #{feeId}
@@ -152,4 +153,28 @@
     <update id="updateChildrenMeetingHotel">
        update t_meeting_hotel set set deleted = 1 where parent_feeid = #{id}
     </update>
+
+
+    <select id="selectWeChatFeeLists" resultType="cc.mrbird.febs.system.entity.MeetingHotel">
+
+
+        SELECT
+        *
+        FROM t_meeting_hotel
+        WHERE meeting_id=#{meetingId} and hotel_id =#{hotelId} and deleted = 0
+        <if test="feeId != null and feeId != ''">
+            AND fee_id =#{feeId}
+        </if>
+        <if test="startTime !=null and startTime !=''">
+            and date_time &gt;= #{startTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and date_time &lt;= #{endTime}
+        </if>
+        <if test="feeId != null and feeId != ''">
+            AND parent_feeid = #{feeId}
+        </if>
+
+
+    </select>
 </mapper>

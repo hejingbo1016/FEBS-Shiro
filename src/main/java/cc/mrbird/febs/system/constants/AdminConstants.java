@@ -34,4 +34,11 @@ public interface AdminConstants {
      */
     Integer FEETYPE_TWO = 2;
 
+
+    /**
+     * 费用类型 房型
+     */
+    Integer HOTEL_TYPE = 1;
+
+
 }
