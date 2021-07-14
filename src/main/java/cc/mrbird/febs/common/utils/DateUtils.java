@@ -6,10 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class DateUtils {
 
@@ -134,7 +131,7 @@ public class DateUtils {
      * @throws ParseException
      * @throws java.text.ParseException
      */
-    public static List<String> findDates(String dBegin, String dEnd) throws ParseException, java.text.ParseException {
+    public static Set<String> findDates(String dBegin, String dEnd) throws ParseException, java.text.ParseException {
         //日期工具类准备
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -147,7 +144,7 @@ public class DateUtils {
         calEnd.setTime(format.parse(dEnd));
 
         //装返回的日期集合容器
-        List<String> Datelist = new ArrayList<String>();
+        Set<String> Datelist = new HashSet<String>();
         //将第一个月添加里面去
         Datelist.add(format.format(calBegin.getTime()));
         // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
@@ -156,6 +153,8 @@ public class DateUtils {
             calBegin.add(Calendar.DAY_OF_MONTH, 1);
             Datelist.add(format.format(calBegin.getTime()));
         }
+        Datelist.add(format.format(calEnd.getTime()));
+
         return Datelist;
     }
 

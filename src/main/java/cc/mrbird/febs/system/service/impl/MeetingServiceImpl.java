@@ -269,7 +269,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         List<MeetingHotel> rooms = new ArrayList<>();
         List<MeetingHotel> roomLists = new ArrayList<>();
         List<MeetingHotel> others = new ArrayList<>();
-        List<String> dates = new ArrayList<>();
+        Set<String> dates = new HashSet<>();
         if (!Objects.isNull(details)) {
             //获取区间时间
             String endTime = DateUtils.getCalculateDay(details.getEndTime(), -1);
@@ -296,7 +296,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
         return list;
     }
 
-    private void getRoomListVo(List<MeetingHotel> rooms, List<MeetingHotel> roomLists, List<MeetingHotel> others, HotelName t, List<MeetingHotel> roomList, List<String> dates, List<MeetingHotel> allList) {
+    private void getRoomListVo(List<MeetingHotel> rooms, List<MeetingHotel> roomLists, List<MeetingHotel> others, HotelName t, List<MeetingHotel> roomList, Set<String> dates, List<MeetingHotel> allList) {
 
         List<MeetingHotel> roomA = new ArrayList<>();
 
@@ -326,11 +326,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
                 if (!Objects.isNull(dates) && dates.size() > 0) {
                     for (Long aLong : listMap.keySet()) {
                         //当值不相等表示该区间内，费用项缺少某天的数据
-                        setMeetTingValue(roomLists, aLong, roomAMap, listMap);
+                        setMeetTingValue(roomLists, aLong, roomAMap, listMap, dates);
                     }
                 } else {
                     for (Long aLong : listMap.keySet()) {
-                        setMeetTingValue(roomLists, aLong, roomAMap, listMap);
+                        setMeetTingValue(roomLists, aLong, roomAMap, listMap, dates);
                     }
                 }
             }
@@ -340,25 +340,35 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
 
     }
 
-    private void setMeetTingValue(List<MeetingHotel> roomLists, Long aLong, Map<Long, List<MeetingHotel>> roomAMap, Map<Long, List<MeetingHotel>> listMap) {
+    private void setMeetTingValue(List<MeetingHotel> roomLists, Long aLong, Map<Long, List<MeetingHotel>> roomAMap, Map<Long, List<MeetingHotel>> listMap, Set<String> dates) {
         Optional<MeetingHotel> min = null;
-        if (!Objects.isNull(roomAMap) && !Objects.isNull(roomAMap.get(aLong))) {
-            min = roomAMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
-        } else {
-            List<MeetingHotel> meetingHotels = listMap.get(aLong);
-            //区间内无参数则直接设置总数为0
-            if (!Objects.isNull(meetingHotels) && meetingHotels.size() > 0) {
-                meetingHotels.stream().forEach(t -> {
-                    if (org.springframework.util.StringUtils.isEmpty(t.getSurplusNumber()))
-                        t.setSurplusNumber(0);
-                });
-                min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
-                min.get().setSurplusNumber(0);
+        //当天数与区间查询的数量一致则表示该区间都有房型，否则对应区间设置成0
+        if (dates.size() == roomAMap.get(aLong).size()) {
+            if (!Objects.isNull(roomAMap) && !Objects.isNull(roomAMap.get(aLong))) {
+                min = roomAMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+            } else {
+                min = getOptionalMin(min, listMap, aLong);
             }
-
-
+        } else {
+            min = getOptionalMin(min, listMap, aLong);
         }
         roomLists.add(min.get());
+    }
+
+    private Optional<MeetingHotel> getOptionalMin(Optional<MeetingHotel> min, Map<Long, List<MeetingHotel>> listMap, Long aLong) {
+
+        List<MeetingHotel> meetingHotels = listMap.get(aLong);
+        //区间内无参数则直接设置总数为0
+        if (!Objects.isNull(meetingHotels) && meetingHotels.size() > 0) {
+            meetingHotels.stream().forEach(t -> {
+                if (org.springframework.util.StringUtils.isEmpty(t.getSurplusNumber()))
+                    t.setSurplusNumber(0);
+            });
+            min = listMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
+            min.get().setSurplusNumber(0);
+        }
+        return min;
+
     }
 
     private String saveFile(InputStream is) {

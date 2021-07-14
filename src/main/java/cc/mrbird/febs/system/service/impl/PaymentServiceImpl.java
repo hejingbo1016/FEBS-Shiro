@@ -159,7 +159,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         List<PaymentDetails> paymentDetails = orderPay.getPaymentDetails();
         List<PaymentDetails> addPaymentDetails = new ArrayList<>();
         StringBuffer sb = new StringBuffer();
-        List<String> dates = new ArrayList<>();
+        Set<String> dates = new HashSet<>();
         String endTime = "";
         String startTime = "";
 

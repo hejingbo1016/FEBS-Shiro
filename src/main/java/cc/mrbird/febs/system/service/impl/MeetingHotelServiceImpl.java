@@ -24,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Service实现
@@ -63,7 +60,7 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
     }
 
 
-    private void isExistMeetingHotel(MeetingHotel meetingHotel, List<String> dates, List<MeetingHotel> saveOrUpdates) {
+    private void isExistMeetingHotel(MeetingHotel meetingHotel, Set<String> dates, List<MeetingHotel> saveOrUpdates) {
 
         dates.stream().forEach(d -> {
             MeetingHotel fee = new MeetingHotel();
@@ -152,7 +149,7 @@ public class MeetingHotelServiceImpl extends ServiceImpl<MeetingHotelMapper, Mee
                 String[] split = dateRange.split("~");
                 try {
                     //该范围内的所有日期
-                    List<String> dates = DateUtils.findDates(split[0], split[1]);
+                    Set<String> dates = DateUtils.findDates(split[0], split[1]);
                     //根据会议id、酒店id、费用id、时间 去查费用项是否存在，存在则更新，不存在则新增
                     isExistMeetingHotel(meetingHotel, dates, saveOrUpdates);
                     this.saveOrUpdateBatch(saveOrUpdates);
