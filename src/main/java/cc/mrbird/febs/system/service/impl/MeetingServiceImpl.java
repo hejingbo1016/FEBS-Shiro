@@ -343,7 +343,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting> impl
     private void setMeetTingValue(List<MeetingHotel> roomLists, Long aLong, Map<Long, List<MeetingHotel>> roomAMap, Map<Long, List<MeetingHotel>> listMap, Set<String> dates) {
         Optional<MeetingHotel> min = null;
         //当天数与区间查询的数量一致则表示该区间都有房型，否则对应区间设置成0
-        if (!Objects.isNull(dates) && dates.size() == roomAMap.get(aLong).size()) {
+        if (!Objects.isNull(dates) &&  !Objects.isNull(roomAMap) && dates.size() == roomAMap.get(aLong).size()) {
             if (!Objects.isNull(roomAMap) && !Objects.isNull(roomAMap.get(aLong))) {
                 min = roomAMap.get(aLong).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber));
             } else {
