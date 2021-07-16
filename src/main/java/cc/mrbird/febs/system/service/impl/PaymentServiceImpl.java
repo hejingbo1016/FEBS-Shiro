@@ -211,11 +211,14 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
                             Integer surplusNumber = listMap.get(p.getFeeId()).stream().min(Comparator.comparing(MeetingHotel::getSurplusNumber)).get().getSurplusNumber();
                             if (surplusNumber >= p.getNumber()) {
                                 for (String s : dates) {
+                                    PaymentDetails vo = new PaymentDetails();
+                                    BeanUtils.copyProperties(p,vo);
+
                                     //库存充足
-                                    p.setId(snowflake.nextId());
-                                    p.setPaymentCode(paymentCode);
-                                    p.setDateTime(s);
-                                    addPaymentDetails.add(p);
+                                    vo.setId(snowflake.nextId());
+                                    vo.setPaymentCode(paymentCode);
+                                    vo.setDateTime(s);
+                                    addPaymentDetails.add(vo);
                                 }
                             } else {
                                 flag = true;
